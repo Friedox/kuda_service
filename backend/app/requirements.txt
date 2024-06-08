@@ -7,3 +7,8 @@ passlib[bcrypt]
 python-multipart
 pydantic
 redis
+databases
+psycopg
+psycopg-binary
+asyncpg
+bcrypt

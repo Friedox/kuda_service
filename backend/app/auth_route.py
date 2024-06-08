@@ -1,41 +1,41 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from fastapi import Request
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemas import UserScheme, CreateUserScheme
-from response_service import ResponseService
-import auth_service
+from . import auth_service
+from .database import get_async_db
+from .schemas import UserScheme, CreateUserScheme, CredentialsScheme
+from .response_service import ResponseService
 
 router = APIRouter()
 
 
 @router.post("/signup", tags=["auth"])
-async def sign_up(user: CreateUserScheme):
+async def sign_up(user: CreateUserScheme, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        auth_service.register_user(user)
+        auth_service.register_user(user, db)
     )
 
 
-# Login endpoint - Creates a new session
 @router.post("/login")
-async def login(user: CreateUserScheme):
+async def login(user: CredentialsScheme, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        auth_service.login_user(user)
+        auth_service.login_user(user, db)
     )
 
 
-# Get current user endpoint - Returns the user corresponding to the session ID
 @router.get("/getusers/me")
-async def read_current_user(request: Request):
+async def read_current_user(request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        auth_service.get_authenticated_user_from_session_id(request)
+        auth_service.get_user_from_session_id(request, db)
     )
 
 
 @router.get("/protected")
-async def protected_endpoint(request: Request):
+async def protected_endpoint(request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        auth_service.protected(request)
+        auth_service.protected(request, db)
     )
 
 

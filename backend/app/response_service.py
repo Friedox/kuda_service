@@ -2,11 +2,10 @@ from typing import Any
 from fastapi import status
 from fastapi.responses import JSONResponse
 
-from schemas import SuccessResponse, ErrorResponse, Message
-from exceptions import *
+from .schemas import SuccessResponse, ErrorResponse, Message
+from .exceptions import *
 
 
-# TODO Add exceptions
 class ResponseService:
     @staticmethod
     async def response(response: Any) -> Any:
@@ -18,7 +17,9 @@ class ResponseService:
             )
 
         except (
-                UserAlreadyExistsError,
+                UserNotFoundError,
+                EmailInUseError,
+                UsernameInUseError,
                 InvalidCredentialsError,
                 InvalidSessionError
 

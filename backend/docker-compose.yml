@@ -1,27 +1,40 @@
 services:
-  web:
-    build: .
+  fastapi_app:
+    env_file:
+      - .env
+    build:
+      context: ./app
     container_name: fastapi_app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     volumes:
       - .:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - redis
-
-  db:
-    image: postgres:13
-    container_name: postgres_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fastapi_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=database
+      - REDIS_HOST=redis
+    depends_on:
+      - database
+      - redis
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+
+  database:
+    env_file:
+      - .env
+    image: postgres:latest
+    restart: always
+    container_name: database
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
 
   redis:
     image: redis:6
@@ -30,4 +43,4 @@ services:
       - "6379:6379"
 
 volumes:
-  postgres_data:
+  database:

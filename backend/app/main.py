@@ -1,15 +1,17 @@
 from fastapi import FastAPI
-from database import async_engine, create_tables
-from auth_route import router
+from .database import async_engine, create_tables
+from .auth_route import router as auth_router
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # await async_engine.connect()
-    # await create_tables()
+    await async_engine.connect()
+    await create_tables()
     yield
-    # await async_engine.dispose()
+    await async_engine.dispose()
 
 
 app = FastAPI(
@@ -21,4 +23,4 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-app.include_router(router, prefix="/auth", tags=["auth"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])

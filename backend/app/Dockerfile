@@ -1,9 +1,9 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Установим зависимости
 RUN apt-get update && apt-get install -y gcc redis-server
-COPY ./pip.conf /root/.pip/pip.conf
-COPY ./requirements.txt /app/requirements.txt
+COPY pip.conf /root/.pip/pip.conf
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir --upgrade setuptools
 RUN pip install --no-cache-dir --upgrade wheel
