@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from .database import async_engine, create_tables
-from .auth_route import router as auth_router
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from .routes.auth_route import router as auth_router
+from .routes.trip_route import router as trip_router
 
 
 @asynccontextmanager
@@ -24,3 +25,5 @@ app = FastAPI(
 )
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
+
+app.include_router(trip_router, prefix="/trip", tags=["trip"])

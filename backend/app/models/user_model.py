@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary
+from sqlalchemy import Column, Integer, String, LargeBinary
 from sqlalchemy.orm import relationship
-from .database import Base
+from ..database import Base
 
 
 class User(Base):
@@ -10,4 +10,4 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     password_hash = Column(LargeBinary, nullable=False)
 
-
+    trips = relationship("Trip", secondary="trip_user", back_populates="users")

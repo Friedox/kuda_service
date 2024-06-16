@@ -3,18 +3,18 @@ import redis.asyncio as redis
 from fastapi import HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .exceptions import InvalidSessionError, InvalidCredentialsError
-from .schemas import CreateUserScheme, CredentialsScheme
+from ..exceptions import InvalidSessionError, InvalidCredentialsError
+from ..schemas.user_scheme import CreateUserScheme, CredentialsScheme
 import random
 import hashlib
-from .config import REDIS_HOST, SESSION_EXPIRE_TIME
-from .crud import UserCrud
+from ..config import REDIS_HOST, SESSION_EXPIRE_TIME
+from ..crud import user_crud
 
 redis_client = redis.from_url(f'redis://{REDIS_HOST}')
 
 
 async def register_user(user_create: CreateUserScheme, db: AsyncSession) -> dict:
-    await UserCrud.create(user_create, db)
+    await user_crud.create(user_create, db)
 
     return {"message": "User registered successfully"}
 
@@ -27,7 +27,7 @@ async def login_user(user_login: CredentialsScheme, db: AsyncSession) -> dict:
 
 
 async def authenticate_user(credentials: CredentialsScheme, db: AsyncSession):
-    user_data = await UserCrud.get(credentials.login, db)
+    user_data = await user_crud.get(credentials.login, db)
     if not bcrypt.checkpw(credentials.password.encode('utf-8'), user_data.password_hash):
         raise InvalidCredentialsError
 
@@ -62,7 +62,7 @@ async def get_user_from_session_id(request: Request, db: AsyncSession):
     username = await redis_client.hget(f"session:{session_id}", "username")
     if not username:
         raise InvalidSessionError
-    user_data = await UserCrud.get(username.decode('utf-8'), db)
+    user_data = await user_crud.get(username.decode('utf-8'), db)
 
     return user_data
 
