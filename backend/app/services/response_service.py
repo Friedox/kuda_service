@@ -2,8 +2,8 @@ from typing import Any
 from fastapi import status
 from fastapi.responses import JSONResponse
 
-from .schemas import SuccessResponse, ErrorResponse, Message
-from .exceptions import *
+from ..schemas.response_scheme import SuccessResponse, ErrorResponse, Message
+from ..exceptions import exceptions_list
 
 
 class ResponseService:
@@ -16,14 +16,7 @@ class ResponseService:
                 detail=response_result
             )
 
-        except (
-                UserNotFoundError,
-                EmailInUseError,
-                UsernameInUseError,
-                InvalidCredentialsError,
-                InvalidSessionError
-
-        ) as error_detail:
+        except exceptions_list as error_detail:
 
             error_response = ErrorResponse(
                 detail=Message(
