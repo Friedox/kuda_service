@@ -23,3 +23,10 @@ async def delete(trip_id: int, request: Request, db: AsyncSession = Depends(get_
     return await ResponseService.response(
         trip_service.delete(trip_id, request, db)
     )
+
+
+@router.get("/get_all", tags=["trip"])
+async def get_all(request: Request, db: AsyncSession = Depends(get_async_db)):
+    return await ResponseService.response(
+        trip_service.get_all(request, db)
+    )

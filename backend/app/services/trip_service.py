@@ -1,8 +1,10 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Request
 from ..crud import trip_crud, trip_user_crud
 from ..exceptions import UnexpectedError
-from ..schemas.trip_scheme import CreateTripScheme
+from ..schemas.trip_scheme import CreateTripScheme, TripScheme
 from ..services.auth_service import get_user_from_session_id
 
 
@@ -22,3 +24,9 @@ async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
         return {f"message": f"Trip deleted successfully"}
     else:
         raise UnexpectedError(f"Trip deleted")
+
+
+async def get_all(request: Request, db: AsyncSession) -> List[TripScheme]:
+    user = await get_user_from_session_id(request, db)
+
+    return await trip_user_crud.get_all(user, db)
