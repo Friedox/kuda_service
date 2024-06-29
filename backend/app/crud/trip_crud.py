@@ -7,7 +7,13 @@ from ..models.trip_model import Trip
 
 
 async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
-    new_trip = Trip(**trip_create.model_dump())
+    new_trip = Trip(
+        pickup=trip_create.pickup,
+        dropoff=trip_create.dropoff,
+        start_timestamp=trip_create.start_timestamp,
+        end_timestamp=trip_create.end_timestamp,
+        fare=trip_create.fare
+    )
 
     db.add(new_trip)
     await db.commit()
@@ -26,8 +32,7 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
     if trip:
         trip_scheme = TripScheme(**trip.__dict__)
         return trip_scheme
-    else:
-        raise TripNotFoundError
+    raise TripNotFoundError
 
 
 async def delete(trip_delete: TripScheme, db: AsyncSession) -> bool:
@@ -41,5 +46,4 @@ async def delete(trip_delete: TripScheme, db: AsyncSession) -> bool:
         await db.commit()
         return True
 
-    else:
-        raise TripNotFoundError
+    raise TripNotFoundError

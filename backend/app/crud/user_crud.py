@@ -1,12 +1,12 @@
 import re
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+import bcrypt
 
 from ..config import EMAIL_PATTERN
 from ..exceptions import UsernameInUseError, EmailInUseError, UserNotFoundError
 from ..schemas.user_scheme import CreateUserScheme, UserScheme
 from ..models.user_model import User
-import bcrypt
 
 
 async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
@@ -47,7 +47,7 @@ async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
 
 
 async def get(param, db: AsyncSession) -> UserScheme:
-    if type(param) is int:
+    if isinstance(param, int):
         query = select(User).filter(User.user_id == param)
     else:
         if re.match(EMAIL_PATTERN, param) is not None:
@@ -56,10 +56,11 @@ async def get(param, db: AsyncSession) -> UserScheme:
             query = select(User).filter(User.username == param)
 
     result = await db.execute(query)
+
     user = result.scalars().first()
 
     if user:
         user_scheme = UserScheme(**user.__dict__)
         return user_scheme
-    else:
-        raise UserNotFoundError
+
+    raise UserNotFoundError

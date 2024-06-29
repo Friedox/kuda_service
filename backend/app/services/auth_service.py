@@ -1,12 +1,13 @@
+import random
+import hashlib
+
 import bcrypt
 import redis.asyncio as redis
-from fastapi import HTTPException, status, Request
+from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..exceptions import InvalidSessionError, InvalidCredentialsError
 from ..schemas.user_scheme import CreateUserScheme, CredentialsScheme
-import random
-import hashlib
 from ..config import REDIS_HOST, SESSION_EXPIRE_TIME
 from ..crud import user_crud
 
@@ -44,14 +45,6 @@ async def create_session(user_id: int, username: str):
     await redis_client.expire(f"session:{session_id}", SESSION_EXPIRE_TIME)
 
     return session_id
-
-
-async def protected(request: Request, db: AsyncSession) -> dict:
-    user = await get_user_from_session_id(request, db)
-    if not user:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authenticated")
-
-    return {"message": "This user can connect to a protected endpoint after successfully authenticated", "user": user}
 
 
 async def get_user_from_session_id(request: Request, db: AsyncSession):

@@ -32,13 +32,6 @@ async def read_current_user(request: Request, db: AsyncSession = Depends(get_asy
     )
 
 
-@router.get("/protected")
-async def protected_endpoint(request: Request, db: AsyncSession = Depends(get_async_db)):
-    return await ResponseService.response(
-        auth_service.protected(request, db)
-    )
-
-
 @router.post("/logout")
 async def logout(request: Request):
     return await ResponseService.response(
