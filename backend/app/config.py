@@ -7,6 +7,8 @@ database_user = os.getenv("POSTGRES_USER", "kuda_user")
 database_password = os.getenv("POSTGRES_PASSWORD", "123")
 database_name = os.getenv("POSTGRES_DB", 'kuda')
 database_host = os.getenv("POSTGRES_HOST", "localhost:5433")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "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")
+REDIRECT_URI = os.getenv("REDIRECT_URI", 'http://localhost:8000/auth/google/callback')
 
 SQLALCHEMY_URL = f"postgresql+asyncpg://{database_user}:{database_password}@{database_host}/{database_name}"
 REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
@@ -14,5 +16,3 @@ REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
 tags_fixture = ['smoke', 'child', 'parcels', 'with_animals', 'max_two', 'only_verified']
 
 GOOGLE_CLIENT_ID = "941807474970-g27gmr4phcusta47dn6fvg6hvcm3btgp.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "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"
-REDIRECT_URI = 'http://localhost:8000/auth/google/callback'
