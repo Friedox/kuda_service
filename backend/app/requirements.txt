@@ -12,3 +12,4 @@ psycopg
 psycopg-binary
 asyncpg
 bcrypt
+authlib
