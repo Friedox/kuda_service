@@ -1,10 +1,14 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from ..exceptions import TripNotFoundError, UserTripNotFoundError
-from ..schemas.trip_scheme import CreateTripScheme, TripScheme
+from ..schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from ..schemas.user_scheme import UserScheme
 from ..models.trip_user_model import TripUser
+from ..models.trip_model import Trip
 from . import trip_crud
 
 
@@ -49,10 +53,31 @@ async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) ->
         if await trip_crud.delete(trip_delete, db):
             await db.commit()
             return True
-        else:
-            await db.rollback()
-            raise TripNotFoundError
+
+        await db.rollback()
+        raise TripNotFoundError
 
     except Exception as e:
         await db.rollback()
         raise e
+
+
+async def get_all(user: UserScheme, db: AsyncSession) -> List[TripTagsScheme]:
+    query = (
+        select(Trip)
+        .join(TripUser)
+        .filter(TripUser.user_id == user.user_id)
+        .options(selectinload(Trip.tags))
+    )
+
+    result = await db.execute(query)
+    trips_objects = result.scalars().all()
+
+    trips = []
+    for trip in trips_objects:
+        tag_names = [tag.tag for tag in trip.tags]
+        trip_dict = trip.__dict__
+        trip_dict['tags'] = tag_names
+        trips.append(TripTagsScheme(**trip_dict))
+
+    return trips

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class CredentialsScheme(BaseModel):
@@ -7,13 +7,17 @@ class CredentialsScheme(BaseModel):
 
 
 class CreateUserScheme(BaseModel):
-    email: str
+    email: EmailStr
     username: str
-    password: str
+    password: str = None
+    is_google_account: bool = False
 
 
 class UserScheme(BaseModel):
-    email: str
-    username: str
-    password_hash: bytes
     user_id: int
+    email: EmailStr
+    username: str
+    is_google_account: bool
+
+    class Config:
+        from_attributes = True

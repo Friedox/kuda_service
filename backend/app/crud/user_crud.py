@@ -1,12 +1,12 @@
 import re
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+import bcrypt
 
 from ..config import EMAIL_PATTERN
 from ..exceptions import UsernameInUseError, EmailInUseError, UserNotFoundError
 from ..schemas.user_scheme import CreateUserScheme, UserScheme
 from ..models.user_model import User
-import bcrypt
 
 
 async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
@@ -29,12 +29,15 @@ async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
     await check_username(user_create.username)
     await check_email(user_create.email)
 
-    hashed_password = bcrypt.hashpw(user_create.password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = None
+    if user_create.password:
+        hashed_password = bcrypt.hashpw(user_create.password.encode('utf-8'), bcrypt.gensalt())
 
     new_user = User(
         email=user_create.email,
         username=user_create.username,
-        password_hash=hashed_password
+        password_hash=hashed_password,
+        is_google_account=user_create.is_google_account
     )
 
     db.add(new_user)
@@ -47,7 +50,7 @@ async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
 
 
 async def get(param, db: AsyncSession) -> UserScheme:
-    if type(param) is int:
+    if isinstance(param, int):
         query = select(User).filter(User.user_id == param)
     else:
         if re.match(EMAIL_PATTERN, param) is not None:
@@ -56,10 +59,39 @@ async def get(param, db: AsyncSession) -> UserScheme:
             query = select(User).filter(User.username == param)
 
     result = await db.execute(query)
+
     user = result.scalars().first()
 
     if user:
         user_scheme = UserScheme(**user.__dict__)
         return user_scheme
-    else:
-        raise UserNotFoundError
+
+    raise UserNotFoundError
+
+
+async def check_password(user_id: int, db: AsyncSession) -> bool:
+    query = select(User).filter(User.user_id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+    if user:
+        return user.password_hash is not None
+    raise UserNotFoundError
+
+
+async def get_hash(user_id: int, db: AsyncSession) -> bytes:
+    query = select(User).filter(User.user_id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+    if user:
+        return user.password_hash
+    raise UserNotFoundError
+
+
+async def set_password(user_id, hashed_password, db):
+    query = select(User).filter(User.user_id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    user.password_hash = hashed_password
+    await db.commit()
+
