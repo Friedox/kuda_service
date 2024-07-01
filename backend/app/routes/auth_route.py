@@ -25,6 +25,13 @@ async def login(user: CredentialsScheme, db: AsyncSession = Depends(get_async_db
     )
 
 
+@router.post("/set_pass")
+async def set_pass(new_pass: str, request: Request, db: AsyncSession = Depends(get_async_db)):
+    return await ResponseService.response(
+        auth_service.set_pass(new_pass, request, db)
+    )
+
+
 @router.get("/getusers/me")
 async def read_current_user(request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
@@ -37,3 +44,4 @@ async def logout(request: Request):
     return await ResponseService.response(
         auth_service.logout(request)
     )
+

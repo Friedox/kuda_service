@@ -1,3 +1,6 @@
+from fastapi import HTTPException
+
+
 class InvalidSessionError(ValueError):
     def __init__(self):
         super().__init__("Invalid session ID")
@@ -43,6 +46,16 @@ class InvalidTagException(ValueError):
         super().__init__(f"Tag '{tag}' is not a valid tag")
 
 
+class GoogleException(ValueError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class PassNotSetException(ValueError):
+    def __init__(self):
+        super().__init__('There is no password set for this account. Please set your password in settings')
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -51,5 +64,7 @@ exceptions_list = (TripNotFoundError,
                    InvalidSessionError,
                    UnexpectedError,
                    UserTripNotFoundError,
-                   InvalidTagException
+                   InvalidTagException,
+                   GoogleException,
+                   PassNotSetException
                    )
