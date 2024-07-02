@@ -12,3 +12,6 @@ psycopg
 psycopg-binary
 asyncpg
 bcrypt
+authlib
+python-dotenv
+requests
