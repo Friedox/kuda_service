@@ -56,6 +56,11 @@ class PassNotSetException(ValueError):
         super().__init__('There is no password set for this account. Please set your password in settings')
 
 
+class PointNotFoundError(ValueError):
+    def __init__(self, point_id):
+        super().__init__(f"Point {point_id} not found")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -66,5 +71,6 @@ exceptions_list = (TripNotFoundError,
                    UserTripNotFoundError,
                    InvalidTagException,
                    GoogleException,
-                   PassNotSetException
+                   PassNotSetException,
+                   PointNotFoundError
                    )

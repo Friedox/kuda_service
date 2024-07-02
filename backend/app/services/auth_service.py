@@ -71,7 +71,13 @@ async def create_session(user_id: int, username: str) -> str:
     return session_id
 
 
-async def get_user_from_session_id(request: Request, db: AsyncSession):
+async def get_info(request: Request, db: AsyncSession):
+    user = await get_user_from_session_id(request, db)
+    user.__dict__.pop('password_hash')
+    return user
+
+
+async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserScheme:
     session_id = request.cookies.get("session_id")
     if not session_id:
         raise InvalidSessionError
@@ -94,7 +100,7 @@ async def get_session_id(request: Request):
 async def logout(request: Request):
     session_id = await get_session_id(request)
     await redis_client.delete(f"session:{session_id}")
-    return {"message": "Logged out successfully", "session_id": session_id}
+    return {"message": "Logged out successfully"}
 
 
 async def proceed_google(code: str, db: AsyncSession) -> dict:

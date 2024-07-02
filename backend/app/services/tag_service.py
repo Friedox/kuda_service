@@ -17,3 +17,4 @@ async def check_tags(tags: List[str], db: AsyncSession) -> None:
     for tag in tags:
         if not await tag_crud.is_in_table(tag, db):
             raise InvalidTagException(tag)
+

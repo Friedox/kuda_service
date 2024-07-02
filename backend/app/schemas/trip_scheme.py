@@ -2,21 +2,23 @@ from typing import List
 
 from pydantic import BaseModel
 
+from .point_scheme import PointScheme, CreatePointScheme
+
 
 class CreateTripScheme(BaseModel):
-    pickup: str
-    dropoff: str
-    start_timestamp: str
-    end_timestamp: str
+    pickup: CreatePointScheme
+    dropoff: CreatePointScheme
+    start_timestamp: int
+    end_timestamp: int
     fare: int
     tags: List[str]
 
 
 class TripScheme(BaseModel):
-    pickup: str
-    dropoff: str
-    start_timestamp: str
-    end_timestamp: str
+    pickup: PointScheme
+    dropoff: PointScheme
+    start_timestamp: int
+    end_timestamp: int
     fare: int
     trip_id: int
 

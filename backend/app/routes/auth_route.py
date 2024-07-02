@@ -33,9 +33,9 @@ async def set_pass(new_pass: str, request: Request, db: AsyncSession = Depends(g
 
 
 @router.get("/getusers/me")
-async def read_current_user(request: Request, db: AsyncSession = Depends(get_async_db)):
+async def get_info(request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        auth_service.get_user_from_session_id(request, db)
+        auth_service.get_info(request, db)
     )
 
 
@@ -44,4 +44,3 @@ async def logout(request: Request):
     return await ResponseService.response(
         auth_service.logout(request)
     )
-

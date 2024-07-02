@@ -30,13 +30,13 @@ async def add_tags(trip: TripScheme, tags: List[str], db: AsyncSession) -> TripS
         raise e
 
 
-async def get_tags(trip: TripScheme, db: AsyncSession) -> List[TagScheme]:
-    query = select(TripTag).filter(TripTag.trip_id == trip.trip_id)
+async def get_tags(trip_id, db: AsyncSession) -> List[TagScheme]:
+    query = select(TripTag).filter(TripTag.trip_id == trip_id)
 
     result = await db.execute(query)
     tag_objects = result.scalars().all()
 
-    tags = [await tag_crud.get(tag.tag, db) for tag in tag_objects]
+    tags = [await tag_crud.get(tag.tag_id, db) for tag in tag_objects]
 
     return tags
 

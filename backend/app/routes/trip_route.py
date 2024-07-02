@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..schemas.filter_scheme import FilterScheme
 from ..services import trip_service, tag_service
 from ..database import get_async_db
 from ..schemas.trip_scheme import CreateTripScheme
@@ -19,17 +20,17 @@ async def create(trip: CreateTripScheme, request: Request,
     )
 
 
-@router.post("/delete", tags=["trip"])
+@router.delete("/delete", tags=["trip"])
 async def delete(trip_id: int, request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
         trip_service.delete(trip_id, request, db)
     )
 
 
-@router.get("/get_all", tags=["trip"])
+@router.get("/get_user_trips", tags=["trip"])
 async def get_all(request: Request, db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
-        trip_service.get_all(request, db)
+        trip_service.get_user_trips(request, db)
     )
 
 
@@ -37,4 +38,11 @@ async def get_all(request: Request, db: AsyncSession = Depends(get_async_db)):
 async def get_available_tags(db: AsyncSession = Depends(get_async_db)):
     return await ResponseService.response(
         tag_service.get_available_tags(db)
+    )
+
+
+@router.post("/get_filtered", tags=["trip"])
+async def get_filtered(trip_filter: FilterScheme, db: AsyncSession = Depends(get_async_db)):
+    return await ResponseService.response(
+        trip_service.get_filtered(trip_filter, db)
     )

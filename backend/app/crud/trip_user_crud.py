@@ -9,7 +9,7 @@ from ..schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from ..schemas.user_scheme import UserScheme
 from ..models.trip_user_model import TripUser
 from ..models.trip_model import Trip
-from . import trip_crud
+from . import trip_crud, point_crud
 
 
 async def create(user: UserScheme, trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
@@ -62,7 +62,7 @@ async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) ->
         raise e
 
 
-async def get_all(user: UserScheme, db: AsyncSession) -> List[TripTagsScheme]:
+async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsScheme]:
     query = (
         select(Trip)
         .join(TripUser)
@@ -77,6 +77,9 @@ async def get_all(user: UserScheme, db: AsyncSession) -> List[TripTagsScheme]:
     for trip in trips_objects:
         tag_names = [tag.tag for tag in trip.tags]
         trip_dict = trip.__dict__
+        trip_dict['tags'] = tag_names
+        trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
+        trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
         trip_dict['tags'] = tag_names
         trips.append(TripTagsScheme(**trip_dict))
 

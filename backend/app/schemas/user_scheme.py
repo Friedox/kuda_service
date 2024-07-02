@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -17,6 +19,7 @@ class UserScheme(BaseModel):
     user_id: int
     email: EmailStr
     username: str
+    password_hash: Optional[bytes] = None
     is_google_account: bool
 
     class Config:
