@@ -3,7 +3,8 @@ services:
     env_file:
       - .env
     build:
-      context: ./app
+      context: backend/app
+    image: ezzysoft/kuda_fastapi_app:latest
     container_name: kuda_fastapi_app
     volumes:
       - .:/app
@@ -18,13 +19,13 @@ services:
     depends_on:
       - kuda_database
       - kuda_redis
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 
 
   kuda_database:
     env_file:
       - .env
-    image: postgres:latest
+    image: ezzysoft/kuda_database:latest
     restart: always
     container_name: kuda_database
     environment:
