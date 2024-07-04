@@ -4,7 +4,6 @@ services:
       - .env
     build:
       context: backend/app
-    image: ezzysoft/kuda_fastapi_app:latest
     container_name: kuda_fastapi_app
     volumes:
       - .:/app
@@ -25,7 +24,6 @@ services:
   kuda_database:
     env_file:
       - .env
-    image: ezzysoft/kuda_database:latest
     restart: always
     container_name: kuda_database
     environment:
