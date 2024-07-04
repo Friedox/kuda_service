@@ -44,6 +44,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
 
+      - name: Display SSH key for debugging
+        run: |
+          cat ssh_key
+
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
