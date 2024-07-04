@@ -35,17 +35,22 @@ jobs:
           docker compose build
           docker compose push
 
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
+          chmod 600 ssh_key
+
       - name: Check SSH connectivity
         run: |
-          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
+          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
 
       - name: Deploy with Docker Compose
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd kuda
             docker compose pull
             docker compose up -d --remove-orphans
+          EOF
+
+      - name: Cleanup SSH key file
+        run: rm -f ssh_key
