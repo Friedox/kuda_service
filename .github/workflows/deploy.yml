@@ -46,6 +46,10 @@ jobs:
 
       - name: Deploy with Docker Compose
         run: |
+          ssh -o StrictHostKeyChecking=no -i ssh_key ***@*** << 'EOF'
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+          EOF
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             ls
             docker compose pull
