@@ -43,20 +43,17 @@ jobs:
       - name: Check SSH connectivity
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
-      - name: Check ls
+          
+      - name: Clone repository on remote server (if necessary)
         run: |
-          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'pwd'
-          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'ls'
-
+          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'git clone https://github.com/Friedox/kuda.git /kuda'
 
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-              ls
-          EOF
-          ssh -o StrictHostKeyChecking=no -i ssh_key ***@*** << 'EOF'
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            cd kuda
+            docker compose pull
+            docker compose up -d --remove-orphans
           EOF
           
 
