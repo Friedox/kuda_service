@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -84,3 +85,10 @@ async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsSch
         trips.append(TripTagsScheme(**trip_dict))
 
     return trips
+
+
+async def get_upcoming_user_trips(user, timestamp, db):
+    user_trips = await get_user_trips(user, db)
+
+    upcoming_trips = [trip for trip in user_trips if trip.start_timestamp > timestamp]
+    return upcoming_trips

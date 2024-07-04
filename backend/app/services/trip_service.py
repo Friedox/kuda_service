@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from sqlalchemy import func, select
@@ -45,6 +46,13 @@ async def get_user_trips(request: Request, db: AsyncSession) -> List[TripScheme]
     user = await get_user_from_session_id(request, db)
 
     return await trip_user_crud.get_user_trips(user, db)
+
+
+async def get_upcoming(request: Request, db: AsyncSession):
+    user = await get_user_from_session_id(request, db)
+    now_time = datetime.datetime.now()
+    timestamp = int(datetime.datetime.timestamp(now_time))
+    return await trip_user_crud.get_upcoming_user_trips(user, timestamp, db)
 
 
 async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
