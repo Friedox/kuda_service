@@ -24,6 +24,7 @@ services:
   kuda_database:
     env_file:
       - .env
+    image: postgres:latest
     restart: always
     container_name: kuda_database
     environment:
