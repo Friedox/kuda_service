@@ -48,6 +48,13 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /kuda && git pull'
 
+      - name: Check dir
+        run: |
+          pwd
+          ls
+          cd /kuda
+          ls
+
       - name: Create .env
         run: |
           touch /kuda/.env
