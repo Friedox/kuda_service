@@ -9,6 +9,7 @@ database_name = os.getenv("POSTGRES_DB", 'kuda')
 database_host = os.getenv("POSTGRES_HOST", "localhost:5433")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 REDIRECT_URI = os.getenv("REDIRECT_URI", 'http://localhost:8000/auth/google/callback')
+YANDEX_API_KEY = os.getenv("YANDEX_API_KEY", "")
 
 SQLALCHEMY_URL = f"postgresql+asyncpg://{database_user}:{database_password}@{database_host}/{database_name}"
 REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
