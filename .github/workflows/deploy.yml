@@ -39,9 +39,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
           chmod 600 ssh_key
-      - name: Display SSH key for debugging
-        run: |
-          cat ssh_key
+     
       - name: Check SSH connectivity
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
