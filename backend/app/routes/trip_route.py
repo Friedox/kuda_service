@@ -46,3 +46,10 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession = Depends(get
     return await ResponseService.response(
         trip_service.get_filtered(trip_filter, db)
     )
+
+
+@router.get("/get_upcoming", tags=["trip"])
+async def get_upcoming(request: Request, db: AsyncSession = Depends(get_async_db)):
+    return await ResponseService.response(
+        trip_service.get_upcoming(request, db)
+    )
