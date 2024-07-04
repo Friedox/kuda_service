@@ -44,14 +44,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
 
-      - name: Check directory
-        run: |
-          ls
-
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd kuda
             docker compose pull
             docker compose up -d --remove-orphans
           EOF
