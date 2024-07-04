@@ -44,9 +44,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
           
-      - name: Clone repository on remote server (if necessary)
+      - name: Update repository on remote server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'git clone https://github.com/Friedox/kuda.git /kuda'
+          ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /kuda && git pull'
 
       - name: Deploy with Docker Compose
         run: |
