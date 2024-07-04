@@ -35,6 +35,10 @@ jobs:
           docker compose build
           docker compose push
 
+      - name: Check SSH connectivity
+        run: |
+          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
+
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         with:
