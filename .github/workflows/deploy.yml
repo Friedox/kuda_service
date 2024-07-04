@@ -51,7 +51,7 @@ jobs:
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd kuda
+            cd /kuda
             docker compose pull
             docker compose up -d --remove-orphans
           EOF
