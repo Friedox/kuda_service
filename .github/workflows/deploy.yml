@@ -26,13 +26,14 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /kuda && git pull'
 
-      - name: Create .env file
+      - name: Create .env file from secrets
         run: |
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
-          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
-          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          touch .env
+          for secret in $(printenv | grep -vE '^(GITHUB|RUNNER|SSH_)' | cut -d'=' -f1); do
+            key=$secret
+            value=${!secret}
+            echo "$key=$value" >> .env
+          done
           chmod 600 .env
 
       - name: Copy .env file to remote server
