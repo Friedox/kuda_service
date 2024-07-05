@@ -28,12 +28,11 @@ jobs:
 
       - name: Create .env file from secrets
         run: |
-          touch .env
-          for secret in $(printenv | grep -vE '^(GITHUB|RUNNER|SSH_)' | cut -d'=' -f1); do
-            key=$secret
-            value=${!secret}
-            echo "$key=$value" >> .env
-          done
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
           chmod 600 .env
           cat .env
 
@@ -47,6 +46,7 @@ jobs:
             cd /kuda
             docker compose up --build -d
           EOF
+
       - name: Cleanup local .env file
         run: rm -f .env
         
