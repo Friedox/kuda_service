@@ -35,20 +35,20 @@ jobs:
             echo "$key=$value" >> .env
           done
           chmod 600 .env
+          cat .env
 
       - name: Copy .env file to remote server
         run: |
           scp -o StrictHostKeyChecking=no -i ssh_key .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/kuda/
       
-      - name: Cleanup local .env file
-        run: rm -f .env
-
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /kuda
             docker compose up --build -d
           EOF
-
+      - name: Cleanup local .env file
+        run: rm -f .env
+        
       - name: Cleanup SSH key file
         run: rm -f ssh_key
