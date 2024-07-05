@@ -13,6 +13,6 @@ COPY . /app
 WORKDIR /app
 
 COPY wait-for-postgres.sh /app/wait-for-postgres.sh
-RUN chmod +x /app/wait-for-postgres.sh
+RUN chmod a+x /app/wait-for-postgres.sh
 
 CMD ["./backend/app/wait-for-postgres.sh","&&", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
