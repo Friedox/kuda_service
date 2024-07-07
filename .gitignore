@@ -1,3 +1,4 @@
 **.env
 .idea
 /backend/app/.coverage
+/backend/app/coverage.xml
