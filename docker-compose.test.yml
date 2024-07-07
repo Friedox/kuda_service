@@ -3,7 +3,10 @@ services:
     env_file:
       - .env
     build:
+      dockerfile: ./Dockerfile_test
       context: backend/app
+
+
     container_name: kuda_fastapi_app
     volumes:
       - .:/app
@@ -17,6 +20,7 @@ services:
       - TEST_POSTGRES_DB=${TEST_POSTGRES_DB}
     depends_on:
       - kuda_test_database
+      - kuda_database
       - kuda_redis
 
   kuda_database:
