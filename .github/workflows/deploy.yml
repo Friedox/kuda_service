@@ -34,7 +34,6 @@ jobs:
           echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
           echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
           chmod 600 .env
-          cat .env
 
       - name: Copy .env file to remote server
         run: |

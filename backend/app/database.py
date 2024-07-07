@@ -1,17 +1,19 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from databases import Database
-
 from .config import SQLALCHEMY_URL, tags_fixture
 
-async_engine = create_async_engine(SQLALCHEMY_URL, echo=True)
+async_engine = create_async_engine(SQLALCHEMY_URL, echo=True, future=True)
 
 database = Database(SQLALCHEMY_URL)
 
 async_session = sessionmaker(
-    async_engine, expire_on_commit=False, class_=AsyncSession
+    bind=async_engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+    future=True
 )
+
 Base = declarative_base()
 
 
