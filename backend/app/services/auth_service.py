@@ -13,8 +13,6 @@ from ..schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserSchem
 from ..config import REDIS_HOST, SESSION_EXPIRE_TIME, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, REDIRECT_URI
 from ..crud import user_crud
 
-redis_client = redis.from_url(f'redis://{REDIS_HOST}')
-
 
 async def register_user(user_create: CreateUserScheme, db: AsyncSession) -> dict:
     await user_crud.create(user_create, db)
@@ -65,8 +63,11 @@ async def create_session(user_id: int, username: str) -> str:
         "username": username,
         "user_id": user_id
     }
+
+    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
     await redis_client.hset(f"session:{session_id}", mapping=user_data)
     await redis_client.expire(f"session:{session_id}", SESSION_EXPIRE_TIME)
+    await redis_client.aclose()
 
     return session_id
 
@@ -82,7 +83,10 @@ async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserSc
     if not session_id:
         raise InvalidSessionError
 
+    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
     username = await redis_client.hget(f"session:{session_id}", "username")
+    await redis_client.aclose()
+
     if not username:
         raise InvalidSessionError
     user_data = await user_crud.get(username.decode('utf-8'), db)
@@ -92,14 +96,21 @@ async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserSc
 
 async def get_session_id(request: Request):
     session_id = request.cookies.get("session_id")
+
+    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
+
     if not session_id or not await redis_client.exists(f"session:{session_id}"):
         raise InvalidSessionError
+    await redis_client.aclose()
     return session_id
 
 
 async def logout(request: Request):
     session_id = await get_session_id(request)
+    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
     await redis_client.delete(f"session:{session_id}")
+    await redis_client.aclose()
+
     return {"message": "Logged out successfully"}
 
 

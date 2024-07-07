@@ -15,3 +15,8 @@ bcrypt
 authlib
 python-dotenv
 requests
+pytest
+httpx
+pytest-asyncio
+aiosqlite
+coverage

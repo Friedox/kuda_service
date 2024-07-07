@@ -1,0 +1,61 @@
+name: Test and Generate Coverage Badge
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create .env file from secrets
+        run: |
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo TEST_POSTGRES_DB=${{ secrets.TEST_POSTGRES_DB }} >> .env
+          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          chmod 600 .env
+
+
+      - name: Set up Docker Compose
+        run: |
+          docker-compose -f docker-compose.test.yml up --build -d
+
+      - name: Run tests with coverage
+        run: |
+          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage run -m pytest
+          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage html
+
+      - name: Generate coverage report in XML format
+        run: |
+          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage xml
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate coverage badge
+        uses: peaceiris/actions-badge@v2.0.5
+        with:
+          template: 'coverage'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit coverage badge
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
+          git add -A
+          git commit -m "Add coverage badge"
+          git push
+
+      - name: Cleanup
+        run: |
+          docker-compose -f docker-compose.test.yml down

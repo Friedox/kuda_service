@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class CredentialsScheme(BaseModel):
@@ -21,6 +21,3 @@ class UserScheme(BaseModel):
     username: str
     password_hash: Optional[bytes] = None
     is_google_account: bool
-
-    class Config:
-        from_attributes = True
