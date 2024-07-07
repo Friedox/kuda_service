@@ -23,7 +23,6 @@ jobs:
           echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
           chmod 600 .env
 
-
       - name: Set up Docker Compose
         run: |
           docker-compose -f docker-compose.test.yml up --build -d
@@ -43,16 +42,15 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate coverage badge
-        uses: peaceiris/actions-badge@v2.0.5
-        with:
-          template: 'coverage'
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COVERAGE_PERCENT=$(curl -s https://coveralls.io/repos/github/${{ github.repository }}/badge.svg?branch=main | grep -oP '\d+%' | tr -d '%')
+          echo "![Coverage](https://img.shields.io/badge/Coverage-${COVERAGE_PERCENT}%25-brightgreen)" > coverage-badge.md
 
       - name: Commit coverage badge
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
-          git add -A
+          git add coverage-badge.md
           git commit -m "Add coverage badge"
           git push
 
