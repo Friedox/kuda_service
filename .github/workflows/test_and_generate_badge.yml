@@ -30,12 +30,12 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage run -m pytest
-          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage html
+          coverage run -m pytest
+          coverage html
 
       - name: Generate coverage report in XML format
         run: |
-          docker-compose -f docker-compose.test.yml exec -T kuda_fastapi_app coverage xml
+          coverage xml
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
