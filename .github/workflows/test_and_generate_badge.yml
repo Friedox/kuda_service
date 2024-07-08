@@ -48,6 +48,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: "coverage_out.xml"
 
+
       - name: Cleanup
         run: |
           docker-compose -f docker-compose.test.yml down
