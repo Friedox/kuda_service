@@ -276,6 +276,7 @@ h5 {
 .gray_bg {
     width: 100%;
     height: 100vh;
+    top: 0;
     z-index: -999;
     position: absolute;
     background-color: #F2F3F4;
@@ -571,4 +572,123 @@ h5 {
     border-radius: 100px;
     border: none;
     background-color: white;
+}
+
+.forward_btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    border: none;
+    background-color: #3070EE;
+}
+
+.header_panel {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 13px;
+    margin-bottom: 28px;
+    align-items: center;
+}
+
+.map_header {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.map_arrow {
+    border: none;
+}
+
+.map {
+    width: 100%;
+    height: 210px;
+    background-color: #b3d4fc;
+}
+
+.trip_grade {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+    color: #3070EE;
+}
+
+.driver_trip_section {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 20px 20px 20px;
+}
+
+.driver_info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.driver_card {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    gap: 10px;
+}
+
+.driver_profile_info {
+    margin-left: 20px;
+}
+
+.trip_counter {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+    color: #7A7A7A;
+}
+
+.car_block {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 20px 20px 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.car_info {
+    display: flex;
+    flex-direction: column;
+}
+
+.car_info h2 {
+    font-weight: 500;
+}
+.car_number {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: row;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 1px solid #7A7A7A;
+    border-radius: 5px;
+    align-items: center;
+    gap:15px;
+
+}
+
+.car_line {
+    background-color: #7A7A7A;
+    width: 1px;
+    height: 40px;
 }
