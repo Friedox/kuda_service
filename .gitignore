@@ -3,5 +3,6 @@
 /backend/app/.coverage
 /backend/app/coverage.xml
 **__pycache__
-.coverage
-coverage.xml
+/.coverage_file
+/.coverage
+/coverage.xml
