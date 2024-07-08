@@ -62,7 +62,7 @@ jobs:
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git add coverage-badge.md
           git commit -m "Add coverage badge"
-          git push HEAD:main
+          git push origin HEAD:main
 
       - name: Cleanup
         run: |
