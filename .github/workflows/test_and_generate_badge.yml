@@ -57,12 +57,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
+          env:
+            GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Friedox/kuda.git
           git add coverage-badge.md
           git commit -m "Add coverage badge"
           git push origin main
+          
 
       - name: Cleanup
         run: |
