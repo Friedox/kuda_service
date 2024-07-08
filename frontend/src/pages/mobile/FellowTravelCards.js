@@ -10,10 +10,13 @@ import '../../styles/mobile/style.css';
 
 import HeaderInformationBlock from '../../components/mobile/HeaderInformationBlock'
 import Button from '../../components/mobile/Button'
+import '../../styles/mobile/FellowTravelCards.module.css';
+
 
 function FellowTravelCards() {
     return (
         <>
+
             <HeaderInformationBlock
                 startLocation="Universitetskaya, 1-7"
                 endLocation="Pushkin, 3"
