@@ -36,17 +36,15 @@ jobs:
           
       - name: Run tests with coverage
         run: |
-          coverage run --data-file=.coverage_file -m pytest ./backend/app/
-
-      - name: Generate coverage report in XML format
-        run: |
+          cd ./backend/app/
+          coverage run -m pytest 
           coverage xml --data-file=.coverage_file -o coverage_out.xml
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          file: "coverage_out.xml"
+          file: "./backend/app/coverage_out.xml"
 
       - name: Cleanup
         run: |
