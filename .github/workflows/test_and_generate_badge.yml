@@ -38,6 +38,7 @@ jobs:
         run: |
           cd ./backend/app/
           coverage run -m pytest 
+          ls
           coverage xml --data-file=.coverage_file -o coverage_out.xml
 
       - name: Upload coverage to Coveralls
