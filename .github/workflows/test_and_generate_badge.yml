@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create .env file from secrets
         run: |
@@ -54,17 +54,14 @@ jobs:
           echo "![Coverage](https://img.shields.io/badge/Coverage-${COVERAGE_PERCENT}%25-brightgreen)" > coverage-badge.md
 
       - name: Commit coverage badge
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           env:
             GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          git config --local user.name "github-actions"
-          git config --local user.email "github-actions@github.com"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Friedox/kuda.git
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add coverage-badge.md
           git commit -m "Add coverage badge"
-          git push origin main
+          git push
           
 
       - name: Cleanup
