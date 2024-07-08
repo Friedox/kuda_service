@@ -36,11 +36,11 @@ jobs:
           
       - name: Run tests with coverage
         run: |
-          coverage run -m pytest
+          coverage run -m pytest ./backend/app/
 
       - name: Generate coverage report in XML format
         run: |
-          coverage xml
+          coverage xml --data-file=./backend/app/.coverage
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
