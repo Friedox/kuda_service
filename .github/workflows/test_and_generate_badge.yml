@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create .env file from secrets
         run: |
@@ -55,8 +55,8 @@ jobs:
 
       - name: Commit coverage badge
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add coverage-badge.md
           git commit -m "Add coverage badge"
           git push
