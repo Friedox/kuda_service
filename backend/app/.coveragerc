@@ -6,6 +6,8 @@ source =
 
 [report]
 omit =
+    *usr/*
+    */lib/*
     */tests/*
     */migrations/*
     */__init__.py
