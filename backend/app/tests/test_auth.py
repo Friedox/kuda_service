@@ -122,7 +122,7 @@ async def test_logout():
             mock_request.cookies["session_id"] = session_id
 
             logout_message = await auth_service.logout(mock_request)
-            assert logout_message == {"message": "Logged out successfully"}
+            assert logout_message == {"message": "Logged out successfully1"}
             await session.close()
 
 
