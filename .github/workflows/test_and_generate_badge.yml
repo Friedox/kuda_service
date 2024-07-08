@@ -54,12 +54,13 @@ jobs:
           echo "![Coverage](https://img.shields.io/badge/Coverage-${COVERAGE_PERCENT}%25-brightgreen)" > coverage-badge.md
 
       - name: Commit coverage badge
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add coverage-badge.md
           git commit -m "Add coverage badge"
-          git push
+          git remote set-url origin https://Friedox:$GITHUB_TOKEN@github.com/Friedox/kuda
+          git push origin main
           
 
       - name: Cleanup
