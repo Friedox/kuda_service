@@ -37,7 +37,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd ./backend/app/
-          coverage run -m pytest 
+          coverage run --data-file=.coverage_file -m pytest  
           ls
           coverage xml --data-file=.coverage_file -o coverage_out.xml
 
