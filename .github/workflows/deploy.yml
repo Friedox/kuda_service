@@ -1,12 +1,14 @@
 name: Deploy Docker Compose Project
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Test and Generate Coverage Badge"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +23,7 @@ jobs:
       - name: Check SSH connectivity
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection established"
-          
+
       - name: Update repository on remote server
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /kuda && git pull'
@@ -38,7 +40,7 @@ jobs:
       - name: Copy .env file to remote server
         run: |
           scp -o StrictHostKeyChecking=no -i ssh_key .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/kuda/
-      
+
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
@@ -48,6 +50,6 @@ jobs:
 
       - name: Cleanup local .env file
         run: rm -f .env
-        
+
       - name: Cleanup SSH key file
         run: rm -f ssh_key
