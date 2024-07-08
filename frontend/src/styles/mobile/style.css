@@ -485,6 +485,340 @@ h5 {
     flex-direction: column;
     gap: 30px;
 }
+
+
+.card {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+
+
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.location_select_input {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
+}
+
+.location_select_section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    /*width: calc(100% - 50px);*/
+}
+
+.location_select_section .line_section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.location_select_section .line_section .line {
+    width: calc(100% - 45px);
+}
+
+.location_title_section {
+    width: calc(100% - 50px);
+}
+
+.location_title_section h2 {
+    margin-bottom: -3px;
+}
+
+.location_title_section span {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+.gray_bg {
+    background-color: #F2F3F4;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -999   ;
+}
+
+.bg_e {
+    background-color: #eeeeee;
+}
+
+.header_information_block {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+
+.button {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    border-radius: 100px;
+}
+
+.blue_button {
+    background-color: #3070EE;
+    color: #ffffff;
+    box-shadow: 0px 3.167346954345703px 6.334693908691406px -3.167346954345703px rgba(22, 34, 51, 4%), 0px 12.669387817382812px 19.00408172607422px 0px rgba(22, 34, 51, 4%);
+}
+
+.white_button {
+    background-color: #ffffff;
+    color: #111111;
+    box-shadow: 0px 4px 8px -4px rgba(22, 34, 51, 8%), 0px 16px 24px 0px rgba(22, 34, 51, 8%), 0px -4px 8px -4px rgba(22, 34, 51, 8%);
+}
+
+.border_button {
+    border: 1px solid #111111;
+    color: #111111;
+}
+
+.pd10_70 {
+    padding: 10px 70px;
+}
+
+.w100 {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.bottom_absolute_block {
+    position: absolute;
+    z-index: 9999;
+    bottom: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.yandex_map {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -999;
+}
+
+.cursor-point {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    background-size: contain;
+    pointer-events: none;
+}
+
+.bottom_block {
+    position: absolute;
+    bottom: 0;
+    background-color: #ffffff;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0px -4px 12px -4px rgba(22, 34, 51, 12%), 0px -16px 32px 0px rgba(22, 34, 51, 5%);
+    padding: 30px 20px;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 30px;
+}
+
+.bottom_block h2 {
+    font-size: 20px;
+}
+
+.input_text {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.input_text img {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.input_text input{
+    /*padding-left: 35px;*/
+    width: 100%;
+    padding: 10px 35px 10px 40px;
+    font-size: 18px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #111111;
+    border-radius: 10px;
+    border: 2px solid #F2F3F4;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #111111;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #111111;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #111111;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    #111111;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color:    #111111;
+}
+
+::placeholder { /* Most modern browsers support this now. */
+    color:    #111111;
+}
+
+.scroll_div {
+    width: 100%;
+    height: 100%;
+}
+
+.h_none {
+    height: unset !important;
+}
+
+.mt20px {
+    margin-top: 20px;
+}
+
+.mt90px {
+    margin-top: 90px;
+}
+
+.input {
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    font-size: 16px;
+    padding: 15px 20px;
+    border: 2px solid #F2F3F4;
+    border-radius: 10px;
+}
+
+.filter_block {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.flex_row {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.react-datepicker-wrapper {
+    width: calc(50% - 7.5px);
+}
+
+.w50 {
+    width: calc(50% - 7.5px);
+}
+
+.flex_input {
+    display: flex;
+    /*width: 100%;*/
+    padding: 0 20px;
+    gap: 15px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    border: 2px solid #F2F3F4;
+    border-radius: 10px;
+}
+
+input {outline:none;}
+
+.no_border_input {
+    width: 50px;
+    font-size: 36px;
+    border: none;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: #111111;
+}
+
+.no_border_input:active {
+    border: none;
+}
+
+.next_btn_circle {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    background-color: #3070EE;
+    border-radius: 100px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.flex_center {
+    justify-content: center;
+}
+
+.input_number_icon {
+    margin-bottom: 5px;
+
 #logo_login {
     margin-top: 90px;
 }
@@ -571,4 +905,5 @@ h5 {
     border-radius: 100px;
     border: none;
     background-color: white;
+
 }
