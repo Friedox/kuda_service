@@ -1,0 +1,820 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    background-color: white;
+    margin: 0;
+}
+
+/* All fix */
+
+a {
+    display: block;
+    text-decoration: none;
+    color: unset;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+li {
+    list-style-type: none;
+}
+
+ul {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+input[type="text"] {
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
+    margin: 0; /* 2 */
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+
+.invisible {
+    visibility: hidden;
+}
+
+.clearfix::before,
+.clearfix::after {
+    content: " ";
+    display: table;
+}
+
+.clearfix::after {
+    clear: both;
+}
+
+
+.purple_hover:hover .title {
+    color: #9747FF !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+/* All fix end*/
+
+.mobile_section {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    min-width: 360px;
+}
+
+.mobile_header {
+    width: 100%;
+    margin-top: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile_btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 1000px;
+    overflow: hidden;
+}
+
+.logo {
+    width: 120px;
+}
+
+.mobile_btn_section {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 60px;
+    gap: 15px;
+}
+
+.mobile_btn {
+    width: 100%;
+    padding: 20px;
+    text-decoration: none;
+    color: #111111;
+    border-radius:  10px;
+    overflow: hidden;
+}
+
+.left_btns {
+    width: calc(55% - 7.5px);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.right_btns {
+    width: calc(45% - 7.5px);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.mobile_btn img {
+    float: right;
+    margin-right: -20px;
+}
+
+.mobile_btn {
+    height: 185px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+h2 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 18px;
+}
+
+.light_blue_bg {
+    background-color: #E7F3FF;
+}
+
+.light_green_bg {
+    background-color: #E9FFE7;
+}
+
+.light_aqua_bg {
+    background-color: #CDFFF6;
+}
+
+.light_orange_bg {
+    background-color: #FFF5E7;
+}
+
+.icon_btn {
+    height: 120px !important;
+    line-height: 120%;
+}
+
+.h140px {
+    height: 140px!important;
+}
+
+.h205px {
+    height: 205px!important;
+}
+
+
+.trip_cards_section {
+    margin-top: 60px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.trip_card_medium {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: #F2F3F4;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px -4px rgba(22, 34, 51, 4%), 0px 16px 24px 0px rgba(22, 34, 51, 4%);
+    text-decoration: none;
+    color: #111111;
+}
+
+h3 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+}
+
+h5 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 13px;
+}
+
+.gray_bg {
+    width: 100%;
+    height: 100vh;
+    z-index: -9999;
+    position: absolute;
+    background-color: #F2F3F4;
+}
+
+
+.trip_card_full {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.trip_time {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+}
+
+.trip_time_section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding-top: 20px;
+}
+
+.travel_time {
+    top: -2px;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+}
+
+.trip_time_line {
+    position: relative;
+}
+
+.travel_time span {
+    background-color: #ffffff;
+    border-radius: 2px;
+    padding: 3px 5px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 13px;
+}
+
+
+.trip_location_section {
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.trip_location {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.city_header {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+}
+
+.address_span {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 13px;
+}
+
+.gray_color {
+    color: #7A7A7A;
+}
+
+.right_align {
+    align-items: flex-end;
+}
+
+.trip_card_section {
+    padding: 0 20px;
+}
+
+.available_seats {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 13px;
+    color: #111111;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: solid 1px #3070EE;
+}
+
+.trip_mini_info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px;
+}
+
+.trip_mini_info .filters {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.trip_mini_info .filters svg {
+    stroke: #7A7A7A !important;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: #7A7A7A;
+}
+
+.profile_avatar {
+    border-radius: 200px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.profile_avatar img {
+    width: 50px;
+    height: 50px;
+}
+
+.mini_profile_view {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.profile_info {
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.profile_info .name {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+    color: #7A7A7A;
+    margin-bottom: -2px;
+}
+
+.profile_info .car {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 13px;
+    color: #7A7A7A;
+}
+
+.grade_div .grade {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+    color: #7A7A7A;
+}
+
+.bottom_info_trip {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px;
+}
+
+.bottom_info_trip .trip_cost {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+    color: #111111;
+}
+
+.trip_cards_list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.card {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+
+
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.location_select_input {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
+}
+
+.location_select_section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    /*width: calc(100% - 50px);*/
+}
+
+.location_select_section .line_section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.location_select_section .line_section .line {
+    width: calc(100% - 45px);
+}
+
+.location_title_section {
+    width: calc(100% - 50px);
+}
+
+.location_title_section h2 {
+    margin-bottom: -3px;
+}
+
+.location_title_section span {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+.gray_bg {
+    background-color: #F2F3F4;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -999   ;
+}
+
+.bg_e {
+    background-color: #eeeeee;
+}
+
+.header_information_block {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+
+.button {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    border-radius: 100px;
+}
+
+.blue_button {
+    background-color: #3070EE;
+    color: #ffffff;
+    box-shadow: 0px 3.167346954345703px 6.334693908691406px -3.167346954345703px rgba(22, 34, 51, 4%), 0px 12.669387817382812px 19.00408172607422px 0px rgba(22, 34, 51, 4%);
+}
+
+.white_button {
+    background-color: #ffffff;
+    color: #111111;
+    box-shadow: 0px 4px 8px -4px rgba(22, 34, 51, 8%), 0px 16px 24px 0px rgba(22, 34, 51, 8%), 0px -4px 8px -4px rgba(22, 34, 51, 8%);
+}
+
+.border_button {
+    border: 1px solid #111111;
+    color: #111111;
+}
+
+.pd10_70 {
+    padding: 10px 70px;
+}
+
+.w100 {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.bottom_absolute_block {
+    position: absolute;
+    z-index: 9999;
+    bottom: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.yandex_map {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -999;
+}
+
+.cursor-point {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    background-size: contain;
+    pointer-events: none;
+}
+
+.bottom_block {
+    position: absolute;
+    bottom: 0;
+    background-color: #ffffff;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0px -4px 12px -4px rgba(22, 34, 51, 12%), 0px -16px 32px 0px rgba(22, 34, 51, 5%);
+    padding: 30px 20px;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 30px;
+}
+
+.bottom_block h2 {
+    font-size: 20px;
+}
+
+.input_text {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.input_text img {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.input_text input{
+    /*padding-left: 35px;*/
+    width: 100%;
+    padding: 10px 35px 10px 40px;
+    font-size: 18px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #111111;
+    border-radius: 10px;
+    border: 2px solid #F2F3F4;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #111111;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #111111;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #111111;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    #111111;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color:    #111111;
+}
+
+::placeholder { /* Most modern browsers support this now. */
+    color:    #111111;
+}
+
+.scroll_div {
+    width: 100%;
+    height: 100%;
+}
+
+.h_none {
+    height: unset !important;
+}
+
+.mt20px {
+    margin-top: 20px;
+}
+
+.mt90px {
+    margin-top: 90px;
+}
+
+.input {
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    font-size: 16px;
+    padding: 15px 20px;
+    border: 2px solid #F2F3F4;
+    border-radius: 10px;
+}
+
+.filter_block {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.flex_row {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.react-datepicker-wrapper {
+    width: calc(50% - 7.5px);
+}
+
+.w50 {
+    width: calc(50% - 7.5px);
+}
+
+.flex_input {
+    display: flex;
+    /*width: 100%;*/
+    padding: 0 20px;
+    gap: 15px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    border: 2px solid #F2F3F4;
+    border-radius: 10px;
+}
+
+input {outline:none;}
+
+.no_border_input {
+    width: 50px;
+    font-size: 36px;
+    border: none;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: #111111;
+}
+
+.no_border_input:active {
+    border: none;
+}
+
+.next_btn_circle {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    background-color: #3070EE;
+    border-radius: 100px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.flex_center {
+    justify-content: center;
+}
+
+.input_number_icon {
+    margin-bottom: 5px;
+}
