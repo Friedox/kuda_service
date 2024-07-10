@@ -7,15 +7,24 @@ import pet from '../../assets/icon/pet.svg';
 import star from '../../assets/icon/star.svg';
 import profile_example from '../../assets/profile_example.png';
 import '../../styles/mobile/style.css';
-import '../../styles/mobile/FellowTravelCards.module.css';
 
+import HeaderInformationBlock from '../../components/mobile/HeaderInformationBlock'
+import Button from '../../components/mobile/Button'
+import '../../styles/mobile/FellowTravelCards.module.css';
 
 
 function FellowTravelCards() {
     return (
         <>
+
+            <HeaderInformationBlock
+                startLocation="Universitetskaya, 1-7"
+                endLocation="Pushkin, 3"
+                date="Today at 18:00"
+                passengers="1 passenger "
+            />
             <section className="mobile_section">
-                <div className="trip_cards_list">
+                                <div className="trip_cards_list">
                     <a href="#" className="trip_card_full">
                         <div className="trip_card_section">
                             <div className="trip_time_section">
@@ -75,6 +84,16 @@ function FellowTravelCards() {
                     </a>
                 </div>
             </section>
+            <div className="bottom_absolute_block">
+                <Button
+                    type='blue_button'
+                    size='pd10_70'
+                    icon=''
+                    text='Filters'
+                    link_href='filters'
+                />
+            </div>
+            <div className="gray_bg" />
         </>
     );
 }
