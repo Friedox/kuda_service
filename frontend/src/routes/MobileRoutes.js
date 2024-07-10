@@ -16,31 +16,24 @@ function MobileRoutes() {
     return (
         <Provider store={store}>
             <Routes>
-                <Route path="/" element={<HomePageMobile />} />
-                <Route path="/fellow_travel_cards" element={<FellowTravelCards />} />
-                <Route path="/filters" element={<TripFilter />} />
-                <Route path="/map" element={<MapPointSelect />} />
-                <Route path="/create" element={<CreateTripMap />} />
-                <Route path="/create_filter" element={<CreateTripFilter />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/login_email" element={<Login_email />} />
-                <Route path="/Trip_card" element={<Trip_card />} />
+                <Route path="/" element={<Login/>}/>
+                <Route path="/fellow_travel_cards" element={<FellowTravelCards/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/login_email" element={<Login_email/>}/>
+                <Route path="/Trip_card" element={<Trip_card/>}/>
+                <Route path="/home" element={<HomePageMobile/>}/>
+                <Route path="/fellow_travel_cards" element={<FellowTravelCards/>}/>
+                <Route path="/filters" element={<TripFilter/>}/>
+                <Route path="/map" element={<MapPointSelect/>}/>
+                <Route path="/create" element={<CreateTripMap/>}/>
+                <Route path="/create_filter" element={<CreateTripFilter/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/login_email" element={<Login_email/>}/>
+                <Route path="/Trip_card" element={<Trip_card/>}/>
             </Routes>
         </Provider>
-import Login from '../pages/mobile/login';
-import Login_email from '../pages/mobile/login_email';
-import Trip_card from '../pages/mobile/trip_card';
+    )
+};
 
-function MobileRoutes() {
-    return (
-        <Routes>
-            <Route path="/" element={<HomePageMobile />} />
-            <Route path="/fellow_travel_cards" element={<FellowTravelCards />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/login_email" element={<Login_email />} />
-            <Route path="/Trip_card" element={<Trip_card />} />
-        </Routes>
-    );
-}
 
 export default MobileRoutes;
