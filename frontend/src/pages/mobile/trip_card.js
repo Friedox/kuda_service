@@ -5,7 +5,11 @@ import child from "../../assets/icon/child.svg";
 import people2 from "../../assets/icon/2people.svg";
 import smoke from "../../assets/icon/smoke.svg";
 import pet from "../../assets/icon/pet.svg";
+import arrow from "../../assets/icon/arrow.svg";
 import Header from "../../components/mobile/Header"
+import Driver from "../../components/mobile/Driver";
+import driver_photo1 from "../../assets/driver_photo1.svg";
+import Car from "../../components/mobile/Car";
 function trip_card() {
     return (
         <>
@@ -48,7 +52,31 @@ function trip_card() {
                         </div>
                     </div>
                 </a>
-
+                <div className="map_section">
+                    <div className="map_header">
+                        <h2>View on the map</h2>
+                        <button className="map_arrow">
+                            <img src={arrow}/>
+                        </button>
+                    </div>
+                    <div className="map"> ТУТ КАРТА БУДЕТ </div>
+                </div>
+                <div className="driver_card">
+                    <h2>Driver</h2>
+                    <Driver
+                        profile_photo={driver_photo1}
+                        driver_name="Dmitry Zvidrin"
+                        grade="4.9"
+                        trips="120"
+                    />
+                </div>
+                <div className="car_card">
+                    <Car car_name="Volkswagen Golf"
+                         car_color="Black"
+                         number="A562BH"
+                         region="116"
+                         />
+                </div>
             </section>
         </>
     );
