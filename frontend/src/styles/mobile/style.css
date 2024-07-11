@@ -862,7 +862,7 @@ input {outline:none;}
     padding-bottom: 10px;
 }
 
-#name {
+#email {
     width: 100%;
     border-radius: 10px;
     padding: 15px 20px 15px 20px;
@@ -1153,4 +1153,56 @@ input {outline:none;}
 
 .trip_filter_section {
     top: 0;
+}
+
+.filters_tripcard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 15px 20px 15px;
+}
+
+.header_sort {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_sort h3 {
+    color: #3070EE;
+}
+
+.filter_card {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    height: 50px;
+    align-items: center;
+
+}
+
+.filter_card img {
+    height: 16px;
+    width: 16px;
+}
+ #gray_filter {
+     color: #707070;
+ }
+
+.find_btn {
+    background-color: #3070EE;
+    color: white;
+    border-radius: 100px;
+    border: none;
+    height: 50px;
+    margin-top: 20px;
+    width: inherit;
+}
+
+.filter_sort {
+    margin-bottom: 25px;
+}
+
+.Convenience_safety h2 {
+    margin-bottom: 10px;
 }

@@ -9,13 +9,15 @@ function LoginEmail() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/home'; // Убедитесь, что этот путь существует в вашем приложении
-        }
-    }, []);
+    // Cookies.set('session_id')
+    //
+    // useEffect(() => {
+    //     const sessionId = Cookies.get('session_id');
+    //     if (sessionId) {
+    //         // Перенаправляем пользователя на главную страницу или другую страницу
+    //         window.location.href = '/home'; // Убедитесь, что этот путь существует в вашем приложении
+    //     }
+    // }, []);
 
     const handleLogin = async () => {
         try {
