@@ -24,10 +24,15 @@ app = FastAPI(
     description="N/A",
     version="0.1.0",
     openapi_url="/openapi.json",
-    middleware=[Middleware(CORSMiddleware, allow_origins=["*"])],
+    middleware=[Middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000", "https://kuda-trip.ru", "http://localhost"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )],
     lifespan=lifespan
 )
-
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
