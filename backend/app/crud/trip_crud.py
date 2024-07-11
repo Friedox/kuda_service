@@ -16,7 +16,10 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
         dropoff=dropoff_point.point_id,
         start_timestamp=trip_create.start_timestamp,
         end_timestamp=trip_create.end_timestamp,
-        fare=trip_create.fare
+        fare=trip_create.fare,
+        available_sits=trip_create.available_sits,
+        driver_tg=trip_create.driver_tg,
+        driver_phone=trip_create.driver_phone
     )
 
     db.add(new_trip)
@@ -28,7 +31,11 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
                       start_timestamp=new_trip.start_timestamp,
                       end_timestamp=new_trip.end_timestamp,
                       fare=new_trip.fare,
-                      trip_id=new_trip.trip_id)
+                      trip_id=new_trip.trip_id,
+                      available_sits=new_trip.available_sits,
+                      driver_tg=new_trip.driver_tg,
+                      driver_phone=new_trip.driver_phone
+                      )
 
     return trip
 
