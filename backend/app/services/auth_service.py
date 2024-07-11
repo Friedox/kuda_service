@@ -79,7 +79,13 @@ async def get_info(request: Request, db: AsyncSession):
 
 
 async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserScheme:
+    print(request.cookies)
+    try:
+        print(request.headers)
+    except Exception as e:
+        pass
     session_id = request.cookies.get("session_id")
+    print(session_id)
     if not session_id:
         raise InvalidSessionError
 

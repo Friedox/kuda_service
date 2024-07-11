@@ -6,10 +6,19 @@ import plus from '../../assets/icon/plus.svg';
 import taxi from '../../assets/illustration/taxi.svg';
 
 import TripCardMedium from '../../components/mobile/TripCardMedium';
-
+import React, {useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
 import '../../styles/mobile/style.css';
 
 function HomePage() {
+    useEffect(() => {
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            // Перенаправляем пользователя на главную страницу или другую страницу
+            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
+        }
+    }, []);
+
     return (
         <>
             <section className="mobile_section">
@@ -36,7 +45,7 @@ function HomePage() {
                     </div>
 
                     <div className="right_btns">
-                        <a href="" className="mobile_btn icon_btn light_green_bg">
+                        <a href="create" className="mobile_btn icon_btn light_green_bg">
                             <img className="" src={plus} alt="plus"/>
                             <h2>
                                 Create a trip
@@ -50,23 +59,23 @@ function HomePage() {
                         </a>
                     </div>
                 </div>
-                <div className="trip_cards_section">
-                    <h2>
-                        Upcoming trips
-                    </h2>
-                    <TripCardMedium
-                        startLocation="Universitetskaya, 1-7"
-                        endLocation="Pushkin, 3"
-                        date="Today at 18:00"
-                        passengers="1 passenger "
-                    />
-                    <TripCardMedium
-                        startLocation="Universitetskaya, 1-7"
-                        endLocation="Pushkin, 3"
-                        date="Today at 18:00"
-                        passengers="1 passenger "
-                    />
-                </div>
+                {/*<div className="trip_cards_section">*/}
+                {/*    <h2>*/}
+                {/*        Upcoming trips*/}
+                {/*    </h2>*/}
+                {/*    <TripCardMedium*/}
+                {/*        startLocation="Universitetskaya, 1-7"*/}
+                {/*        endLocation="Pushkin, 3"*/}
+                {/*        date="Today at 18:00"*/}
+                {/*        passengers="1 passenger "*/}
+                {/*    />*/}
+                {/*    <TripCardMedium*/}
+                {/*        startLocation="Universitetskaya, 1-7"*/}
+                {/*        endLocation="Pushkin, 3"*/}
+                {/*        date="Today at 18:00"*/}
+                {/*        passengers="1 passenger "*/}
+                {/*    />*/}
+                {/*</div>*/}
             </section>
         </>
     );

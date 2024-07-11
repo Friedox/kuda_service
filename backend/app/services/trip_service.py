@@ -32,6 +32,7 @@ async def create(trip_create: CreateTripScheme, request: Request, db: AsyncSessi
 
 
 async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
+    print(request.__dict__)
     user = await get_user_from_session_id(request, db)
     trip_delete = await trip_crud.get(trip_id, db)
 

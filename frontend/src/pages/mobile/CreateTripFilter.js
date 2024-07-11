@@ -5,16 +5,25 @@ import profile_img from "../../assets/profile_example.png"
 import plus from "../../assets/icon/plus_no_circle.svg"
 import minus from "../../assets/icon/minus.svg"
 import arrow from "../../assets/icon/arrow_right.svg"
-import React, {useState} from 'react';
 import InputMask from 'react-input-mask';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
+import React, {useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
 
 function TripFilter() {
     const [value, setValue] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState('');
+
+    useEffect(() => {
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            // Перенаправляем пользователя на главную страницу или другую страницу
+            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
+        }
+    }, []);
 
     const dataChange = (date) => {
         setSelectedDate(date);

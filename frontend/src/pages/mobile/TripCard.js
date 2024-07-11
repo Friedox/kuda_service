@@ -11,7 +11,18 @@ import Driver from "../../components/mobile/Driver";
 import driver_photo1 from "../../assets/driver_photo1.svg";
 import Car from "../../components/mobile/Car";
 import profile_example from '../../assets/profile_example.png';
-function trip_card() {
+import React, {useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
+
+function TripCard() {
+    useEffect(() => {
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            // Перенаправляем пользователя на главную страницу или другую страницу
+            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
+        }
+    }, []);
+
     return (
         <>
             <div className="gray_bg" />
@@ -107,4 +118,4 @@ function trip_card() {
     );
 }
 
-export default trip_card;
+export default TripCard;
