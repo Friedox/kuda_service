@@ -10,6 +10,7 @@ import Header from "../../components/mobile/Header"
 import Driver from "../../components/mobile/Driver";
 import driver_photo1 from "../../assets/driver_photo1.svg";
 import Car from "../../components/mobile/Car";
+import profile_example from '../../assets/profile_example.png';
 import React, {useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 
@@ -21,6 +22,7 @@ function TripCard() {
             window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
         }
     }, []);
+
     return (
         <>
             <div className="gray_bg" />
@@ -87,6 +89,30 @@ function TripCard() {
                          region="116"
                          />
                 </div>
+
+                <div className="passengers">
+                    <h2>Passengers</h2>
+                    <Driver profile_photo={profile_example}
+                            driver_name="Andrey"
+                            trips="120"
+                            grade="4.9"
+                            ></Driver>
+                    <Driver profile_photo={profile_example}
+                            driver_name="Andrey"
+                            trips="120"
+                            grade="4.9"
+                    ></Driver>
+                </div>
+
+
+                <button className="order_btn">
+                    <div className="order_price">
+                        <h2>800₽</h2>
+                        <span>per person</span>
+                    </div>
+                    <div className="btn_separator"/>
+                    <h2>Book</h2>
+                </button>
             </section>
         </>
     );

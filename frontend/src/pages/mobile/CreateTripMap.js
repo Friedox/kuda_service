@@ -318,6 +318,10 @@ function MapPointSelect() {
                         <a className="input w50" onClick={handlePassengerClick}>{valueSeats} passenger{valueSeats > 1 ? 's' : ''}</a>
                     </div>
                 </div>
+
+
+
+
                 {/*<Button text="Create" className="button blue_button w100 create_btn" onClick={handleCreateClick} />*/}
                 <a href="#" className="button blue_button w100 create_btn" onClick={handleCreateClick}>Create</a>
             </section>
