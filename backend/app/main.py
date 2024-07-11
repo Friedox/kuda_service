@@ -26,7 +26,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
     middleware=[Middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=["http://localhost:3000", "https://kuda-trip.ru", "http://localhost"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"]
