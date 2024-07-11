@@ -7,16 +7,79 @@ import pet from '../../assets/icon/pet.svg';
 import star from '../../assets/icon/star.svg';
 import profile_example from '../../assets/profile_example.png';
 import '../../styles/mobile/style.css';
-
+import React, {useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
 import HeaderInformationBlock from '../../components/mobile/HeaderInformationBlock'
 import Button from '../../components/mobile/Button'
 import '../../styles/mobile/FellowTravelCards.module.css';
+import LocationSelectSection from "../../components/mobile/LocationSelectSection";
+import DatePicker from "react-datepicker";
+import {format} from "date-fns";
 
 
 function FellowTravelCards() {
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [formattedDate, setFormattedDate] = useState('');
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [showFilters, setShowFilters] = useState(false);
+
+    const toggleFilters = () => {
+        setShowFilters(!showFilters);
+    };
+
+    const handleApply = () => {
+        // Здесь можно добавить логику для применения фильтров
+        toggleFilters();
+    };
+
+    const dataChange = (date) => {
+        setSelectedDate(date);
+        setFormattedDate(formatDate(date));
+    };
+
+    const formatDate = (date) => {
+        if (!date) return '';
+        const now = new Date();
+        if (date.toDateString() === now.toDateString()) {
+            return `Today at ${format(date, 'HH:mm')}`;
+        }
+        return `${format(date, 'dd MMM')} at ${format(date, 'HH:mm')}`;
+    };
+
+    const CustomInput = ({ value, onClick }) => {
+        value = formatDate(selectedDate);
+        return (
+            <input
+                value={value}
+                onClick={onClick}
+                readOnly
+                className="input"
+                placeholder="Select time"
+            />)
+    };
+
+    const handleOptionClick = (option) => {
+        setSelectedOptions(prevState => {
+            if (prevState.includes(option)) {
+                return prevState.filter(item => item !== option);
+            } else {
+                return [...prevState, option];
+            }
+        });
+    };
+
+    const isSelected = (option) => selectedOptions.includes(option);
+
+    useEffect(() => {
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            // Перенаправляем пользователя на главную страницу или другую страницу
+            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
+        }
+    }, []);
+
     return (
         <>
-
             <HeaderInformationBlock
                 startLocation="Universitetskaya, 1-7"
                 endLocation="Pushkin, 3"
@@ -93,6 +156,68 @@ function FellowTravelCards() {
                     link_href='filters'
                 />
             </div>
+
+            <section className="mobile_section trip_filter_section">
+                <div className="filter_flex">
+                    <div className="filter_block">
+                        <LocationSelectSection />
+                    </div>
+
+                    <div className="flex_row">
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={dataChange}
+                            showTimeSelect
+                            dateFormat="Pp"
+                            placeholderText="Select time"
+                            customInput={<CustomInput value={formattedDate} />}
+                        />
+                    </div>
+
+                    <div className="filter_block_f ${showFilters ? 'show' : ''}`">
+                        <div
+                            className={`filter_btn ${isSelected("only_verified") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("only_verified")}
+                        >
+                            Only verified users
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("smoke") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("smoke")}
+                        >
+                            You can smoke
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("parcels") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("parcels")}
+                        >
+                            I take parcels
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("child") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("child")}
+                        >
+                            Child safety seat
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("with_animals") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("with_animals")}
+                        >
+                            With animals
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("max_two") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("max_two")}
+                        >
+                            Maximum two in the back
+                        </div>
+                    </div>
+                    <a onClick={toggleFilters} className="button blue_button w100">
+                        <h2>Apply</h2>
+                    </a>
+                </div>
+            </section>
+
             <div className="gray_bg" />
         </>
     );
