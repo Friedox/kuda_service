@@ -15,6 +15,8 @@ class CreateTripScheme(BaseModel):
     available_sits: int
     driver_phone: str
     driver_tg: str
+    car_number: str
+    car_type: str
 
 
 class TripScheme(BaseModel):
@@ -27,7 +29,10 @@ class TripScheme(BaseModel):
     available_sits: int
     driver_phone: str
     driver_tg: str
+    car_number: str
+    car_type: str
 
 
 class TripTagsScheme(TripScheme):
     tags: List[str]
+

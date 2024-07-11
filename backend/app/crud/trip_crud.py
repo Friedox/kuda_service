@@ -19,7 +19,9 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
         fare=trip_create.fare,
         available_sits=trip_create.available_sits,
         driver_tg=trip_create.driver_tg,
-        driver_phone=trip_create.driver_phone
+        driver_phone=trip_create.driver_phone,
+        car_type=trip_create.car_type,
+        car_number=trip_create.car_number
     )
 
     db.add(new_trip)
@@ -34,7 +36,9 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
                       trip_id=new_trip.trip_id,
                       available_sits=new_trip.available_sits,
                       driver_tg=new_trip.driver_tg,
-                      driver_phone=new_trip.driver_phone
+                      driver_phone=new_trip.driver_phone,
+                      car_type=trip_create.car_type,
+                      car_number=trip_create.car_number
                       )
 
     return trip
