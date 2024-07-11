@@ -14,6 +14,8 @@ class Trip(Base):
     available_sits = Column(Integer, nullable=True)
     driver_phone = Column(String, nullable=True)
     driver_tg = Column(String, nullable=True)
+    car_number = Column(String, nullable=True)
+    car_type = Column(String, nullable=True)
 
     users = relationship("User", secondary="trip_user", back_populates="trips")
     tags = relationship("Tag", secondary="trip_tag", back_populates="trips")
