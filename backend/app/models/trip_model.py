@@ -11,7 +11,9 @@ class Trip(Base):
     start_timestamp = Column(Integer, nullable=False)
     end_timestamp = Column(Integer, nullable=False)
     fare = Column(Integer, nullable=False)
+    available_sits = Column(Integer, nullable=True)
+    driver_phone = Column(String, nullable=True)
+    driver_tg = Column(String, nullable=True)
 
     users = relationship("User", secondary="trip_user", back_populates="trips")
     tags = relationship("Tag", secondary="trip_tag", back_populates="trips")
-

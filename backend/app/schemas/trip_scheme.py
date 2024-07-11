@@ -12,6 +12,9 @@ class CreateTripScheme(BaseModel):
     end_timestamp: int
     fare: int
     tags: List[str]
+    available_sits: int
+    driver_phone: str
+    driver_tg: str
 
 
 class TripScheme(BaseModel):
@@ -21,6 +24,9 @@ class TripScheme(BaseModel):
     end_timestamp: int
     fare: int
     trip_id: int
+    available_sits: int
+    driver_phone: str
+    driver_tg: str
 
 
 class TripTagsScheme(TripScheme):

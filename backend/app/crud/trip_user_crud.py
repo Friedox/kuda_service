@@ -76,12 +76,14 @@ async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsSch
 
     trips = []
     for trip in trips_objects:
+        print("==========================", trip.__dict__)
+
         tag_names = [tag.tag for tag in trip.tags]
         trip_dict = trip.__dict__
-        trip_dict['tags'] = tag_names
         trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
         trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
         trip_dict['tags'] = tag_names
+        print(trip_dict)
         trips.append(TripTagsScheme(**trip_dict))
 
     return trips
