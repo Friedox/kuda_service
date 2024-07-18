@@ -14,13 +14,6 @@ import React, {useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 
 function TripCard() {
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (!sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
-        }
-    }, []);
     return (
         <>
             <div className="gray_bg" />

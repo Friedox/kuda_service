@@ -11,13 +11,6 @@ import Cookies from 'js-cookie';
 import '../../styles/mobile/style.css';
 
 function HomePage() {
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (!sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
-        }
-    }, []);
 
     return (
         <>
@@ -30,7 +23,7 @@ function HomePage() {
                 </div>
                 <div className="mobile_btn_section">
                     <div className="left_btns">
-                        <a href="fellow_travel_cards" className="mobile_btn light_blue_bg">
+                        <a href="filters" className="mobile_btn light_blue_bg">
                             <h2>
                                 Fellow travelers
                             </h2>
