@@ -23,6 +23,7 @@ app = FastAPI(
     title="Kuda Service API",
     description="N/A",
     version="0.1.0",
+    openapi_url="/api/openapi.json",
     docs_url="/api/docs",
     middleware=[Middleware(
         CORSMiddleware,
