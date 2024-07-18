@@ -40,8 +40,8 @@ function FellowTravelCards() {
                 const response = await axios.post('https://kuda-trip.ru/api/trip/get_filtered', filterData);
                 if (response.data.status === 'ok') {
                     const tripsWithAddresses = await Promise.all(response.data.detail.map(async (trip) => {
-                        const startAddress = await getAddressFromCoordinates(trip.pickup.latitude, trip.pickup.longitude);
-                        const endAddress = await getAddressFromCoordinates(trip.end.latitude, trip.end.longitude);
+                        const startAddress = await getAddressFromCoordinates(0, 0);
+                        const endAddress = await getAddressFromCoordinates(0, 0);
                         return { ...trip, startAddress, endAddress };
                     }));
                     setTrips(tripsWithAddresses);
@@ -113,16 +113,31 @@ function FellowTravelCards() {
     };
 
     const getAddressFromCoordinates = async (latitude, longitude) => {
-        const apiKey = '2d7d974c-4c95-4115-a3e5-8a33651cb060';
+        const apiUrl = `https://kuda-trip.ru/api/trip/convert_coords?latitude=${latitude}&longitude=${longitude}`; // Замените на ваш URL сервера
+        console.log(apiUrl)
+
         try {
-            const response = await axios.get(`https://suggest-maps.yandex.ru/v1/suggest/?format=json&apikey=${apiKey}&geocode=${longitude},${latitude}`);
-            const address = response.data.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+            const response = await axios.get(apiUrl);
+            console.log(response.data.detail)
+            const address = response.data.detail; // Предполагаем, что сервер возвращает строку с адресом
             return address;
         } catch (error) {
             console.error('Error fetching address:', error);
             return '';
         }
     };
+
+    // const getAddressFromCoordinates = async (latitude, longitude) => {
+    //     const apiKey = '2d7d974c-4c95-4115-a3e5-8a33651cb060';
+    //     try {
+    //         const response = await axios.get(`https://geocode-maps.yandex.ru/1.0/?format=json&apikey=${apiKey}&geocode=${longitude},${latitude}`);
+    //         const address = response.data.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+    //         return address;
+    //     } catch (error) {
+    //         console.error('Error fetching address:', error);
+    //         return '';
+    //     }
+    // };
 
     const isSelected = (option) => selectedOptions.includes(option);
 
@@ -180,18 +195,18 @@ function FellowTravelCards() {
                                         <img src={profile_example} />
                                     </div>
                                     <div className="profile_info">
-                                        <span className="name">{trip.driver_name}</span>
-                                        <span className="car">{trip.car_type}</span>
+                                        <span className="name">Alex</span>
+                                        <span className="car">Haval</span>
                                     </div>
                                     <div className="grade_div">
                                         <img src={star} />
-                                        <span className="grade">{trip.driver_tg}</span>
+                                        <span className="grade">4.8</span>
                                     </div>
                                 </div>
                                 <div className="clearfix"></div>
 
                                 <div className="trip_cost">
-                                    {trip.cost}₽
+                                    FREE
                                 </div>
                             </div>
                         </a>
@@ -270,6 +285,7 @@ function FellowTravelCards() {
                     </div>
                 </section>
             )}
+            <div className="gray_bg" />
         </>
     );
 }
