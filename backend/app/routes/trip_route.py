@@ -53,3 +53,10 @@ async def get_upcoming(request: Request, db: AsyncSession = Depends(get_async_db
     return await ResponseService.response(
         trip_service.get_upcoming(request, db)
     )
+
+
+@router.get("/convert_coords", tags=["trip"])
+async def create(latitude: float, longitude: float):
+    return await ResponseService.response(
+        trip_service.convert_coords(latitude, longitude)
+    )

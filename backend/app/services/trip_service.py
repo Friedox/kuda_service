@@ -1,6 +1,9 @@
 import datetime
+import json
 from typing import List
 
+import httpx
+import requests
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Request
@@ -16,6 +19,8 @@ from ..models.trip_tag_model import TripTag
 from ..schemas.filter_scheme import FilterScheme
 from ..schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from ..services.auth_service import get_user_from_session_id
+
+apiKey = '2d7d974c-4c95-4115-a3e5-8a33651cb060'
 
 
 async def create(trip_create: CreateTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -129,3 +134,15 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         trip_schemas.append(TripTagsScheme(**trip_dict))
 
     return trip_schemas
+
+
+async def convert_coords(latitude, longitude):
+    url = f"https://geocode-maps.yandex.ru/1.x/?apikey={apiKey}&geocode={latitude},{longitude}&format=json"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+
+        data = response.json()
+
+        return data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty'][
+            'GeocoderMetaData']['text']
