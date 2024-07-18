@@ -1,4 +1,24 @@
 services:
+
+
+  kuda_react_app:
+    env_file:
+      - .env
+    build:
+      context: frontend
+    container_name: kuda_react_app
+
+    ports:
+      - "3001:3001"
+    environment:
+      - API_URI=kuda_fastapi_app
+
+    depends_on:
+      - kuda_database
+      - kuda_redis
+      - kuda_fastapi_app
+
+
   kuda_fastapi_app:
     env_file:
       - .env

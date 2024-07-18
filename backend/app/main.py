@@ -23,10 +23,12 @@ app = FastAPI(
     title="Kuda Service API",
     description="N/A",
     version="0.1.0",
-    openapi_url="/openapi.json",
+    openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
     middleware=[Middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "https://kuda-trip.ru", "http://localhost"],
+        allow_origins=["http://localhost:3001", "http://localhost:3000", "https://kuda-trip.ru", "http://localhost",
+                       "http://kuda-trip.ru"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"]
@@ -34,8 +36,8 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 
-app.include_router(google_auth_router, prefix="/auth/google", tags=["google"])
+app.include_router(google_auth_router, prefix="/api/auth/google", tags=["google"])
 
-app.include_router(trip_router, prefix="/trip", tags=["trip"])
+app.include_router(trip_router, prefix="/api/trip", tags=["trip"])
