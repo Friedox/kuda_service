@@ -11,6 +11,12 @@ import CreateTripFilter from "../pages/mobile/CreateTripFilter";
 import Login from '../pages/mobile/Login';
 import Login_email from '../pages/mobile/LoginEmail';
 import TripCard from '../pages/mobile/TripCard';
+import TaxiCreate from "../pages/mobile/TaxiCreate";
+import CarSearching from "../pages/mobile/CarSearching";
+import DriverWait from "../pages/mobile/DriverWait";
+import StartTrip from "../pages/mobile/StartTrip";
+import DriverNotFound from "../pages/mobile/DriverNotFound";
+import Rating from "../pages/mobile/Raiting";
 
 function MobileRoutes() {
     return (
@@ -30,6 +36,12 @@ function MobileRoutes() {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/login_email" element={<Login_email/>}/>
                 <Route path="/TripCard" element={<TripCard/>}/>
+                <Route path="/TaxiCreate" element={<TaxiCreate/>}/>
+                <Route path="/CarSearching" element={<CarSearching/>}/>
+                <Route path="/DriverWait" element={<DriverWait/>}/>
+                <Route path="/StartTrip" element={<StartTrip/>}/>
+                <Route path="/DriverNotFound" element={<DriverNotFound/>}/>
+                <Route path="/Rating" element={<Rating/>}/>
             </Routes>
         </Provider>
     )

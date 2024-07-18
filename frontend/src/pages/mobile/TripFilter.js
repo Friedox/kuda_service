@@ -53,7 +53,9 @@ function TripFilter() {
     };
 
     const isSelected = (option) => selectedOptions.includes(option);
-
+    const resetFilters = () => {
+        setSelectedOptions([]);
+    };
     return (
         <>
             <section className="mobile_section">
@@ -77,46 +79,45 @@ function TripFilter() {
                         <div className="filter_sort">
                             <div className="header_sort">
                                 <h2>Sort</h2>
-                                <h3>Reset everything</h3>
+                                <h3 onClick={resetFilters} >Reset everything</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={earliest_trip}/>
-                                <h3 id="gray_filter">The earliest trips</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('earliest_trip')}>
+                                <img src={earliest_trip} className={isSelected('earliest_trip') ? 'selected' : ''} />
+                                <h3 className={isSelected('earliest_trip') ? 'selected' : ''} id="gray_filter">The earliest trips</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={cheapest_trip}/>
-                                <h3 id="gray_filter">The cheapest trips</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('cheapest_trip')}>
+                                <img src={cheapest_trip} className={isSelected('cheapest_trip') ? 'selected' : ''} />
+                                <h3 className={isSelected('cheapest_trip') ? 'selected' : ''} id="gray_filter">The cheapest trips</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={shortest_trip}/>
-                                <h3 id="gray_filter">The shortest trips</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('shortest_trip')}>
+                                <img src={shortest_trip} className={isSelected('shortest_trip') ? 'selected' : ''} />
+                                <h3 className={isSelected('shortest_trip') ? 'selected' : ''} id="gray_filter">The shortest trips</h3>
                             </div>
                         </div>
                         <div className="Convenience_safety">
                             <h2> Convenience and safety </h2>
-                            <div className="filter_card">
-                                <img src={confirmed}/>
-                                <h3>The profile is confirmed</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('confirmed')}>
+                                <img src={confirmed} className={isSelected('confirmed') ? 'selected' : ''} />
+                                <h3 className={isSelected('confirmed') ? 'selected' : ''}>The profile is confirmed</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={smoke}/>
-                                <h3>You can smoke</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('smoke')}>
+                                <img src={smoke} className={isSelected('smoke') ? 'selected' : ''} />
+                                <h3 className={isSelected('smoke') ? 'selected' : ''}>You can smoke</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={pet}/>
-                                <h3>It is possible with animals</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('pet')}>
+                                <img src={pet} className={isSelected('pet') ? 'selected' : ''} />
+                                <h3 className={isSelected('pet') ? 'selected' : ''}>It is possible with animals</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={bag}/>
-                                <h3>I take parcels</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('bag')}>
+                                <img src={bag} className={isSelected('bag') ? 'selected' : ''} />
+                                <h3 className={isSelected('bag') ? 'selected' : ''}>I take parcels</h3>
                             </div>
-                            <div className="filter_card">
-                                <img src={child}/>
-                                <h3>Child safety seat</h3>
+                            <div className="filter_card" onClick={() => handleOptionClick('child')}>
+                                <img src={child} className={isSelected('child') ? 'selected' : ''} />
+                                <h3 className={isSelected('child') ? 'selected' : ''}>Child safety seat</h3>
                             </div>
                         </div>
                     </div>
-
                     <button className="find_btn">
                         <h2>Find</h2>
                     </button>
