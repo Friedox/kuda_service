@@ -814,6 +814,12 @@ input {outline:none;}
     margin-top: 90px;
 }
 
+.w60pr {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .login_main {
     display: flex;
     flex-direction: column;
@@ -867,10 +873,20 @@ input {outline:none;}
     border-radius: 10px;
     padding: 15px 20px 15px 20px;
     gap: 10px;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 15px;
     border: 1.5px solid #F2F3F4;
 }
+
+#username {
+    width: 100%;
+    border-radius: 10px;
+    padding: 15px 20px 15px 20px;
+    gap: 10px;
+    margin-bottom: 15px;
+    border: 1.5px solid #F2F3F4;
+}
+
 #password {
     width: 100%;
     border-radius: 10px;
@@ -883,6 +899,7 @@ input {outline:none;}
 .login_btn {
     background-color: #3070EE;
     padding-bottom: 10px;
+    margin-bottom: 25px;
     padding-top: 10px;
     color: white;
     border-radius: 100px;
@@ -984,6 +1001,7 @@ input {outline:none;}
     padding: 20px 20px 20px 20px;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .car_info {
@@ -1095,7 +1113,7 @@ input {outline:none;}
 
 .create_btn {
     position: relative;
-    bottom: -50vh;
+    bottom: -40vh;
 }
 
 .filter_block {
@@ -1146,13 +1164,72 @@ input {outline:none;}
     padding: 0 20px;
     position: fixed;
     top: 100vh;
-    z-index: 999;
     background-color: #F2F3F4;
     transition: bottom 0.3s ease;
+    z-index: 999999;
 }
 
 .trip_filter_section {
     top: 0;
+}
+
+.profile_big_block {
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    padding: 30px;
+}
+
+.profile_info_row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+}
+
+.profile_info_review {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.profile_big_block_avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 1000px;
+}
+
+.profile_info_row h3 {
+    color: #7A7A7A;
+}
+
+.profile_info_review h3{
+    color: #3070EE;
+    font-weight: 700;
+}
+
+.profile_info_review {
+    filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(1442%) hue-rotate(209deg) brightness(95%) contrast(96%);
+}
+
+.review_btn {
+    display: flex;
+    flex-direction: row;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+.review_btn img {
+    filter: brightness(0) saturate(100%) invert(0%) sepia(86%) saturate(7500%) hue-rotate(170deg) brightness(107%) contrast(89%);
 }
 
 .filters_tripcard {
@@ -1206,3 +1283,192 @@ input {outline:none;}
 .Convenience_safety h2 {
     margin-bottom: 10px;
 }
+
+.selected {
+    color: #3070EE !important;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(85%) saturate(2209%) hue-rotate(210deg) brightness(97%) contrast(92%);
+}
+
+.selected_taxi {
+    border: 1px solid #3070EE;
+}
+
+.taxi_type_card {
+    border-radius: 100px;
+    background-color: #F2F3F4;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 60px;
+    min-width: 150px;
+    align-items: center;
+}
+.type_taxi_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.type_taxi_info h4{
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.type_taxi_info h2{
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.card_taxi_type {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    overflow-y: scroll;
+    width: 100%;
+
+}
+.car_image {
+    height: 59px;
+    width: 60px;
+    border-radius: 100px;
+    background-color: #E3E3E3;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar { /* chrome based */
+    width: 0px;  /* ширина scrollbar'a */
+    background: transparent;  /* опционально */
+}
+
+html {
+    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+
+.order_trip {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 15px;
+}
+
+.plan_trip {
+    background-color: #F2F3F4;
+    border-radius: 100%;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan_trip img {
+    width: 17px;
+    height: 19px;
+}
+
+.searching_driver {
+    font-size: 30px;
+    font-weight: 500;
+    height: 90px;
+    width: 265px;
+    text-align: center;
+}
+
+.cancel_trip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px #111111;
+    border-radius: 100px;
+    height: 50px;
+}
+
+.chat_btn {
+    background-color: #3070EE;
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+}
+
+.driver_found {
+    display: flex;
+    height: 50px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.pd0 {
+    padding: 0;
+}
+
+.car_card {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.chat_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat_btn img {
+    height: 18px;
+    width: 18px;
+}
+
+.wait_time {
+    background-color: #3070EE;
+    color: white;
+    border-radius: 100px;
+    padding: 10px 15px 10px 15px;
+    display: flex;
+    gap: 10px;
+    height: 50px;
+    align-items: center;
+    top: -25px;
+    position: absolute;
+
+}
+
+.wait_time span {
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.driver_notfound {
+    font-size: 30px;
+    font-weight: 500;
+    height: 75px;
+    width: 245px;
+    text-align: center;
+}
+
+.find_comp {
+    height: 50px;
+}
+
+.rate_btns {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50px;
+    gap: 15px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 15px; /* Отступ между звездами */
+}
+
+.star {
+    width: 50px; /* Ширина звезды */
+    height: 50px; /* Высота звезды */
+    cursor: pointer; /* Курсор указателя при наведении */
+}
+

@@ -10,13 +10,6 @@ import loadYandexMapScript from '../../utils/loadYandexMapScript';
 import Cookies from 'js-cookie';
 
 function MapPointSelect() {
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (!sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
-        }
-    }, []);
 
     const [mapInitialized, setMapInitialized] = useState(false);
     const [lastGeocodeTime, setLastGeocodeTime] = useState(0);
