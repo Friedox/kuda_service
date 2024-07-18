@@ -124,7 +124,7 @@ p {
     width: calc(100% - 40px);
     margin-left: 20px;
     margin-right: 20px;
-    min-width: 360px;
+    min-width: 330px;
 }
 
 .mobile_header {
@@ -604,7 +604,7 @@ h5 {
 }
 
 .bottom_absolute_block {
-    position: absolute;
+    position: fixed;
     z-index: 9999;
     bottom: 60px;
     display: flex;
@@ -733,7 +733,7 @@ h5 {
     border-radius: 10px;
 }
 
-.filter_block {
+.filter_block_create {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -811,6 +811,7 @@ input {outline:none;}
 }
 
 #logo_login {
+    width: 100%;
     margin-top: 90px;
 }
 
@@ -845,10 +846,11 @@ input {outline:none;}
 .or_section div {
     background-color: rgba(0, 0, 0, 0.2);
     height: 1px;
-    width: 182px;
+    width: 100%;
 }
 
 .or_section {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -905,6 +907,8 @@ input {outline:none;}
     border-radius: 100px;
     width: 100%;
     border: none;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .back_btn {
@@ -1117,7 +1121,7 @@ input {outline:none;}
 }
 
 .filter_block {
-    margin-top: 100px;
+    margin-top: 50px;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -1472,3 +1476,55 @@ html {
     cursor: pointer; /* Курсор указателя при наведении */
 }
 
+@media screen and (max-height: 750px) {
+    #logo_login {
+        width: 80%;
+        margin-top: 40px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .login_email {
+        margin-top: 15px;
+    }
+
+    .login_btn {
+        margin-bottom: 15px;
+    }
+
+    .google_btn {
+        margin-bottom: 15px;
+    }
+}
+
+
+@media screen and (max-width: 425px) {
+    .mobile_btn h2 {
+        font-size: 15px;
+    }
+}
+
+
+@media screen and (max-height: 830px) {
+    .cursor-point {
+        height: 80vh !important;
+    }
+
+    .map {
+        height: 80vh !important;
+    }
+
+    .create_btn {
+        bottom: -20vh;
+    }
+}
+
+@media screen and (max-height: 750px) {
+    .cursor-point {
+        height: 65vh !important;
+    }
+
+    .map {
+        height: 65vh !important;
+    }
+}

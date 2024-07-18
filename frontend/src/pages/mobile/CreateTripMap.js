@@ -232,6 +232,8 @@ function MapPointSelect() {
             car_type: car, // Тип машины
         };
 
+        Cookies.set('session_id', '5e317068e6ec6e5f22b4518a5bfd828c67eab15beb79cbd794eb2aad435c92c5')
+
 
         try {
             const response = await axios.post('https://kuda-trip.ru/api/trip/create', data, {
@@ -287,7 +289,7 @@ function MapPointSelect() {
             </div>
 
             <section className={`mobile_section filters_bottom ${isFilterVisible ? 'show' : ''}`}>
-                <div className="filter_block mt90px">
+                <div className="filter_block_create mt90px">
                     <ProfileBlock profile_id="0" name="Andrey" profile_img={profile_img} grade="4.2" />
                     <InputMask
                         className="input"
