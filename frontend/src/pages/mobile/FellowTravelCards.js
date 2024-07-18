@@ -16,6 +16,10 @@ import '../../styles/mobile/FellowTravelCards.module.css';
 import LocationSelectSection from '../../components/mobile/LocationSelectSection';
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
+import earliest_trip from "../../assets/icon/earliest_trip.svg";
+import cheapest_trip from "../../assets/icon/cheapest_trip.svg";
+import shortest_trip from "../../assets/icon/shortest_trip.svg";
+import confirmed from "../../assets/icon/confirmed.svg";
 
 function FellowTravelCards() {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -25,25 +29,37 @@ function FellowTravelCards() {
     const [trips, setTrips] = useState([]);
     const [filterData, setFilterData] = useState({
         pickup: { latitude: 0, longitude: 0 },
-        pickup_range: 0,
+        pickup_range: 100000,
         dropoff: { latitude: 0, longitude: 0 },
-        dropoff_range: 0,
+        dropoff_range: 100000,
         start_timestamp: 0,
         end_timestamp: 0,
         tags: []
     });
+    const [filterDataFirst, setFilterDataFirst] = useState({
+        tags: []
+    });
+
+    const [isFirstRequest, setIsFirstRequest] = useState(true);
 
     useEffect(() => {
         // Функция для получения данных с сервера
         const fetchTrips = async () => {
             try {
-                const response = await axios.post('https://kuda-trip.ru/api/trip/get_filtered', filterData);
+                let response;
+                if (isFirstRequest) {
+                    response = await axios.post('https://kuda-trip.ru/api/trip/get_filtered', filterDataFirst, { withCredentials: true });
+                    setIsFirstRequest(false);
+                } else {
+                    response = await axios.post('https://kuda-trip.ru/api/trip/get_filtered', filterData, { withCredentials: true });
+                }
                 if (response.data.status === 'ok') {
                     const tripsWithAddresses = await Promise.all(response.data.detail.map(async (trip) => {
-                        const startAddress = await getAddressFromCoordinates(0, 0);
-                        const endAddress = await getAddressFromCoordinates(0, 0);
+                        const startAddress = await getAddressFromCoordinates(trip.pickup.latitude, trip.pickup.longitude);
+                        const endAddress = await getAddressFromCoordinates(trip.dropoff.latitude, trip.dropoff.longitude);
                         return { ...trip, startAddress, endAddress };
                     }));
+                    console.log(tripsWithAddresses);
                     setTrips(tripsWithAddresses);
                 }
             } catch (error) {
@@ -57,6 +73,10 @@ function FellowTravelCards() {
 
     const toggleFilters = () => {
         setShowFilters(!showFilters);
+    };
+
+    const resetFilters = () => {
+        setSelectedOptions([]);
     };
 
     const handleApply = () => {
@@ -195,18 +215,18 @@ function FellowTravelCards() {
                                         <img src={profile_example} />
                                     </div>
                                     <div className="profile_info">
-                                        <span className="name">Alex</span>
-                                        <span className="car">Haval</span>
+                                        <span className="name">{trip.driver_tg}</span>
+                                        <span className="car">{trip.car_type}</span>
                                     </div>
                                     <div className="grade_div">
                                         <img src={star} />
-                                        <span className="grade">4.8</span>
+                                        <span className="grade">{trip.driver_phone}</span>
                                     </div>
                                 </div>
                                 <div className="clearfix"></div>
 
                                 <div className="trip_cost">
-                                    FREE
+                                    {trip.cost}₽
                                 </div>
                             </div>
                         </a>
@@ -240,45 +260,87 @@ function FellowTravelCards() {
                                 customInput={<CustomInput value={formattedDate} />}
                             />
                         </div>
-
-                        <div className={`filter_block_f ${showFilters ? 'show' : ''}`}>
-                            <div
-                                className={`filter_btn ${isSelected("only_verified") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("only_verified")}
-                            >
-                                Only verified users
+                        <div className="filters_tripcard">
+                            <div className="filter_sort">
+                                <div className="header_sort">
+                                    <h2>Sort</h2>
+                                    <h3 onClick={resetFilters} >Reset everything</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('earliest_trip')}>
+                                    <img src={earliest_trip} className={isSelected('earliest_trip') ? 'selected' : ''} />
+                                    <h3 className={isSelected('earliest_trip') ? 'selected' : ''} id="gray_filter">The earliest trips</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('cheapest_trip')}>
+                                    <img src={cheapest_trip} className={isSelected('cheapest_trip') ? 'selected' : ''} />
+                                    <h3 className={isSelected('cheapest_trip') ? 'selected' : ''} id="gray_filter">The cheapest trips</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('shortest_trip')}>
+                                    <img src={shortest_trip} className={isSelected('shortest_trip') ? 'selected' : ''} />
+                                    <h3 className={isSelected('shortest_trip') ? 'selected' : ''} id="gray_filter">The shortest trips</h3>
+                                </div>
                             </div>
-                            <div
-                                className={`filter_btn ${isSelected("smoke") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("smoke")}
-                            >
-                                You can smoke
-                            </div>
-                            <div
-                                className={`filter_btn ${isSelected("parcels") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("parcels")}
-                            >
-                                I take parcels
-                            </div>
-                            <div
-                                className={`filter_btn ${isSelected("child") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("child")}
-                            >
-                                Child safety seat
-                            </div>
-                            <div
-                                className={`filter_btn ${isSelected("with_animals") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("with_animals")}
-                            >
-                                With animals
-                            </div>
-                            <div
-                                className={`filter_btn ${isSelected("max_two") ? 'checkbox_blue' : ''}`}
-                                onClick={() => handleOptionClick("max_two")}
-                            >
-                                Maximum two in the back
+                            <div className="Convenience_safety">
+                                <h2> Convenience and safety </h2>
+                                <div className="filter_card" onClick={() => handleOptionClick('confirmed')}>
+                                    <img src={confirmed} className={isSelected('confirmed') ? 'selected' : ''} />
+                                    <h3 className={isSelected('confirmed') ? 'selected' : ''}>The profile is confirmed</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('smoke')}>
+                                    <img src={smoke} className={isSelected('smoke') ? 'selected' : ''} />
+                                    <h3 className={isSelected('smoke') ? 'selected' : ''}>You can smoke</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('pet')}>
+                                    <img src={pet} className={isSelected('pet') ? 'selected' : ''} />
+                                    <h3 className={isSelected('pet') ? 'selected' : ''}>It is possible with animals</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('bag')}>
+                                    <img src={bag} className={isSelected('bag') ? 'selected' : ''} />
+                                    <h3 className={isSelected('bag') ? 'selected' : ''}>I take parcels</h3>
+                                </div>
+                                <div className="filter_card" onClick={() => handleOptionClick('child')}>
+                                    <img src={child} className={isSelected('child') ? 'selected' : ''} />
+                                    <h3 className={isSelected('child') ? 'selected' : ''}>Child safety seat</h3>
+                                </div>
                             </div>
                         </div>
+                        {/*<div className={`filter_block_f ${showFilters ? 'show' : ''}`}>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("only_verified") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("only_verified")}*/}
+                        {/*    >*/}
+                        {/*        Only verified users*/}
+                        {/*    </div>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("smoke") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("smoke")}*/}
+                        {/*    >*/}
+                        {/*        You can smoke*/}
+                        {/*    </div>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("parcels") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("parcels")}*/}
+                        {/*    >*/}
+                        {/*        I take parcels*/}
+                        {/*    </div>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("child") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("child")}*/}
+                        {/*    >*/}
+                        {/*        Child safety seat*/}
+                        {/*    </div>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("with_animals") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("with_animals")}*/}
+                        {/*    >*/}
+                        {/*        With animals*/}
+                        {/*    </div>*/}
+                        {/*    <div*/}
+                        {/*        className={`filter_btn ${isSelected("max_two") ? 'checkbox_blue' : ''}`}*/}
+                        {/*        onClick={() => handleOptionClick("max_two")}*/}
+                        {/*    >*/}
+                        {/*        Maximum two in the back*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                         <a href="filters" className="button blue_button w100" onClick={handleApply}>
                             <h2>Apply</h2>
                         </a>
