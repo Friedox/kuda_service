@@ -9,11 +9,11 @@ import React from 'react';
 //w100 - width: 100% + padding: 10px 0;
 //pd10_70 - padding: 10px 70px
 
-function Button({ type, size, icon, text, link_href}) {
+function Button({ type, size, icon, text, link_href, onClick}) {
     const buttonClasses = `button ${type} ${size}`;
 
     return (
-        <a href={link_href} className={buttonClasses}>
+        <a href={link_href} onClick={onClick} className={buttonClasses}>
             {icon && <img src={icon} alt="icon" />}
             <h2>{text}</h2>
         </a>

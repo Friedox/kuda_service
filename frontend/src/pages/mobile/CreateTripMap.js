@@ -34,6 +34,8 @@ function MapPointSelect() {
     const target = new URLSearchParams(location.search).get('target');
     const pointTypeRef = useRef(pointType);
     const [value, setValue] = useState('');
+    const [car, setCar] = useState('');
+    const [carNumber, setCarNumber] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState('');
     const [valueSeats, setValueSeats] = useState(1); // Начальное значение
@@ -201,8 +203,15 @@ function MapPointSelect() {
         setIsSeatsBlockVisible(false);
     };
 
+    const handleCarChange = (event) => {
+        setCar(event.target.value);
+    };
+
+    const handleCarNumberChange = (event) => {
+        setCarNumber(event.target.value);
+    };
+
     const handleCreateClick = async () => {
-        console.log(123)
         const data = {
             pickup: {
                 latitude: startCoordinates[0],
@@ -214,42 +223,31 @@ function MapPointSelect() {
             },
             start_timestamp: selectedDate ? Math.floor(selectedDate.getTime() / 1000) : 0,
             end_timestamp: 0, // Здесь вы можете добавить логику для определения end_timestamp
-            fare: valueSeats,
-            tags: [] // Здесь вы можете добавить любые теги, которые вам нужны
+            fare: 0,
+            tags: [], // Здесь вы можете добавить любые теги, которые вам нужны
+            available_sits: valueSeats, // Количество доступных мест
+            driver_phone: '', // Номер телефона водителя
+            driver_tg: value, // Логин в Telegram
+            car_number: carNumber, // Номер машины
+            car_type: car, // Тип машины
         };
 
 
-        // Cookies.set('session_id', '0f40d507963923c82b463462ec6c3ba4bcf6b2192ed2288d4e8bac1dc193b6ee', { expires: 7, path: '/' });
-
-        async function post_trip() {
-            const respose = await fetch('http://localhost:8000/trip/create', {
-                method: 'POST',
+        try {
+            const response = await axios.post('https://kuda-trip.ru/api/trip/create', data, {
                 headers: {
-                    // 'Cookie': 'session_id="0f40d507963923c82b463462ec6c3ba4bcf6b2192ed2288d4e8bac1dc193b6ee"',
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                credentials: 'include', // Включение cookies в запрос
+                withCredentials: true, // Включение cookies в запрос
+            });
 
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error(`Network response was not ok: ${response.statusText}. Response body: ${text}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => {
-                    console.error('There was an error!', error);
+            console.log('Trip created successfully:', response.data);
+            // Добавьте здесь обработку успешного создания поезда или обработку ошибок при создании поездки.
 
-                });
+        } catch (error) {
+            console.error('Error creating trip:', error);
+            // Добавьте здесь обработку ошибок при создании поездки.
         }
-
-        await post_trip();
     };
 
     return (
@@ -316,6 +314,22 @@ function MapPointSelect() {
                             customInput={<CustomInput />}
                         />
                         <a className="input w50" onClick={handlePassengerClick}>{valueSeats} passenger{valueSeats > 1 ? 's' : ''}</a>
+                    </div>
+                    <div className="flex_row">
+                        <input
+                            className="input w50"
+                            type="text"
+                            value={car}
+                            onChange={handleCarChange}
+                            placeholder="Your car"
+                        />
+                        <input
+                            className="input w50"
+                            type="text"
+                            value={carNumber}
+                            onChange={handleCarNumberChange}
+                            placeholder="Your car number"
+                        />
                     </div>
                 </div>
 

@@ -17,14 +17,6 @@ function TripFilter() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState('');
 
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (!sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
-        }
-    }, []);
-
     const dataChange = (date) => {
         setSelectedDate(date);
         setFormattedDate(formatDate(date));
