@@ -15,6 +15,12 @@ import Register from "../pages/mobile/Register";
 import SignUpEmail from "../pages/mobile/Register";
 import PrivateRoute from "./PrivateRoute";
 import Profile from "../pages/mobile/Profile";
+import TaxiCreate from "../pages/mobile/TaxiCreate";
+import CarSearching from "../pages/mobile/CarSearching";
+import DriverWait from "../pages/mobile/DriverWait";
+import StartTrip from "../pages/mobile/StartTrip";
+import DriverNotFound from "../pages/mobile/DriverNotFound";
+import Rating from "../pages/mobile/Raiting";
 
 function MobileRoutes() {
     return (
@@ -32,6 +38,15 @@ function MobileRoutes() {
                 <Route path="/signup" element={<SignUpEmail />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile s/>} />
+                <Route path="/TripCard" element={<TripCard/>}/>
+                <Route path="/home" element={<HomePageMobile/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/TaxiCreate" element={<TaxiCreate/>}/>
+                <Route path="/CarSearching" element={<CarSearching/>}/>
+                <Route path="/DriverWait" element={<DriverWait/>}/>
+                <Route path="/StartTrip" element={<StartTrip/>}/>
+                <Route path="/DriverNotFound" element={<DriverNotFound/>}/>
+                <Route path="/Rating" element={<Rating/>}/>
             </Routes>
         </Provider>
     );

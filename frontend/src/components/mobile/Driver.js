@@ -1,9 +1,10 @@
 import blue_star from "../../assets/icon/blue_star.svg";
 import point from "../../assets/icon/point.svg";
-function Driver({profile_photo, driver_name, grade, trips}) {
+function Driver({profile_photo, driver_name, grade, trips, classesName}) {
+    const classes = `driver_trip_section ${classesName}`;
     return (
         <>
-            <div className="driver_trip_section">
+            <div className={classes}>
 
                 <div className="profile_avatar">
                     <img src={profile_photo}/>

@@ -278,7 +278,7 @@ h5 {
     height: 100vh;
     top: 0;
     z-index: -999;
-    position: absolute;
+    position: fixed;
     background-color: #F2F3F4;
 }
 
@@ -545,17 +545,6 @@ h5 {
     text-overflow: ellipsis;
 }
 
-
-
-.gray_bg {
-    background-color: #F2F3F4;
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -999   ;
-}
 
 .bg_e {
     background-color: #eeeeee;
@@ -1012,6 +1001,7 @@ input {outline:none;}
     padding: 20px 20px 20px 20px;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .car_info {
@@ -1043,6 +1033,53 @@ input {outline:none;}
     background-color: #7A7A7A;
     width: 1px;
     height: 40px;
+}
+
+.passengers {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 150px;
+}
+
+.order_btn {
+    height: 65px;
+    width: inherit;
+    background-color: #3070EE;
+    border: none;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    /*justify-content: space-evenly;*/
+    position: fixed;
+    bottom: 50px;
+
+
+}
+
+.btn_separator {
+    width: 1px;
+    height: 39px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.order_btn {
+    color: white;
+}
+
+.order_btn h2 {
+    width: 100%;
+}
+
+.order_price {
+    display: flex;
+    flex-direction: column;
+}
+
+.order_btn div:nth-child(1) {
+    flex: none;
+    width: 12em;
 }
 
 .filters_bottom {
@@ -1194,3 +1231,244 @@ input {outline:none;}
 .review_btn img {
     filter: brightness(0) saturate(100%) invert(0%) sepia(86%) saturate(7500%) hue-rotate(170deg) brightness(107%) contrast(89%);
 }
+
+.filters_tripcard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 15px 20px 15px;
+}
+
+.header_sort {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_sort h3 {
+    color: #3070EE;
+}
+
+.filter_card {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    height: 50px;
+    align-items: center;
+
+}
+
+.filter_card img {
+    height: 16px;
+    width: 16px;
+}
+ #gray_filter {
+     color: #707070;
+ }
+
+.find_btn {
+    background-color: #3070EE;
+    color: white;
+    border-radius: 100px;
+    border: none;
+    height: 50px;
+    margin-top: 20px;
+    width: inherit;
+}
+
+.filter_sort {
+    margin-bottom: 25px;
+}
+
+.Convenience_safety h2 {
+    margin-bottom: 10px;
+}
+
+.selected {
+    color: #3070EE !important;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(85%) saturate(2209%) hue-rotate(210deg) brightness(97%) contrast(92%);
+}
+
+.selected_taxi {
+    border: 1px solid #3070EE;
+}
+
+.taxi_type_card {
+    border-radius: 100px;
+    background-color: #F2F3F4;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 60px;
+    min-width: 150px;
+    align-items: center;
+}
+.type_taxi_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.type_taxi_info h4{
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.type_taxi_info h2{
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.card_taxi_type {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    overflow-y: scroll;
+    width: 100%;
+
+}
+.car_image {
+    height: 59px;
+    width: 60px;
+    border-radius: 100px;
+    background-color: #E3E3E3;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar { /* chrome based */
+    width: 0px;  /* ширина scrollbar'a */
+    background: transparent;  /* опционально */
+}
+
+html {
+    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+
+.order_trip {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 15px;
+}
+
+.plan_trip {
+    background-color: #F2F3F4;
+    border-radius: 100%;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan_trip img {
+    width: 17px;
+    height: 19px;
+}
+
+.searching_driver {
+    font-size: 30px;
+    font-weight: 500;
+    height: 90px;
+    width: 265px;
+    text-align: center;
+}
+
+.cancel_trip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px #111111;
+    border-radius: 100px;
+    height: 50px;
+}
+
+.chat_btn {
+    background-color: #3070EE;
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+}
+
+.driver_found {
+    display: flex;
+    height: 50px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.pd0 {
+    padding: 0;
+}
+
+.car_card {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.chat_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat_btn img {
+    height: 18px;
+    width: 18px;
+}
+
+.wait_time {
+    background-color: #3070EE;
+    color: white;
+    border-radius: 100px;
+    padding: 10px 15px 10px 15px;
+    display: flex;
+    gap: 10px;
+    height: 50px;
+    align-items: center;
+    top: -25px;
+    position: absolute;
+
+}
+
+.wait_time span {
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.driver_notfound {
+    font-size: 30px;
+    font-weight: 500;
+    height: 75px;
+    width: 245px;
+    text-align: center;
+}
+
+.find_comp {
+    height: 50px;
+}
+
+.rate_btns {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50px;
+    gap: 15px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 15px; /* Отступ между звездами */
+}
+
+.star {
+    width: 50px; /* Ширина звезды */
+    height: 50px; /* Высота звезды */
+    cursor: pointer; /* Курсор указателя при наведении */
+}
+
