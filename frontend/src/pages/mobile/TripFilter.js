@@ -14,6 +14,10 @@ import Button from '../../components/mobile/Button'
 import '../../styles/mobile/FellowTravelCards.module.css';
 import LocationSelectSection from "../../components/mobile/LocationSelectSection";
 import DatePicker from "react-datepicker";
+import earliest_trip from "../../assets/icon/earliest_trip.svg"
+import cheapest_trip from "../../assets/icon/cheapest_trip.svg"
+import confirmed from "../../assets/icon/confirmed.svg"
+import shortest_trip from "../../assets/icon/shortest_trip.svg"
 
 import {format} from "date-fns";
 
@@ -182,6 +186,7 @@ function FellowTravelCards() {
                             </div>
                         </div>
                     </a>
+                </div>
                 <div className="filter_flex">
                     <div className="filter_block">
                         <LocationSelectSection />
