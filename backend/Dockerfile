@@ -28,37 +28,3 @@ CMD ["/bin/sh", "-c", " \
   cd ..; \
   poetry run python ./app/main.py"]
 
-
-
-
-
-
-
-
-
-#
-#
-#
-#
-#FROM python:3.12
-#
-## Обновляем пакетный менеджер и устанавливаем необходимые зависимости
-#RUN apt-get update && apt-get install -y gcc redis-server postgresql-client curl
-#
-## Устанавливаем Poetry
-#RUN curl -sSL https://install.python-poetry.org | python3 -
-#
-## Добавляем Poetry в PATH
-#
-## Устанавливаем рабочую директорию
-#WORKDIR /app
-#
-## Копируем все файлы проекта в рабочую директорию
-#COPY . /app
-#RUN poetry config virtualenvs.in-project true && poetry install
-#
-#
-## Экспонируем порт
-#EXPOSE 8000
-#CMD ["tail", "-f", "/dev/null"]
-#
