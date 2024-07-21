@@ -55,6 +55,7 @@ jobs:
           poetry install
           cd app
           poetry run alembic upgrade head
+          cd ..
 
       - name: Run tests with coverage
         run: |
