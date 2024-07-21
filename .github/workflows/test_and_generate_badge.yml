@@ -30,6 +30,7 @@ jobs:
           echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > ./backend/.env
           echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> ./backend/.env
           echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_HOST=nothing >> ./backend/.env
           echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> ./backend/.env
           echo APP_CONFIG__TEST_DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_PASSWORD }} >> ./backend/.env
           echo APP_CONFIG__TEST_DATABASE__DB_NAME=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_NAME }} >> ./backend/.env
