@@ -328,8 +328,8 @@ function FellowTravelCards() {
 
         try {
             const response = await axios.post('https://kuda-trip.ru/api/v1/trips/get_filtered/', requestBody);
-            console.log(response.data)
-            setTrips(response.data);
+            console.log(response)
+            setTrips(response.data.detail);
             setShowFilters(false);
         } catch (error) {
             console.error('Error fetching trips:', error);
@@ -426,7 +426,7 @@ function FellowTravelCards() {
         <>
             <HeaderInformationBlock
                 startLocation={startAddress}
-                endLocation={endCoordinate}
+                endLocation={endAddress}
                 date={selectedDate}
                 // passengers={}
             />
@@ -456,7 +456,7 @@ function FellowTravelCards() {
                                     </div>
                                     <div className="trip_location right_align">
                                         <span className="city_header gray_color">{trip.dropoff.address.city}</span>
-                                        <span className="address_span gray_color">{trip.dropoff.address.road} {trip.dropoff.address.house_number}</span>
+                                        <span className="address_span gray_color text_right">{trip.dropoff.address.road} {trip.dropoff.address.house_number}</span>
                                     </div>
                                 </div>
                             </div>

@@ -37,8 +37,8 @@ function MobileRoutes() {
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<SignUpEmail />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile s/>} />
-                <Route path="/TripCard" element={<TripCard/>}/>
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/trip_card/:tripId" element={<TripCard />} />
                 <Route path="/home" element={<HomePageMobile/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/taxi_create" element={<TaxiCreate/>}/>
