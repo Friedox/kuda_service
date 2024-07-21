@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from exceptions import TripNotFoundError, UserTripNotFoundError
+from exceptions import TripNotFoundError, UserTripNotFoundError, BookNotFoundError
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from schemas.user_scheme import UserScheme
 from models.trip_user_model import TripUser
@@ -58,13 +58,65 @@ async def get(trip_id: int, db: AsyncSession) -> TripTagsScheme:
 async def get_trip_creator_id(trip_id: int, db: AsyncSession) -> int:
     query = (
         select(TripUser)
-        .filter(TripUser.trip_id== trip_id)
+        .filter(TripUser.trip_id == trip_id)
     )
 
     result = await db.execute(query)
     trip_object = result.scalars().first()
 
     return trip_object.user_id
+
+
+async def get_trip_users(trip_id: int, db: AsyncSession) -> list[int]:
+    query = (
+        select(TripUser)
+        .filter(TripUser.trip_id == trip_id)
+    )
+
+    result = await db.execute(query)
+    trip_objects = result.scalars().all()
+
+    return [trip_object.user_id for trip_object in trip_objects]
+
+
+async def book(user: UserScheme, trip_id: int, db: AsyncSession) -> TripScheme:
+    try:
+        db.begin()
+
+        trip = await trip_crud.get(trip_id, db)
+
+        link = TripUser(
+            user_id=user.user_id,
+            trip_id=trip.trip_id
+        )
+        db.add(link)
+        await db.commit()
+        await db.refresh(link)
+
+        return trip
+    except Exception as e:
+        await db.rollback()
+        raise e
+
+
+async def delete_book(user: UserScheme, trip_id: int, db: AsyncSession) -> None:
+    try:
+        db.begin()
+
+        query = select(TripUser).filter(TripUser.user_id == user.user_id).filter(TripUser.trip_id == trip_id)
+
+        result = await db.execute(query)
+
+        link = result.scalars().first()
+        if not link:
+            raise BookNotFoundError
+
+        await db.delete(link)
+        await db.commit()
+
+    except Exception as e:
+        await db.rollback()
+        raise e
 
 
 async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:

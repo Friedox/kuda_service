@@ -44,3 +44,4 @@ class TripTagsScheme(TripScheme):
 
 class TripResponseScheme(TripTagsScheme):
     creator_id: int
+    trip_users: list[int]

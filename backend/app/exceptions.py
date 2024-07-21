@@ -66,6 +66,26 @@ class GeocoderServiceError(ValueError):
         super().__init__(f"Error '{error_message}' while trying to geocode")
 
 
+class UserAlreadyBookedError(ValueError):
+    def __init__(self: str):
+        super().__init__("User already booked")
+
+
+class UserNotBookedError(ValueError):
+    def __init__(self: str):
+        super().__init__("User even not booked yet")
+
+
+class NotEnoughSitsError(ValueError):
+    def __init__(self: str):
+        super().__init__("Not enough sits")
+
+
+class BookNotFoundError(ValueError):
+    def __init__(self: str):
+        super().__init__("Book not found")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -78,5 +98,9 @@ exceptions_list = (TripNotFoundError,
                    GoogleException,
                    PassNotSetException,
                    PointNotFoundError,
-                   GeocoderServiceError
+                   GeocoderServiceError,
+                   UserAlreadyBookedError,
+                   NotEnoughSitsError,
+                   UserNotBookedError,
+                   BookNotFoundError
                    )
