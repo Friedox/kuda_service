@@ -1,13 +1,13 @@
 from typing import List, Optional
 
 from pydantic import BaseModel
-from .point_scheme import PointScheme, CreatePointScheme
+from .point_scheme import PointScheme, CreatePointScheme, RequestPointScheme
 
 
 class FilterScheme(BaseModel):
-    pickup: Optional[CreatePointScheme] = None
+    pickup: Optional[RequestPointScheme] = None
     pickup_range: Optional[int] = None
-    dropoff: Optional[CreatePointScheme] = None
+    dropoff: Optional[RequestPointScheme] = None
     dropoff_range: Optional[int] = None
 
     start_timestamp: Optional[int] = None

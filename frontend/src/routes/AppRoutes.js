@@ -1,4 +1,4 @@
-// src/routes/AppRoutes.js
+// src/api/AppRoutes.js
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import MobileRoutes from './MobileRoutes';

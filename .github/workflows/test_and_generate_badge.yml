@@ -14,30 +14,55 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
       - name: Create .env file from secrets
         run: |
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo TEST_POSTGRES_DB=${{ secrets.TEST_POSTGRES_DB }} >> .env
-          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
-          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
-          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
-          chmod 600 .env
+          echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_HOST=nothing >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_PASSWORD }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_NAME=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_NAME }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_HOST=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_HOST }} >> ./backend/.env
+          echo APP_CONFIG__ENV__IS_TEST=1 >> ./backend/.env
+          echo APP_CONFIG__GEOCODER__API_KEY=${{ secrets.APP_CONFIG__GEOCODER__API_KEY }} >> ./backend/.env
+          echo APP_CONFIG__GEOCODER__URL=${{ secrets.APP_CONFIG__GEOCODER__URL }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__CLIENT_ID=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_ID }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__CLIENT_SECRET=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_SECRET }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__REDIRECT_URI=${{ secrets.APP_CONFIG__GOOGLE__REDIRECT_URI }} >> ./backend/.env
+          echo APP_CONFIG__REDIS__HOST=${{ secrets.APP_CONFIG__REDIS__HOST }} >> ./backend/.env
+          echo APP_CONFIG__REDIS__EXPIRE_TIME=${{ secrets.APP_CONFIG__REDIS__EXPIRE_TIME }} >> ./backend/.env
+          chmod 600 ./backend/.env
 
       - name: Set up Docker Compose
         run: |
-          docker-compose -f docker-compose.test.yml up --build -d
+          docker compose --env-file ./backend/.env -f docker-compose.test.yml up --build -d
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r ./backend/app/requirements.txt
+          cd ./backend
+          poetry install
+          cd app
+          poetry run alembic upgrade head
+          ls
+          echo "------"
 
       - name: Run tests with coverage
         run: |
-          cd ./backend/app/
-          coverage run --data-file=.coverage_file -m pytest  
-          coverage xml --data-file=.coverage_file -o coverage_out.xml
+          cd ./backend/app
+          poetry run coverage run --data-file=.coverage_file -m pytest tests
+          poetry run coverage xml --data-file=.coverage_file -o coverage_out.xml
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2

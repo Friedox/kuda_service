@@ -7,11 +7,11 @@ import redis.asyncio as redis
 from fastapi import Request, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..exceptions import InvalidSessionError, InvalidCredentialsError, EmailInUseError, UsernameInUseError, \
+from exceptions import InvalidSessionError, InvalidCredentialsError, EmailInUseError, UsernameInUseError, \
     GoogleException, PassNotSetException
-from ..schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme
-from ..config import REDIS_HOST, SESSION_EXPIRE_TIME, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, REDIRECT_URI
-from ..crud import user_crud
+from schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme
+from config import settings
+from crud import user_crud
 
 
 async def register_user(user_create: CreateUserScheme, db: AsyncSession) -> dict:
@@ -64,9 +64,9 @@ async def create_session(user_id: int, username: str) -> str:
         "user_id": user_id
     }
 
-    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
+    redis_client = redis.from_url(f'redis://{settings.redis.host}')
     await redis_client.hset(f"session:{session_id}", mapping=user_data)
-    await redis_client.expire(f"session:{session_id}", SESSION_EXPIRE_TIME)
+    await redis_client.expire(f"session:{session_id}", settings.redis.expire_time)
     await redis_client.aclose()
 
     return session_id
@@ -89,7 +89,7 @@ async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserSc
     if not session_id:
         raise InvalidSessionError
 
-    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
+    redis_client = redis.from_url(f'redis://{settings.redis.host}')
     username = await redis_client.hget(f"session:{session_id}", "username")
     await redis_client.aclose()
 
@@ -103,7 +103,7 @@ async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserSc
 async def get_session_id(request: Request):
     session_id = request.cookies.get("session_id")
 
-    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
+    redis_client = redis.from_url(f'redis://{settings.redis.host}')
 
     if not session_id or not await redis_client.exists(f"session:{session_id}"):
         raise InvalidSessionError
@@ -113,7 +113,7 @@ async def get_session_id(request: Request):
 
 async def logout(request: Request):
     session_id = await get_session_id(request)
-    redis_client = redis.from_url(f'redis://{REDIS_HOST}')
+    redis_client = redis.from_url(f'redis://{settings.redis.host}')
     await redis_client.delete(f"session:{session_id}")
     await redis_client.aclose()
 
@@ -124,9 +124,9 @@ async def proceed_google(code: str, db: AsyncSession) -> dict:
     token_url = "https://accounts.google.com/o/oauth2/token"
     data = {
         "code": code,
-        "client_id": GOOGLE_CLIENT_ID,
-        "client_secret": GOOGLE_CLIENT_SECRET,
-        "redirect_uri": REDIRECT_URI,
+        "client_id": settings.google.client_id,
+        "client_secret": settings.google.client_secret,
+        "redirect_uri": settings.google.redirect_uri,
         "grant_type": "authorization_code",
     }
     response = requests.post(token_url, data=data)

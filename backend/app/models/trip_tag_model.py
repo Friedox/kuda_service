@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from ..database import Base
+from models.base import Base
 
 
 class TripTag(Base):

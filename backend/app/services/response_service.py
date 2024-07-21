@@ -2,8 +2,8 @@ from typing import Any
 from fastapi import status
 from fastapi.responses import JSONResponse
 
-from ..schemas.response_scheme import SuccessResponse, ErrorResponse, Message
-from ..exceptions import exceptions_list
+from schemas.response_scheme import SuccessResponse, ErrorResponse, Message
+from exceptions import exceptions_list
 
 
 class ResponseService:

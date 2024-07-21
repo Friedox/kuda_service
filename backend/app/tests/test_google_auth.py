@@ -1,11 +1,11 @@
 import pytest
 from fastapi import Request
 
-from ..crud import user_crud
-from ..exceptions import PassNotSetException, InvalidCredentialsError
-from ..schemas.user_scheme import CredentialsScheme
-from ..services import auth_service
-from ..schemas import user_scheme
+from crud import user_crud
+from exceptions import PassNotSetException, InvalidCredentialsError, UsernameInUseError
+from schemas.user_scheme import CredentialsScheme
+from services import auth_service
+from schemas import user_scheme
 from .test_auth import setup_db
 
 mock_user = user_scheme.CreateUserScheme(
@@ -25,7 +25,6 @@ async def test_google_register_user_without_pass():
     async for session_obj in setup_db():
         async with session_obj as session:
             user = await user_crud.create(mock_user, session)
-
             session_id = await auth_service.create_session(user.user_id, user.username)
 
             with pytest.raises(PassNotSetException):
@@ -37,7 +36,7 @@ async def test_google_register_user_without_pass():
 async def test_google_set_user_pass():
     async for session_obj in setup_db():
         async with session_obj as session:
-            user = await user_crud.create(mock_user, session)
+            user = await user_crud.get(mock_user.username, session)
 
             session_id = await auth_service.create_session(user.user_id, user.username)
 
@@ -53,7 +52,7 @@ async def test_google_set_user_pass():
 async def test_google_login_with_new_pass():
     async for session_obj in setup_db():
         async with session_obj as session:
-            user = await user_crud.create(mock_user, session)
+            user = await user_crud.get(mock_user.username, session)
 
             session_id = await auth_service.create_session(user.user_id, user.username)
 
@@ -73,7 +72,7 @@ async def test_google_login_with_new_pass():
 async def test_google_login_with_wrong_pass():
     async for session_obj in setup_db():
         async with session_obj as session:
-            user = await user_crud.create(mock_user, session)
+            user = await user_crud.get(mock_user.username, session)
 
             session_id = await auth_service.create_session(user.user_id, user.username)
 

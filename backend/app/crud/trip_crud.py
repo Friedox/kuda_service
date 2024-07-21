@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from . import point_crud
-from ..exceptions import TripNotFoundError
-from ..schemas.trip_scheme import CreateTripScheme, TripScheme
-from ..models.trip_model import Trip
+from crud import point_crud
+from exceptions import TripNotFoundError
+from schemas.trip_scheme import CreateTripScheme, TripScheme
+from models.trip_model import Trip
 
 
 async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:

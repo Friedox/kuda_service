@@ -3,10 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import bcrypt
 
-from ..config import EMAIL_PATTERN
-from ..exceptions import UsernameInUseError, EmailInUseError, UserNotFoundError
-from ..schemas.user_scheme import CreateUserScheme, UserScheme
-from ..models.user_model import User
+from config import settings
+from exceptions import UsernameInUseError, EmailInUseError, UserNotFoundError
+from schemas.user_scheme import CreateUserScheme, UserScheme
+from models.user_model import User
 
 
 async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
@@ -53,7 +53,7 @@ async def get(param, db: AsyncSession) -> UserScheme:
     if isinstance(param, int):
         query = select(User).filter(User.user_id == param)
     else:
-        if re.match(EMAIL_PATTERN, param) is not None:
+        if re.match(settings.validation.email_pattern, param) is not None:
             query = select(User).filter(User.email == param)
         else:
             query = select(User).filter(User.username == param)
@@ -94,4 +94,3 @@ async def set_password(user_id, hashed_password, db):
 
     user.password_hash = hashed_password
     await db.commit()
-
