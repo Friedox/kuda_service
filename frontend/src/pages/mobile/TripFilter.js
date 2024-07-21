@@ -83,7 +83,7 @@ function FellowTravelCards() {
             window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
         } else {
             // Делаем запрос на сервер для получения фильтрованных данных
-            fetch('https://kuda-trip.ru/api/trip/get_upcoming', {
+            fetch('https://kuda-trip.ru/api/v1/trip/get_upcoming', {
                 method: 'POST',
                 credentials: 'include', // Включение cookies в запрос
                 headers: {

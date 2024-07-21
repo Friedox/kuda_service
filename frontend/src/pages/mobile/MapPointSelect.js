@@ -4,7 +4,7 @@ import local_icon from "../../assets/icon/LocateIcon.svg";
 import user_location from "../../assets/icon/user_locatin.svg";
 import Button from "../../components/mobile/Button";
 import { useDispatch } from 'react-redux';
-import { setStartAddress, setEndAddress } from '../../addressSlice';
+import {setStartAddress, setEndAddress, setStartCoordinate, setEndCoordinate} from '../../addressSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadYandexMapScript from '../../utils/loadYandexMapScript';
 import Cookies from 'js-cookie';
@@ -14,6 +14,7 @@ function MapPointSelect() {
     const [mapInitialized, setMapInitialized] = useState(false);
     const [lastGeocodeTime, setLastGeocodeTime] = useState(0);
     const [address, setAddressState] = useState('');
+    const [addressCoordinate, setAddressCoordinate] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -37,7 +38,9 @@ function MapPointSelect() {
                                 map.setCenter(userCoordinates);
 
                                 const userAddress = result.geoObjects.get(0).properties.get('text');
+                                // const addressCoordinate = result.geoObjects.position;
                                 setAddressState(userAddress);
+                                // setAddressCoordinate(addressCoordinate);
 
                                 const marker = new ymaps.Placemark(userCoordinates, {}, {
                                     iconLayout: 'default#image',
@@ -64,6 +67,9 @@ function MapPointSelect() {
                                     const firstGeoObject = res.geoObjects.get(0);
                                     const address = firstGeoObject.getAddressLine();
                                     setAddressState(address);
+                                    const addressCoordinate = firstGeoObject.geometry._coordinates;
+                                    setAddressCoordinate(addressCoordinate);
+                                    console.log(addressCoordinate)
                                     setLastGeocodeTime(now);
                                 });
                                 setLastGeocodeTime(now);
@@ -97,10 +103,15 @@ function MapPointSelect() {
     const handleApply = () => {
         if (target === 'start') {
             dispatch(setStartAddress(address));
+            dispatch(setStartCoordinate(addressCoordinate));
+            console.log(addressCoordinate)
         } else if (target === 'end') {
             dispatch(setEndAddress(address));
+            dispatch(setEndCoordinate(addressCoordinate));
+            console.log(addressCoordinate)
+
         }
-        navigate('/filters');
+        navigate('/fellow_travel_cards');
     };
 
     return (
