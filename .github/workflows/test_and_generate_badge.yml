@@ -16,28 +16,29 @@ jobs:
 
       - name: Create .env file from secrets
         run: |
-          echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > .env
-          echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> .env
-          echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> .env
-          echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> .env
-          echo APP_CONFIG__TEST_DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_PASSWORD }} >> .env
-          echo APP_CONFIG__TEST_DATABASE__DB_NAME=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_NAME }} >> .env
-          echo APP_CONFIG__TEST_DATABASE__DB_HOST=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_HOST }} >> .env
-          echo APP_CONFIG__ENV__IS_TEST=1 >> .env
-          echo APP_CONFIG__GEOCODER__API_KEY=${{ secrets.APP_CONFIG__GEOCODER__API_KEY }} >> .env
-          echo APP_CONFIG__GEOCODER__URL=${{ secrets.APP_CONFIG__GEOCODER__URL }} >> .env
-          echo APP_CONFIG__GOOGLE__CLIENT_ID=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_ID }} >> .env
-          echo APP_CONFIG__GOOGLE__CLIENT_SECRET=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_SECRET }} >> .env
-          echo APP_CONFIG__GOOGLE__REDIRECT_URI=${{ secrets.APP_CONFIG__GOOGLE__REDIRECT_URI }} >> .env
-          echo APP_CONFIG__REDIS__HOST=${{ secrets.APP_CONFIG__REDIS__HOST }} >> .env
-          echo APP_CONFIG__REDIS__EXPIRE_TIME=${{ secrets.APP_CONFIG__REDIS__EXPIRE_TIME }} >> .env
-          chmod 600 .env
+          echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> ./backend/.env
+          echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_PASSWORD }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_NAME=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_NAME }} >> ./backend/.env
+          echo APP_CONFIG__TEST_DATABASE__DB_HOST=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_HOST }} >> ./backend/.env
+          echo APP_CONFIG__ENV__IS_TEST=1 >> ./backend/.env
+          echo APP_CONFIG__GEOCODER__API_KEY=${{ secrets.APP_CONFIG__GEOCODER__API_KEY }} >> ./backend/.env
+          echo APP_CONFIG__GEOCODER__URL=${{ secrets.APP_CONFIG__GEOCODER__URL }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__CLIENT_ID=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_ID }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__CLIENT_SECRET=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_SECRET }} >> ./backend/.env
+          echo APP_CONFIG__GOOGLE__REDIRECT_URI=${{ secrets.APP_CONFIG__GOOGLE__REDIRECT_URI }} >> ./backend/.env
+          echo APP_CONFIG__REDIS__HOST=${{ secrets.APP_CONFIG__REDIS__HOST }} >> ./backend/.env
+          echo APP_CONFIG__REDIS__EXPIRE_TIME=${{ secrets.APP_CONFIG__REDIS__EXPIRE_TIME }} >> ./backend/.env
+          chmod 600 ./backend/.env
+          
 
       - name: Set up Docker Compose
         run: |
           ls -la
           cat .env
-          docker compose  --env-file .env -f docker-compose.test.yml up --build -d
+          docker compose  -f docker-compose.test.yml up --build -d
 
       - name: Install dependencies
         run: |
