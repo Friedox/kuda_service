@@ -55,10 +55,12 @@ jobs:
           poetry install
           cd app
           poetry run alembic upgrade head
-          cd ..
+          ls
+          echo "------"
 
       - name: Run tests with coverage
         run: |
+          ls
           poetry run coverage run --data-file=.coverage_file -m pytest tests
           poetry run coverage xml --data-file=.coverage_file -o coverage_out.xml
 
