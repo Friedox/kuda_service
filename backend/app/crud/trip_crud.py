@@ -59,7 +59,12 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
             start_timestamp=trip.start_timestamp,
             end_timestamp=trip.end_timestamp,
             fare=trip.fare,
-            trip_id=trip.trip_id
+            trip_id=trip.trip_id,
+            available_sits=trip.available_sits,
+            driver_tg=trip.driver_tg,
+            car_number=trip.car_number,
+            car_type=trip.car_type,
+            driver_phone=trip.driver_phone
         )
         return trip_scheme
     raise TripNotFoundError

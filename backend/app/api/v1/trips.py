@@ -60,3 +60,17 @@ async def get_upcoming(request: Request, db: AsyncSession = Depends(database_hel
     return await ResponseService.response(
         trip_service.get_upcoming(request, db)
     )
+
+
+@router.post("/book/{trip_id}")
+async def book(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.book(trip_id, request, db)
+    )
+
+
+@router.delete("/delete_book/{trip_id}")
+async def delete_book(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.delete_book(trip_id, request, db)
+    )

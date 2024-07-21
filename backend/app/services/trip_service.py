@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
-from exceptions import UnexpectedError
+from exceptions import UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError
 from models.point_model import Point
 from models.tag_model import Tag
 from models.trip_model import Trip
@@ -81,25 +81,46 @@ async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
     creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
 
     response_trip = TripResponseScheme(**trip.__dict__,
-                                       creator_id=creator_id)
+                                       creator_id=creator_id,
+                                       trip_users=await trip_user_crud.get_trip_users(trip_id, db))
 
     return response_trip
 
 
-async def get_user_trips(request: Request, db: AsyncSession) -> List[TripScheme]:
+async def get_user_trips(request: Request, db: AsyncSession) -> List[TripResponseScheme]:
     user = await get_user_from_session_id(request, db)
 
-    return await trip_user_crud.get_user_trips(user, db)
+    trips = await trip_user_crud.get_user_trips(user, db)
+
+    response_trips = [
+        TripResponseScheme(
+            **trip.__dict__,
+            creator_id=await trip_user_crud.get_trip_creator_id(trip.trip_id, db),
+            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db)
+        ) for
+        trip in trips]
+
+    return response_trips
 
 
-async def get_upcoming(request: Request, db: AsyncSession):
+async def get_upcoming(request: Request, db: AsyncSession) -> List[TripResponseScheme]:
     user = await get_user_from_session_id(request, db)
     now_time = datetime.datetime.now()
     timestamp = int(datetime.datetime.timestamp(now_time))
-    return await trip_user_crud.get_upcoming_user_trips(user, timestamp, db)
+    trips = await trip_user_crud.get_upcoming_user_trips(user, timestamp, db)
+
+    response_trips = [
+        TripResponseScheme(
+            **trip.__dict__,
+            creator_id=await trip_user_crud.get_trip_creator_id(trip.trip_id, db),
+            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db)
+        ) for
+        trip in trips]
+
+    return response_trips
 
 
-async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
+async def get_filtered(trip_filter: FilterScheme, db: AsyncSession) -> List[TripResponseScheme]:
     query = select(Trip)
 
     if trip_filter.pickup:
@@ -169,7 +190,10 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         trip_dict['tags'] = tag_names
         trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
         trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
-        trip_schemas.append(TripTagsScheme(**trip_dict))
+        trip_dict['creator_id'] = await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+        trip_dict['trip_users'] = await trip_user_crud.get_trip_users(trip.trip_id, db)
+
+        trip_schemas.append(TripResponseScheme(**trip_dict))
 
     return trip_schemas
 
@@ -183,3 +207,32 @@ async def convert_coords(latitude: float, longitude: float):
         translated_details[key] = translate(text=value)
 
     return translated_details
+
+
+async def book(trip_id: int, request: Request, db: AsyncSession):
+    user = await get_user_from_session_id(request, db)
+    trip = await trip_user_crud.get(trip_id, db)
+    users = await trip_user_crud.get_trip_users(trip_id, db)
+
+    if user.user_id in users:
+        raise UserAlreadyBookedError
+
+    if len(users) - 1 >= trip.available_sits:
+        raise NotEnoughSitsError
+
+    await trip_user_crud.book(user, trip_id, db)
+
+    return {"message": "Booked successfully"}
+
+
+async def delete_book(trip_id: int, request: Request, db: AsyncSession):
+    user = await get_user_from_session_id(request, db)
+    trip = await trip_user_crud.get(trip_id, db)
+    users = await trip_user_crud.get_trip_users(trip_id, db)
+
+    if user.user_id not in users:
+        raise UserAlreadyBookedError
+
+    await trip_user_crud.delete_book(user, trip_id, db)
+
+    return {"message": "Book deleted successfully"}
