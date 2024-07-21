@@ -247,3 +247,4 @@ fabric.properties
 /frontend/package-lock.json
 /backend/app/.coverage_file
 /backend/app/coverage_out.xml
+/backend/app/__pycache__
