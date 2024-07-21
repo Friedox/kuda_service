@@ -55,6 +55,18 @@ async def get(trip_id: int, db: AsyncSession) -> TripTagsScheme:
     return trip
 
 
+async def get_trip_creator_id(trip_id: int, db: AsyncSession) -> int:
+    query = (
+        select(TripUser)
+        .filter(TripUser.trip_id== trip_id)
+    )
+
+    result = await db.execute(query)
+    trip_object = result.scalars().first()
+
+    return trip_object.user_id
+
+
 async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:
     try:
         db.begin()

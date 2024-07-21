@@ -1,13 +1,11 @@
 import datetime
 from typing import List
 
+from fastapi import Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Request
 from sqlalchemy.orm import aliased
 
-from services import tag_service
-from services.translate_service import translate
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
 from exceptions import UnexpectedError
 from models.point_model import Point
@@ -16,9 +14,11 @@ from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
 from schemas.point_scheme import CreatePointScheme
-from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme
+from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
+from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
+from services.translate_service import translate
 
 
 async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -76,10 +76,14 @@ async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
     raise UnexpectedError("Trip not deleted")
 
 
-async def get(trip_id: int, db: AsyncSession) -> TripScheme:
+async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
     trip = await trip_user_crud.get(trip_id, db)
+    creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
 
-    return trip
+    response_trip = TripResponseScheme(**trip.__dict__,
+                                       creator_id=creator_id)
+
+    return response_trip
 
 
 async def get_user_trips(request: Request, db: AsyncSession) -> List[TripScheme]:
@@ -102,7 +106,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         pickup_point = aliased(Point)
         query = query.join(pickup_point, Trip.pickup == pickup_point.point_id)
         if trip_filter.pickup_range:
-            pickup_range_degrees = trip_filter.pickup_range / 111320.0  # 1 градус ≈ 111.32 км
+            pickup_range_degrees = trip_filter.pickup_range / 111320.0  # 1 degree ≈ 111.32 km
             query = query.filter(
                 func.sqrt(
                     func.pow(pickup_point.latitude - trip_filter.pickup.latitude, 2) +
@@ -119,7 +123,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         dropoff_point = aliased(Point)
         query = query.join(dropoff_point, Trip.dropoff == dropoff_point.point_id)
         if trip_filter.dropoff_range:
-            dropoff_range_degrees = trip_filter.dropoff_range / 111320.0  # 1 градус ≈ 111.32 км
+            dropoff_range_degrees = trip_filter.dropoff_range / 111320.0  # 1 degree ≈ 111.32 km
             query = query.filter(
                 func.sqrt(
                     func.pow(dropoff_point.latitude - trip_filter.dropoff.latitude, 2) +
@@ -143,7 +147,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         trip_tag_alias = aliased(TripTag)
 
         subquery = (
-            select([Trip.trip_id])
+            select(Trip.trip_id)
             .join(trip_tag_alias, Trip.trip_id == trip_tag_alias.trip_id)
             .join(tag_alias, trip_tag_alias.tag_id == tag_alias.tag_id)
             .filter(tag_alias.tag.in_(trip_filter.tags))
