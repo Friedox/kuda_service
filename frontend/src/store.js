@@ -12,11 +12,14 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import addressReducer from './addressSlice';
+import selectedOptionsReducer from './selectedOptionsSlice';
 
 const store = configureStore({
     reducer: {
         address: addressReducer,
+        selectedOptions: selectedOptionsReducer,
     },
 });
 
 export default store;
+

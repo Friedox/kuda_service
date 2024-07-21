@@ -12,7 +12,7 @@ function SignUpEmail() {
 
     const handleSignUp = async () => {
         try {
-            const response = await axios.post('https://kuda-trip.ru/api/auth/signup', {
+            const response = await axios.post('https://kuda-trip.ru/api/v1/auth/signup', {
                 email: email,
                 username: username,
                 password: password,

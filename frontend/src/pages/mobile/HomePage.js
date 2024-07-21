@@ -20,7 +20,7 @@ function HomePage() {
             window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
         } else {
             // Делаем запрос на сервер для получения фильтрованных данных
-            fetch('https://kuda-trip.ru/api/trip/get_upcoming', {
+            fetch('https://kuda-trip.ru/api/v1/trip/get_upcoming', {
                 method: 'GET',
                 credentials: 'include', // Включение cookies в запрос
                 headers: {
@@ -88,7 +88,7 @@ function HomePage() {
                                 Create a trip
                             </h2>
                         </a>
-                        <a href="" className="mobile_btn light_orange_bg h205px">
+                        <a href="taxi_create" className="mobile_btn light_orange_bg h205px">
                             <h2>
                                 Taxi
                             </h2>

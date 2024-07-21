@@ -28,8 +28,8 @@ function MobileRoutes() {
             <Routes>
                 <Route path="/login_email" element={<LoginEmail />} />
                 <Route path="/home" element={<HomePageMobile />} />
-                <Route path="/fellow_travel_cards" element={<TripFilter />} />
-                <Route path="/filters" element={<FellowTravelCards />} />
+                <Route path="/fellow_travel_cards" element={<FellowTravelCards />} />
+                {/*<Route path="/filters" element={<FellowTravelCards />} />*/}
                 <Route path="/map" element={<MapPointSelect />} />
                 <Route path="/create" element={<CreateTripMap />} />
                 <Route path="/create_filter" element={<CreateTripFilter />} />
@@ -41,12 +41,12 @@ function MobileRoutes() {
                 <Route path="/TripCard" element={<TripCard/>}/>
                 <Route path="/home" element={<HomePageMobile/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/TaxiCreate" element={<TaxiCreate/>}/>
-                <Route path="/CarSearching" element={<CarSearching/>}/>
-                <Route path="/DriverWait" element={<DriverWait/>}/>
-                <Route path="/StartTrip" element={<StartTrip/>}/>
-                <Route path="/DriverNotFound" element={<DriverNotFound/>}/>
-                <Route path="/Rating" element={<Rating/>}/>
+                <Route path="/taxi_create" element={<TaxiCreate/>}/>
+                <Route path="/car_searching" element={<CarSearching/>}/>
+                <Route path="/driver_wait" element={<DriverWait/>}/>
+                <Route path="/start_trip" element={<StartTrip/>}/>
+                <Route path="/driver_not_found" element={<DriverNotFound/>}/>
+                <Route path="/rating" element={<Rating/>}/>
             </Routes>
         </Provider>
     );

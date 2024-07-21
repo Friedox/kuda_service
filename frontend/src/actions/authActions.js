@@ -6,7 +6,7 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const login = (email, password) => async dispatch => {
     try {
-        const response = await axios.post('https://kuda-trip.ru/api/auth/login', {
+        const response = await axios.post('https://kuda-trip.ru/api/v1/auth/login', {
             login: email,
             password: password
         });

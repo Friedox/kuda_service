@@ -24,6 +24,10 @@ a {
                                      supported by Chrome, Edge, Opera and Firefox */
 }
 
+.non-visible {
+    visibility: hidden;
+}
+
 li {
     list-style-type: none;
 }
@@ -445,6 +449,13 @@ h5 {
     font-size: 16px;
     color: #7A7A7A;
     margin-bottom: -2px;
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .profile_info .car {

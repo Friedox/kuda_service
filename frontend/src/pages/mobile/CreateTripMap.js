@@ -232,11 +232,10 @@ function MapPointSelect() {
             car_type: car, // Тип машины
         };
 
-        Cookies.set('session_id', '5e317068e6ec6e5f22b4518a5bfd828c67eab15beb79cbd794eb2aad435c92c5')
-
+        console.log(data)
 
         try {
-            const response = await axios.post('https://kuda-trip.ru/api/trip/create', data, {
+            const response = await axios.post('https://kuda-trip.ru/api/v1/trips/', data, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
