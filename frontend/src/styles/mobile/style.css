@@ -351,6 +351,12 @@ h5 {
     font-weight: 600;
     font-style: normal;
     font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .address_span {
@@ -1538,4 +1544,8 @@ html {
     .map {
         height: 65vh !important;
     }
+}
+
+.text_right {
+    text-align: right;
 }
