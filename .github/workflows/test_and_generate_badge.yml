@@ -29,6 +29,8 @@ jobs:
           echo APP_CONFIG__GOOGLE__CLIENT_ID=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_ID }} >> .env
           echo APP_CONFIG__GOOGLE__CLIENT_SECRET=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_SECRET }} >> .env
           echo APP_CONFIG__GOOGLE__REDIRECT_URI=${{ secrets.APP_CONFIG__GOOGLE__REDIRECT_URI }} >> .env
+          echo APP_CONFIG__REDIS__HOST=${{ secrets.APP_CONFIG__REDIS__HOST }} >> .env
+          echo APP_CONFIG__REDIS__EXPIRE_TIME=${{ secrets.APP_CONFIG__REDIS__EXPIRE_TIME }} >> .env
           chmod 600 .env
 
       - name: Set up Docker Compose
