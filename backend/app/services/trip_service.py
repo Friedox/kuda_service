@@ -1,13 +1,11 @@
 import datetime
 from typing import List
 
+from fastapi import Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Request
 from sqlalchemy.orm import aliased
 
-from services import tag_service
-from services.translate_service import translate
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
 from exceptions import UnexpectedError
 from models.point_model import Point
@@ -16,9 +14,11 @@ from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
 from schemas.point_scheme import CreatePointScheme
-from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme
+from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
+from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
+from services.translate_service import translate
 
 
 async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -76,10 +76,14 @@ async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
     raise UnexpectedError("Trip not deleted")
 
 
-async def get(trip_id: int, db: AsyncSession) -> TripScheme:
+async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
     trip = await trip_user_crud.get(trip_id, db)
+    creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
 
-    return trip
+    response_trip = TripResponseScheme(**trip.__dict__,
+                                       creator_id=creator_id)
+
+    return response_trip
 
 
 async def get_user_trips(request: Request, db: AsyncSession) -> List[TripScheme]:

@@ -40,3 +40,7 @@ class TripScheme(BaseModel):
 
 class TripTagsScheme(TripScheme):
     tags: List[str]
+
+
+class TripResponseScheme(TripTagsScheme):
+    creator_id: int
