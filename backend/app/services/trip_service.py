@@ -102,7 +102,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         pickup_point = aliased(Point)
         query = query.join(pickup_point, Trip.pickup == pickup_point.point_id)
         if trip_filter.pickup_range:
-            pickup_range_degrees = trip_filter.pickup_range / 111320.0  # 1 градус ≈ 111.32 км
+            pickup_range_degrees = trip_filter.pickup_range / 111320.0  # 1 degree ≈ 111.32 km
             query = query.filter(
                 func.sqrt(
                     func.pow(pickup_point.latitude - trip_filter.pickup.latitude, 2) +
@@ -119,7 +119,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         dropoff_point = aliased(Point)
         query = query.join(dropoff_point, Trip.dropoff == dropoff_point.point_id)
         if trip_filter.dropoff_range:
-            dropoff_range_degrees = trip_filter.dropoff_range / 111320.0  # 1 градус ≈ 111.32 км
+            dropoff_range_degrees = trip_filter.dropoff_range / 111320.0  # 1 degree ≈ 111.32 km
             query = query.filter(
                 func.sqrt(
                     func.pow(dropoff_point.latitude - trip_filter.dropoff.latitude, 2) +
@@ -143,7 +143,7 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
         trip_tag_alias = aliased(TripTag)
 
         subquery = (
-            select([Trip.trip_id])
+            select(Trip.trip_id)
             .join(trip_tag_alias, Trip.trip_id == trip_tag_alias.trip_id)
             .join(tag_alias, trip_tag_alias.tag_id == tag_alias.tag_id)
             .filter(tag_alias.tag.in_(trip_filter.tags))
