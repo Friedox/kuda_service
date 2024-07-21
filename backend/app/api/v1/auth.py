@@ -11,13 +11,11 @@ from services.response_service import ResponseService
 router = APIRouter(tags=["Auth"])
 
 
-
 @router.post("/signup")
 async def sign_up(user: CreateUserScheme, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         auth_service.register_user(user, db)
     )
-
 
 
 @router.post("/login")
@@ -34,10 +32,17 @@ async def set_pass(new_pass: str, request: Request, db: AsyncSession = Depends(d
     )
 
 
-@router.get("/getusers/me")
+@router.get("/getusers/me/")
 async def get_info(request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         auth_service.get_info(request, db)
+    )
+
+
+@router.get("/getusers/{user_id}")
+async def get_user(user_id: int, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.get_user(user_id, db)
     )
 
 

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from exceptions import InvalidSessionError, InvalidCredentialsError, EmailInUseError, UsernameInUseError, \
     GoogleException, PassNotSetException
-from schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme
+from schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme, UserGetScheme
 from config import settings
 from crud import user_crud
 
@@ -164,3 +164,15 @@ async def set_pass(new_pass, request, db) -> dict:
 
     await user_crud.set_password(user_id, hashed_password, db)
     return {"message": "Password successfully set"}
+
+
+async def get_user(user_id, db) -> UserGetScheme:
+    user = await user_crud.get(user_id, db)
+
+    user_response = UserGetScheme(
+        user_id=user.user_id,
+        email=user.email,
+        username=user.username
+    )
+
+    return user_response

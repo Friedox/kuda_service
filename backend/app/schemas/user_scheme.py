@@ -21,3 +21,9 @@ class UserScheme(BaseModel):
     username: str
     password_hash: Optional[bytes] = None
     is_google_account: bool
+
+
+class UserGetScheme(BaseModel):
+    user_id: int
+    email: EmailStr
+    username: str
