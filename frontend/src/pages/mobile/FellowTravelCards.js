@@ -327,7 +327,7 @@ function FellowTravelCards() {
         console.log(endCoordinate)
 
         try {
-            const response = await axios.post('https://kuda-trip.ru/api/v1/v1/trips/get_filtered/', requestBody);
+            const response = await axios.post('https://kuda-trip.ru/api/v1/trips/get_filtered/', requestBody);
             console.log(response.data)
             setTrips(response.data);
             setShowFilters(false);
