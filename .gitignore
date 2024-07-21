@@ -245,6 +245,10 @@ fabric.properties
 /frontend/node_modules/
 /frontend/build/
 /frontend/package-lock.json
+<<<<<<< HEAD
 /backend/app/.coverage_file
 /backend/app/coverage_out.xml
 /backend/app/__pycache__
+=======
+frontend/node_modules/.cache/default-development/0.pack
+>>>>>>> main
