@@ -60,7 +60,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          ls
+          cd ./backend/app
           poetry run coverage run --data-file=.coverage_file -m pytest tests
           poetry run coverage xml --data-file=.coverage_file -o coverage_out.xml
 
