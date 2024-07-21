@@ -14,10 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install poetry
-        run: |
-          apt-get install -y gcc redis-server postgresql-client curl
-          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
           
 
       - name: Create .env file from secrets
