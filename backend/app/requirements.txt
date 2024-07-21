@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
+sqlalchemy[asyncio]
 psycopg2-binary
 aioredis
 passlib[bcrypt]
@@ -20,3 +21,5 @@ httpx
 pytest-asyncio
 aiosqlite
 coverage
+deep_translator
+black

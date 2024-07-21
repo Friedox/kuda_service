@@ -61,6 +61,11 @@ class PointNotFoundError(ValueError):
         super().__init__(f"Point {point_id} not found")
 
 
+class GeocoderServiceError(ValueError):
+    def __init__(self, error_message: str):
+        super().__init__(f"Error '{error_message}' while trying to geocode")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -72,5 +77,6 @@ exceptions_list = (TripNotFoundError,
                    InvalidTagException,
                    GoogleException,
                    PassNotSetException,
-                   PointNotFoundError
+                   PointNotFoundError,
+                   GeocoderServiceError
                    )

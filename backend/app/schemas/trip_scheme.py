@@ -2,12 +2,12 @@ from typing import List
 
 from pydantic import BaseModel
 
-from .point_scheme import PointScheme, CreatePointScheme
+from .point_scheme import PointScheme, CreatePointScheme, RequestPointScheme
 
 
-class CreateTripScheme(BaseModel):
-    pickup: CreatePointScheme
-    dropoff: CreatePointScheme
+class RequestTripScheme(BaseModel):
+    pickup: RequestPointScheme
+    dropoff: RequestPointScheme
     start_timestamp: int
     end_timestamp: int
     fare: int
@@ -17,6 +17,11 @@ class CreateTripScheme(BaseModel):
     driver_tg: str
     car_number: str
     car_type: str
+
+
+class CreateTripScheme(RequestTripScheme):
+    pickup: CreatePointScheme
+    dropoff: CreatePointScheme
 
 
 class TripScheme(BaseModel):
@@ -35,4 +40,3 @@ class TripScheme(BaseModel):
 
 class TripTagsScheme(TripScheme):
     tags: List[str]
-

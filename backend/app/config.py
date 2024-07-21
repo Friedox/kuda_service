@@ -1,28 +1,91 @@
-import os
+from typing import Any
+
 from dotenv import load_dotenv
+from pydantic import BaseModel, PostgresDsn, field_validator, ConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
-EMAIL_PATTERN = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-SESSION_EXPIRE_TIME = 3600
 
-database_user = os.getenv("POSTGRES_USER", "kuda_user")
-database_password = os.getenv("POSTGRES_PASSWORD", "123")
-database_name = os.getenv("POSTGRES_DB", 'kuda')
-database_host = os.getenv("POSTGRES_HOST", "localhost:5433")
-
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI")
+class RunConfig(BaseModel):
+    host: str = "0.0.0.0"
+    port: int = 8000
 
 
-test_database_host = os.getenv("TEST_POSTGRES_HOST", "localhost:5434")
-test_database_name = os.getenv("TEST_POSTGRES_DB", 'kuda_test')
+class ApiV1Prefix(BaseModel):
+    prefix: str = "/v1"
+    auth: str = "/auth"
+    trips: str = "/trips"
+    google: str = "/auth/google"
 
 
-SQLALCHEMY_URL = f"postgresql+asyncpg://{database_user}:{database_password}@{database_host}/{database_name}"
-TEST_SQLALCHEMY_URL = f"postgresql+asyncpg://{database_user}:{database_password}@{test_database_host}/{test_database_name}"
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+class ApiPrefix(BaseModel):
+    prefix: str = "/api"
+    v1: ApiV1Prefix = ApiV1Prefix()
 
-tags_fixture = ['smoke', 'child', 'parcels', 'with_animals', 'max_two', 'only_verified']
 
-GOOGLE_CLIENT_ID = "941807474970-g27gmr4phcusta47dn6fvg6hvcm3btgp.apps.googleusercontent.com"
+class EnvConfig(BaseSettings):
+    is_test: bool = False
+
+
+class DatabaseConfig(BaseModel):
+    db_name: str
+    db_user: str
+    db_password: str
+    db_host: str
+    echo: bool = True
+    echo_pool: bool = False
+    max_overflow: int = 10
+    pool_size: int = 50
+    tags: list[str] = ["smoke", "child", "parcels", "with_animals", "max_two", "only_verified"]
+
+    naming_convention: dict[str, str] = {
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_N_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
+    }
+    model_config = ConfigDict(extra="ignore")
+
+
+class ValidationConfig(BaseModel):
+    email_pattern: str = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+
+
+class GeocoderConfig(BaseModel):
+    api_key: str
+    url: str
+
+
+class RedisConfig(BaseModel):
+    host: str = "localhost"
+    expire_time: int = 3600
+
+
+class GoogleConfig(BaseModel):
+    client_id: str
+    client_secret: str
+    redirect_uri: str
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        case_sensitive=False,
+        env_nested_delimiter="__",
+        env_prefix="APP_CONFIG__",
+        env_file=".env"
+    )
+    run: RunConfig = RunConfig()
+    api: ApiPrefix = ApiPrefix()
+    database: DatabaseConfig
+    test_database: DatabaseConfig
+    redis: RedisConfig
+    google: GoogleConfig
+    validation: ValidationConfig = ValidationConfig()
+    geocoder: GeocoderConfig
+    env: EnvConfig
+    BaseSettings.model_config = ConfigDict(extra="ignore")
+
+
+settings = Settings()

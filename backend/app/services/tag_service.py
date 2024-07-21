@@ -1,8 +1,8 @@
 from typing import List
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..crud import tag_crud
-from ..exceptions import InvalidTagException
+from crud import tag_crud
+from exceptions import InvalidTagException
 
 
 async def get_available_tags(db: AsyncSession) -> dict[str, list[str]]:
