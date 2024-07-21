@@ -5,7 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml.xml
 # Distribution / packaging
 .Python
 build/
@@ -244,3 +245,5 @@ fabric.properties
 /frontend/node_modules/
 /frontend/build/
 /frontend/package-lock.json
+/backend/app/.coverage_file
+/backend/app/coverage_out.xml

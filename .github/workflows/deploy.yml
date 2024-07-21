@@ -30,22 +30,30 @@ jobs:
 
       - name: Create .env file from secrets
         run: |
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
-          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
-          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > .env
+          echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> .env
+          echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> .env
+          echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> .env
+          echo APP_CONFIG__TEST_DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_PASSWORD }} >> .env
+          echo APP_CONFIG__TEST_DATABASE__DB_NAME=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_NAME }} >> .env
+          echo APP_CONFIG__TEST_DATABASE__DB_HOST=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_HOST }} >> .env
+          echo APP_CONFIG__ENV__IS_TEST=${{ secrets.APP_CONFIG__ENV__IS_TEST }} >> .env
+          echo APP_CONFIG__GEOCODER__API_KEY=${{ secrets.APP_CONFIG__GEOCODER__API_KEY }} >> .env
+          echo APP_CONFIG__GEOCODER__URL=${{ secrets.APP_CONFIG__GEOCODER__URL }} >> .env
+          echo APP_CONFIG__GOOGLE__CLIENT_ID=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_ID }} >> .env
+          echo APP_CONFIG__GOOGLE__CLIENT_SECRET=${{ secrets.APP_CONFIG__GOOGLE__CLIENT_SECRET }} >> .env
+          echo APP_CONFIG__GOOGLE__REDIRECT_URI=${{ secrets.APP_CONFIG__GOOGLE__REDIRECT_URI }} >> .env
           chmod 600 .env
 
       - name: Copy .env file to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -i ssh_key .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/kuda/
+          scp -o StrictHostKeyChecking=no -i ssh_key .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/kuda/backend
 
       - name: Deploy with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /kuda
-            docker compose up --build -d
+            docker compose --env-file ./backend/.env up --build -d
           EOF
 
       - name: Cleanup local .env file

@@ -23,6 +23,9 @@ CMD ["/bin/sh", "-c", " \
   ls; \
   >&2 echo 'Postgres is up - executing command'; \
   poetry install; \
+  cd app; \
+  poetry run alembic upgrade head; \
+  cd ..; \
   poetry run python ./app/main.py"]
 
 
