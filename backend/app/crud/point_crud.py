@@ -3,14 +3,16 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ..exceptions import PointNotFoundError
-from ..schemas.point_scheme import CreatePointScheme, PointScheme
-from ..models.point_model import Point
+from exceptions import PointNotFoundError
+from schemas.point_scheme import CreatePointScheme, PointScheme
+from models.point_model import Point
 
 
 async def create(point_create: CreatePointScheme, db: AsyncSession) -> PointScheme:
     point = Point(latitude=point_create.latitude,
-                  longitude=point_create.longitude)
+                  longitude=point_create.longitude,
+                  address=point_create.address
+                  )
 
     db.add(point)
     await db.commit()
@@ -19,6 +21,7 @@ async def create(point_create: CreatePointScheme, db: AsyncSession) -> PointSche
     point_scheme = PointScheme(**point.__dict__)
 
     return point_scheme
+
 
 
 async def get(point_id: int, db: AsyncSession) -> PointScheme:

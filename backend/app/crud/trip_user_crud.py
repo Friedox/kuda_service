@@ -5,12 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from ..exceptions import TripNotFoundError, UserTripNotFoundError
-from ..schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
-from ..schemas.user_scheme import UserScheme
-from ..models.trip_user_model import TripUser
-from ..models.trip_model import Trip
-from . import trip_crud, point_crud
+from exceptions import TripNotFoundError, UserTripNotFoundError
+from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
+from schemas.user_scheme import UserScheme
+from models.trip_user_model import TripUser
+from models.trip_model import Trip
+from crud import trip_crud, point_crud
 
 
 async def create(user: UserScheme, trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
@@ -31,6 +31,28 @@ async def create(user: UserScheme, trip_create: CreateTripScheme, db: AsyncSessi
     except Exception as e:
         await db.rollback()
         raise e
+
+
+async def get(trip_id: int, db: AsyncSession) -> TripTagsScheme:
+    query = (
+        select(Trip)
+        .join(TripUser)
+        .filter(Trip.trip_id == trip_id)
+        .options(selectinload(Trip.tags))
+    )
+
+    result = await db.execute(query)
+    trip_object = result.scalars().first()
+
+    tag_names = [tag.tag for tag in trip_object.tags]
+    trip_dict = trip_object.__dict__
+    trip_dict['pickup'] = await point_crud.get(trip_object.pickup, db)
+    trip_dict['dropoff'] = await point_crud.get(trip_object.dropoff, db)
+    trip_dict['tags'] = tag_names
+
+    trip = TripTagsScheme(**trip_dict)
+
+    return trip
 
 
 async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:
@@ -76,14 +98,11 @@ async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsSch
 
     trips = []
     for trip in trips_objects:
-        print("==========================", trip.__dict__)
-
         tag_names = [tag.tag for tag in trip.tags]
         trip_dict = trip.__dict__
         trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
         trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
         trip_dict['tags'] = tag_names
-        print(trip_dict)
         trips.append(TripTagsScheme(**trip_dict))
 
     return trips

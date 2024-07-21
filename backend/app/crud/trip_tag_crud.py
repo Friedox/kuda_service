@@ -3,14 +3,15 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 
-from ..models.trip_tag_model import TripTag
-from ..schemas.tag_scheme import TagScheme
-from ..schemas.trip_scheme import TripScheme
-from . import tag_crud
+from models.trip_tag_model import TripTag
+from schemas.tag_scheme import TagScheme
+from schemas.trip_scheme import TripScheme
+from crud import tag_crud
 
 
 async def add_tags(trip: TripScheme, tags: List[str], db: AsyncSession) -> TripScheme:
     try:
+
         db.begin()
 
         for tag in tags:

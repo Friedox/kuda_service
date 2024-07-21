@@ -1,33 +1,62 @@
 import datetime
-import json
 from typing import List
 
-import httpx
-import requests
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Request
 from sqlalchemy.orm import aliased
 
-from . import tag_service
-from ..crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
-from ..exceptions import UnexpectedError
-from ..models.point_model import Point
-from ..models.tag_model import Tag
-from ..models.trip_model import Trip
-from ..models.trip_tag_model import TripTag
-from ..schemas.filter_scheme import FilterScheme
-from ..schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
-from ..services.auth_service import get_user_from_session_id
+from services import tag_service
+from services.translate_service import translate
+from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
+from exceptions import UnexpectedError
+from models.point_model import Point
+from models.tag_model import Tag
+from models.trip_model import Trip
+from models.trip_tag_model import TripTag
+from schemas.filter_scheme import FilterScheme
+from schemas.point_scheme import CreatePointScheme
+from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme
+from services.auth_service import get_user_from_session_id
+from services.geocoder_service import geocode
 
-apiKey = '2d7d974c-4c95-4115-a3e5-8a33651cb060'
 
-
-async def create(trip_create: CreateTripScheme, request: Request, db: AsyncSession) -> dict:
+async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
     user = await get_user_from_session_id(request, db)
-    await tag_service.check_tags(trip_create.tags, db)
+
+    await tag_service.check_tags(trip_request.tags, db)
+
+    pickup_address_dict = await convert_coords(trip_request.pickup.latitude, trip_request.pickup.longitude)
+    dropoff_address_dict = await convert_coords(trip_request.dropoff.latitude, trip_request.dropoff.longitude)
+
+    pickup_point = CreatePointScheme(
+        address=pickup_address_dict,
+        latitude=trip_request.pickup.latitude,
+        longitude=trip_request.pickup.longitude,
+    )
+
+    dropoff_point = CreatePointScheme(
+        address=dropoff_address_dict,
+        latitude=trip_request.dropoff.latitude,
+        longitude=trip_request.dropoff.longitude,
+    )
+
+    trip_create = CreateTripScheme(
+        pickup=pickup_point,
+        dropoff=dropoff_point,
+        start_timestamp=trip_request.start_timestamp,
+        end_timestamp=trip_request.end_timestamp,
+        fare=trip_request.fare,
+        tags=trip_request.tags,
+        available_sits=trip_request.available_sits,
+        driver_phone=trip_request.driver_phone,
+        driver_tg=trip_request.driver_tg,
+        car_number=trip_request.car_number,
+        car_type=trip_request.car_type,
+    )
 
     trip = await trip_user_crud.create(user, trip_create, db)
+
     await trip_tag_crud.add_tags(trip, trip_create.tags, db)
 
     return {
@@ -37,7 +66,6 @@ async def create(trip_create: CreateTripScheme, request: Request, db: AsyncSessi
 
 
 async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
-    print(request.__dict__)
     user = await get_user_from_session_id(request, db)
     trip_delete = await trip_crud.get(trip_id, db)
 
@@ -45,7 +73,13 @@ async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
     if await trip_user_crud.delete(user, trip_delete, db):
         return {"message": "Trip deleted successfully"}
 
-    raise UnexpectedError("Trip deleted")
+    raise UnexpectedError("Trip not deleted")
+
+
+async def get(trip_id: int, db: AsyncSession) -> TripScheme:
+    trip = await trip_user_crud.get(trip_id, db)
+
+    return trip
 
 
 async def get_user_trips(request: Request, db: AsyncSession) -> List[TripScheme]:
@@ -136,13 +170,12 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession):
     return trip_schemas
 
 
-async def convert_coords(latitude, longitude):
-    url = f"https://geocode-maps.yandex.ru/1.x/?apikey={apiKey}&geocode={latitude},{longitude}&format=json"
+async def convert_coords(latitude: float, longitude: float):
+    translated_details = {}
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
+    address_info = geocode(latitude=latitude, longitude=longitude)
 
-        data = response.json()
+    for key, value in address_info.items():
+        translated_details[key] = translate(text=value)
 
-        return data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty'][
-            'GeocoderMetaData']['text']
+    return translated_details

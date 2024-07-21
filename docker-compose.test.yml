@@ -2,14 +2,14 @@ services:
 
   kuda_test_database:
     env_file:
-      - .env
+      - ./backend/.env
     image: postgres:latest
     restart: always
     container_name: kuda_test_database
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${TEST_POSTGRES_DB}
+      POSTGRES_USER: ${APP_CONFIG__TEST_DATABASE__DB_USER}
+      POSTGRES_PASSWORD: ${APP_CONFIG__TEST_DATABASE__DB_PASSWORD}
+      POSTGRES_DB: ${APP_CONFIG__TEST_DATABASE__DB_NAME}
     ports:
       - "5434:5432"
 

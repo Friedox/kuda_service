@@ -3,8 +3,8 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ..schemas.tag_scheme import TagScheme
-from ..models.tag_model import Tag
+from schemas.tag_scheme import TagScheme
+from models.tag_model import Tag
 
 
 async def get_all(db: AsyncSession) -> List[TagScheme]:
