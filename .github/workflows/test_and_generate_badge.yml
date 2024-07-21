@@ -36,6 +36,8 @@ jobs:
       - name: Set up Docker Compose
         run: |
           ls
+          ll
+          cat .env
           docker compose  --env-file /kuda/.env -f docker-compose.test.yml up --build -d
 
       - name: Install dependencies
