@@ -56,6 +56,7 @@ class ValidationConfig(BaseModel):
 class GeocoderConfig(BaseModel):
     api_key: str
     url: str
+    path_api_key: str
 
 
 class RedisConfig(BaseModel):

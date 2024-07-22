@@ -1,7 +1,8 @@
-from sqlalchemy import select, func, cast, Integer
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from exceptions import ReviewNotAllowedError
 from models import Review
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
 
@@ -53,5 +54,5 @@ async def get_user_score(user_id: int, db: AsyncSession) -> float:
 
         return avg_score
 
-    except Exception as e:
-        raise RuntimeError(f"An error occurred while retrieving the user score: {e}")
+    except IntegrityError as e:
+        raise ReviewNotAllowedError(str(e))

@@ -7,14 +7,17 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
+from config import settings
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud
-from exceptions import UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError, UserNotAllowedError
+from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
+                        UserNotAllowedError, \
+                        FindPathError)
 from models.point_model import Point
 from models.tag_model import Tag
 from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
-from schemas.point_scheme import CreatePointScheme
+from schemas.point_scheme import CreatePointScheme, PathRequestScheme
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
 from schemas.user_scheme import UserScheme
@@ -271,12 +274,12 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     return response
 
 
-async def get_trip_time(db):
-    pick_up_latitude = 55.754671
-    pick_up_longitude = 48.741960
-    drop_off_latitude = 55.793490
-    drop_off_longitude = 49.118317
-    time_trip_api = "hFD5DYJTQxkwl7LFdk87-KL3UIx8kUSPY8kqP0fam_s"
+async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
+    pick_up_latitude = path.pick_up.latitude
+    pick_up_longitude = path.pick_up.longitude
+    drop_off_latitude = path.drop_off.latitude
+    drop_off_longitude = path.drop_off.longitude
+    time_trip_api = settings.geocoder.path_api_key
 
     response = requests.get(f"https://router.hereapi.com/v8/routes?transportMode=car&origin={pick_up_latitude},"
                             f"{pick_up_longitude}&destination={drop_off_latitude},"
@@ -295,6 +298,8 @@ async def get_trip_time(db):
 
         durations.append(total_duration)
 
+    if len(durations) <= 0:
+        raise FindPathError
     smallest_duration = min(durations)
 
     return smallest_duration
