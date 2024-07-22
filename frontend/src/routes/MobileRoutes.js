@@ -11,6 +11,8 @@ import CreateTripFilter from "../pages/mobile/CreateTripFilter";
 import Login from '../pages/mobile/login';
 import Login_email from '../pages/mobile/login_email';
 import Trip_card from '../pages/mobile/trip_card';
+import DirectMessages from '../pages/mobile/DirectMessage';
+import Conversation from '../pages/mobile/Conversation';
 
 function MobileRoutes() {
     return (
@@ -28,8 +30,8 @@ function MobileRoutes() {
                 <Route path="/create" element={<CreateTripMap/>}/>
                 <Route path="/create_filter" element={<CreateTripFilter/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/login_email" element={<Login_email/>}/>
-                <Route path="/Trip_card" element={<Trip_card/>}/>
+                <Route path="/chats" element={<DirectMessages/>}/>
+                <Route path="/convTest" element={<Conversation/>}/>
             </Routes>
         </Provider>
     )

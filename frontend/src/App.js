@@ -1,7 +1,7 @@
 // src/App.js
 import React from 'react';
 import AppRoutes from './routes/AppRoutes';
-// import './styles/style.css';
+import './App.css';
 
 function App() {
   return (
