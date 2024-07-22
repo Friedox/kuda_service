@@ -41,7 +41,7 @@ function MapPointSelect() {
     const [valueSeats, setValueSeats] = useState(1); // Начальное значение
     const [isFilterVisible, setIsFilterVisible] = useState(false); // Состояние для видимости фильтра
     const [isSeatsBlockVisible, setIsSeatsBlockVisible] = useState(false); // Состояние для видимости блока seats_number_block
-
+    const [region, setRegion] = useState('');
     const handleDecrement = () => {
         setValueSeats((prevValue) => Math.max(prevValue - 1, 1)); // Уменьшаем значение, но не меньше 1
     };
@@ -211,6 +211,9 @@ function MapPointSelect() {
         setCarNumber(event.target.value);
     };
 
+    const handleCarRegionChange = (event) => {
+        setRegion(event.target.value);
+    };
     const handleCreateClick = async () => {
         const data = {
             pickup: {
@@ -228,7 +231,7 @@ function MapPointSelect() {
             available_sits: valueSeats, // Количество доступных мест
             driver_phone: '', // Номер телефона водителя
             driver_tg: value, // Логин в Telegram
-            car_number: carNumber, // Номер машины
+            car_number: carNumber + region, // Номер машины
             car_type: car, // Тип машины
         };
 
@@ -324,13 +327,23 @@ function MapPointSelect() {
                             onChange={handleCarChange}
                             placeholder="Your car"
                         />
-                        <input
-                            className="input w50"
-                            type="text"
-                            value={carNumber}
-                            onChange={handleCarNumberChange}
-                            placeholder="Your car number"
-                        />
+
+                        <div className="number_region w50">
+                            <input
+                                className="car_number input_num"
+                                type="text"
+                                value={carNumber}
+                                onChange={handleCarNumberChange}
+                                placeholder="A000AA"
+                            />
+                            <input
+                                className="car_number input_reg"
+                                type="text"
+                                value={region}
+                                onChange={handleCarRegionChange}
+                                placeholder="666"
+                            />
+                        </div>
                     </div>
                 </div>
 
