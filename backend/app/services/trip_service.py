@@ -282,18 +282,19 @@ async def get_trip_time(db):
                             f"{pick_up_longitude}&destination={drop_off_latitude},"
                             f"{drop_off_longitude}&return=summary&apikey={time_trip_api}")
     route_data = response.json()
-
+    durations = []
     for route in route_data['routes']:
-        print(f"Route ID: {route['id']}")
+        total_duration = 0
+
         for section in route['sections']:
             departure_time = section['departure']['time']
             arrival_time = section['arrival']['time']
             duration = (datetime.fromisoformat(arrival_time) - datetime.fromisoformat(
                 departure_time)).total_seconds() / 60
-            print(f"  Section ID: {section['id']}")
-            print(f"    Departure time: {departure_time}")
-            print(f"    Arrival time: {arrival_time}")
-            print(f"    Duration: {duration}")
+            total_duration += duration
 
-    print(route_data)
-    return None
+        durations.append(total_duration)
+
+    smallest_duration = min(durations)
+
+    return smallest_duration
