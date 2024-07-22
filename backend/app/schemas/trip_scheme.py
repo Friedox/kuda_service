@@ -22,6 +22,7 @@ class RequestTripScheme(BaseModel):
 class CreateTripScheme(RequestTripScheme):
     pickup: CreatePointScheme
     dropoff: CreatePointScheme
+    travel_time: float
 
 
 class TripScheme(BaseModel):
@@ -37,6 +38,7 @@ class TripScheme(BaseModel):
     car_number: str
     car_type: str
     is_active: bool
+    travel_time: float
 
 
 class TripTagsScheme(TripScheme):
