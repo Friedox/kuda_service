@@ -163,7 +163,7 @@ function TripCard() {
     const handleCancel = async () => {
         setIsBooking(false);
         try {
-            const response = await axios.post(`https://kuda-trip.ru/api/v1/trips/delete_book/${tripId}`, {
+            const response = await axios.delete(`https://kuda-trip.ru/api/v1/trips/delete_book/${tripId}`, {
                 trip_id: tripId
             });
             if (response.data.status === 'ok') {
