@@ -31,7 +31,7 @@ jobs:
       - name: Create .env file from secrets
         run: |
           echo APP_CONFIG__DATABASE__DB_USER=${{ secrets.APP_CONFIG__DATABASE__DB_USER }} > .env
-          echo APP_CONFIG__GEOCODER__PATH_API_KEY=${{ secrets.APP_CONFIG__GEOCODER__PATH_API_KEY }} > .env
+          echo APP_CONFIG__GEOCODER__PATH_API_KEY=${{ secrets.APP_CONFIG__GEOCODER__PATH_API_KEY }} >> .env
           echo APP_CONFIG__DATABASE__DB_PASSWORD=${{ secrets.APP_CONFIG__DATABASE__DB_PASSWORD }} >> .env
           echo APP_CONFIG__DATABASE__DB_NAME=${{ secrets.APP_CONFIG__DATABASE__DB_NAME }} >> .env
           echo APP_CONFIG__TEST_DATABASE__DB_USER=${{ secrets.APP_CONFIG__TEST_DATABASE__DB_USER }} >> .env
