@@ -45,6 +45,27 @@ function MapPointSelect() {
     const [region, setRegion] = useState('');
     const [selectedOptions, setSelectedOptions] = useState([]);
 
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
+
     const handleDecrement = () => {
         setValueSeats((prevValue) => Math.max(prevValue - 1, 1)); // Уменьшаем значение, но не меньше 1
     };

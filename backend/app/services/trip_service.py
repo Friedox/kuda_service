@@ -274,6 +274,7 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     return response
 
 
+
 async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
     pick_up_latitude = path.pick_up.latitude
     pick_up_longitude = path.pick_up.longitude
@@ -303,3 +304,15 @@ async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
     smallest_duration = min(durations)
 
     return smallest_duration
+
+async def check_user(trip_id: int, request: Request, db: AsyncSession):
+    user: UserScheme = await get_user_from_session_id(request, db)
+
+    users = await trip_user_crud.get_trip_users(trip_id, db)
+    creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
+
+    is_in_trip = user.user_id in users
+    is_creator = user.user_id == creator_id
+
+    return {"is_in_trip": is_in_trip, "is_creator": is_creator}
+

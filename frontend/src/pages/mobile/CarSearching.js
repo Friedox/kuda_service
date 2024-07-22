@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import minus from "../../assets/icon/minus.svg";
 import plus from "../../assets/icon/plus_no_circle.svg";
 import arrow from "../../assets/icon/arrow_right.svg";
+import axios from "axios";
 
 function CarSearching() {
     const [mapInitialized, setMapInitialized] = useState(false);
@@ -33,6 +34,25 @@ function CarSearching() {
     const [isFilterVisible, setIsFilterVisible] = useState(false); // Состояние для видимости фильтра
     const [isSeatsBlockVisible, setIsSeatsBlockVisible] = useState(false); // Состояние для видимости блока seats_number_block
 
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     const [selectedType, setSelectedType] = useState(null);
 
