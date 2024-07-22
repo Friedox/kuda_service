@@ -37,41 +37,13 @@ function HomePage() {
         checkSession();
     }, [navigate]);
 
-    useEffect(() => {
-        const sessionId = Cookies.get('session_id');
-        if (!sessionId) {
-            // Перенаправляем пользователя на главную страницу или другую страницу
-            window.location.href = '/'; // Убедитесь, что этот путь существует в вашем приложении
-        } else {
-            // Делаем запрос на сервер для получения фильтрованных данных
-            fetch('https://kuda-trip.ru/api/v1/trip/get_upcoming', {
-                method: 'GET',
-                credentials: 'include', // Включение cookies в запрос
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-                // body: JSON.stringify({ tags: [] })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            let errorMessage;
-                            try {
-                                errorMessage = JSON.parse(text);
-                            } catch (e) {
-                                errorMessage = text;
-                            }
-                            throw new Error(`Network response was not ok: ${response.statusText}. Response body: ${JSON.stringify(errorMessage)}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    setTrips(data); // Предполагается, что trips - это массив поездок
-                })
-                .catch(error => {
-                    console.error('There was an error!', error);
-                });
+    useEffect(async () => {
+        try {
+            const response = await axios.post('https://kuda-trip.ru/api/v1/trips/get_upcoming/');
+            console.log(response)
+            setTrips(response.data.detail);
+        } catch (error) {
+            console.error('Error fetching trips:', error);
         }
     }, []);
 
