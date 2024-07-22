@@ -1549,3 +1549,42 @@ html {
 .text_right {
     text-align: right;
 }
+
+.validation {
+    background-color: #F2F3F4;
+    border-radius: 100px;
+    padding: 5px 15px 7px 15px;
+
+}
+
+.criteria {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.check_valid span {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.criterion.valid {
+    background-color: #3070EE;
+    border-color: #3070EE;
+    color: white;
+}
+
+.criterion.invalid {
+    background-color: #EE3030;
+    border-color: #EE3030;
+    color: white;
+}
+
+.criterion {
+    background-color: #F2F3F4;
+    color: #111111;
+}
