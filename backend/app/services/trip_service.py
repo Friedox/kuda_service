@@ -1,6 +1,7 @@
 import datetime
 from typing import List
 
+import requests
 from fastapi import Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,6 +22,8 @@ from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
 from services.translate_service import translate
+
+from datetime import datetime
 
 
 async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -266,3 +269,31 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     response = await review_crud.create(review, user.user_id, db)
 
     return response
+
+
+async def get_trip_time(db):
+    pick_up_latitude = 55.754671
+    pick_up_longitude = 48.741960
+    drop_off_latitude = 55.793490
+    drop_off_longitude = 49.118317
+    time_trip_api = "hFD5DYJTQxkwl7LFdk87-KL3UIx8kUSPY8kqP0fam_s"
+
+    response = requests.get(f"https://router.hereapi.com/v8/routes?transportMode=car&origin={pick_up_latitude},"
+                            f"{pick_up_longitude}&destination={drop_off_latitude},"
+                            f"{drop_off_longitude}&return=summary&apikey={time_trip_api}")
+    route_data = response.json()
+
+    for route in route_data['routes']:
+        print(f"Route ID: {route['id']}")
+        for section in route['sections']:
+            departure_time = section['departure']['time']
+            arrival_time = section['arrival']['time']
+            duration = (datetime.fromisoformat(arrival_time) - datetime.fromisoformat(
+                departure_time)).total_seconds() / 60
+            print(f"  Section ID: {section['id']}")
+            print(f"    Departure time: {departure_time}")
+            print(f"    Arrival time: {arrival_time}")
+            print(f"    Duration: {duration}")
+
+    print(route_data)
+    return None
