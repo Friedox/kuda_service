@@ -34,267 +34,29 @@ function FellowTravelCards() {
     const [formattedDate, setFormattedDate] = useState('');
     // const [selectedOptions, setSelectedOptions] = useState([]);
     const [showFilters, setShowFilters] = useState(true);
-    const [trips, setTrips] = useState([
-        {
-            pickup: {
-                latitude: 55.75190325,
-                longitude: 48.75292795468886,
-                address: {
-                    city: "Innopolis",
-                    name: "Building named after A. S. Popov",
-                    road: "Universitetskaya street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420500",
-                    country_code: "ru",
-                    house_number: "7"
-                },
-                point_id: 1
-            },
-            dropoff: {
-                latitude: 55.7455385,
-                longitude: 48.7394729136916,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420500",
-                    country_code: "ru",
-                    house_number: "98"
-                },
-                point_id: 2
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 0,
-            trip_id: 1,
-            available_sits: 2,
-            driver_phone: "string",
-            driver_tg: "string",
-            car_number: "string",
-            car_type: "string",
-            tags: ["smoke"]
-        },
-        {
-            pickup: {
-                latitude: 55.752,
-                longitude: 48.753,
-                address: {
-                    city: "Innopolis",
-                    name: "Library",
-                    road: "Universitetskaya street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420500",
-                    country_code: "ru",
-                    house_number: "8"
-                },
-                point_id: 3
-            },
-            dropoff: {
-                latitude: 55.746,
-                longitude: 48.74,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420500",
-                    country_code: "ru",
-                    house_number: "99"
-                },
-                point_id: 4
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 100,
-            trip_id: 2,
-            available_sits: 3,
-            driver_phone: "string2",
-            driver_tg: "string2",
-            car_number: "string2",
-            car_type: "string2",
-            tags: ["smoke", "pet"]
-        },
-        {
-            pickup: {
-                latitude: 55.753,
-                longitude: 48.754,
-                address: {
-                    city: "Innopolis",
-                    name: "Cafeteria",
-                    road: "Student street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420501",
-                    country_code: "ru",
-                    house_number: "9"
-                },
-                point_id: 5
-            },
-            dropoff: {
-                latitude: 55.747,
-                longitude: 48.741,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420501",
-                    country_code: "ru",
-                    house_number: "100"
-                },
-                point_id: 6
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 150,
-            trip_id: 3,
-            available_sits: 4,
-            driver_phone: "string3",
-            driver_tg: "string3",
-            car_number: "string3",
-            car_type: "string3",
-            tags: ["bag"]
-        },
-        {
-            pickup: {
-                latitude: 55.754,
-                longitude: 48.755,
-                address: {
-                    city: "Innopolis",
-                    name: "Dormitory",
-                    road: "Student street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420502",
-                    country_code: "ru",
-                    house_number: "10"
-                },
-                point_id: 7
-            },
-            dropoff: {
-                latitude: 55.748,
-                longitude: 48.742,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420502",
-                    country_code: "ru",
-                    house_number: "101"
-                },
-                point_id: 8
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 200,
-            trip_id: 4,
-            available_sits: 2,
-            driver_phone: "string4",
-            driver_tg: "string4",
-            car_number: "string4",
-            car_type: "string4",
-            tags: ["pet"]
-        },
-        {
-            pickup: {
-                latitude: 55.755,
-                longitude: 48.756,
-                address: {
-                    city: "Innopolis",
-                    name: "Tech Park",
-                    road: "Technopark street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420503",
-                    country_code: "ru",
-                    house_number: "11"
-                },
-                point_id: 9
-            },
-            dropoff: {
-                latitude: 55.749,
-                longitude: 48.743,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420503",
-                    country_code: "ru",
-                    house_number: "102"
-                },
-                point_id: 10
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 250,
-            trip_id: 5,
-            available_sits: 5,
-            driver_phone: "string5",
-            driver_tg: "string5",
-            car_number: "string5",
-            car_type: "string5",
-            tags: ["smoke", "pet"]
-        },
-        {
-            pickup: {
-                latitude: 55.756,
-                longitude: 48.757,
-                address: {
-                    city: "Innopolis",
-                    name: "Shopping Mall",
-                    road: "Mall street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420504",
-                    country_code: "ru",
-                    house_number: "12"
-                },
-                point_id: 11
-            },
-            dropoff: {
-                latitude: 55.75,
-                longitude: 48.744,
-                address: {
-                    city: "Innopolis",
-                    road: "Sportivnaya Street",
-                    state: "Tatarstan",
-                    county: "Verkhneuslonsky District",
-                    country: "Russia",
-                    postcode: "420504",
-                    country_code: "ru",
-                    house_number: "103"
-                },
-                point_id: 12
-            },
-            start_timestamp: 0,
-            end_timestamp: 0,
-            fare: 300,
-            trip_id: 6,
-            available_sits: 1,
-            driver_phone: "string6",
-            driver_tg: "string6",
-            car_number: "string6",
-            car_type: "string6",
-            tags: ["smoke", "pets", "bag"]
-        }
-    ]);
+    const [trips, setTrips] = useState([]);
 
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
 
     const toggleFilters = () => {
@@ -390,7 +152,6 @@ function FellowTravelCards() {
 
     const isSelected = (option) => selectedOptions.includes(option);
 
-    const navigate = useNavigate();
     // const dispatch = useDispatch();
     const startAddress = useSelector((state) => state.address.startAddress);
     const endAddress = useSelector((state) => state.address.endAddress);

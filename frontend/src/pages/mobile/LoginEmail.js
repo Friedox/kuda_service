@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../actions/authActions';
 import logo_full from '../../assets/illustration/logo_full.svg';
 import '../../styles/mobile/style.css';
-import Cookies from 'js-cookie'; // Импорт библиотеки для работы с куками
+import Cookies from 'js-cookie';
+import {useNavigate} from "react-router-dom";
+import axios from "axios"; // Импорт библиотеки для работы с куками
 
 
 function LoginEmail() {
@@ -11,6 +13,33 @@ function LoginEmail() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+
+                if (response.data.status === 'ok') {
+                    // Сессия действительна, перенаправляем пользователя
+                    navigate('/homes'); // Замените на нужный маршрут
+                }
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    console.log('Invalid session, staying on login page');
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     const handleLogin = async () => {
         try {
@@ -20,7 +49,6 @@ function LoginEmail() {
             // Проверьте авторизацию после завершения входа
             const sessionId = Cookies.get('session_id');
             if (sessionId) {
-                console.log(sessionId)
                 // Перенаправьте на страницу Home, если пользователь авторизован
                 window.location.href = '/home';
             } else {

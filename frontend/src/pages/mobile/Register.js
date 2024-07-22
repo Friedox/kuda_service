@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // Импорт библиотеки для работы с куками
 import logo_full from '../../assets/illustration/vertical_login.svg';
 import '../../styles/mobile/style.css';
+import {useNavigate} from "react-router-dom";
 
 function SignUpEmail() {
     const [email, setEmail] = useState('');
@@ -14,6 +15,33 @@ function SignUpEmail() {
         uppercase: false,
         number: false,
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+
+                if (response.data.status === 'ok') {
+                    // Сессия действительна, перенаправляем пользователя
+                    navigate('/homes'); // Замените на нужный маршрут
+                }
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    console.log('Invalid session, staying on login page');
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     const handlePasswordChange = (e) => {
         const value = e.target.value;
