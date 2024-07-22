@@ -84,10 +84,6 @@ function FellowTravelCards() {
             tags: selectedOptions
         };
 
-        console.log(requestBody)
-        console.log(startCoordinate)
-        console.log(endCoordinate)
-
         try {
             const response = await axios.post('https://kuda-trip.ru/api/v1/trips/get_filtered/', requestBody);
             console.log(response)

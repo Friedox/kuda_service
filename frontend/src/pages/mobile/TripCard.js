@@ -27,23 +27,23 @@ function TripCard() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkSession = async () => {
-            try {
-                await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
-                    withCredentials: true, // Включение cookies в запрос
-                });
-            } catch (error) {
-                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
-                    navigate('/'); // Замените на нужный маршрут
-                } else {
-                    console.error('Error checking session:', error);
-                }
-            }
-        };
-
-        checkSession();
-    }, [navigate]);
+    // useEffect(() => {
+    //     const checkSession = async () => {
+    //         try {
+    //             await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+    //                 withCredentials: true, // Включение cookies в запрос
+    //             });
+    //         } catch (error) {
+    //             if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+    //                 navigate('/'); // Замените на нужный маршрут
+    //             } else {
+    //                 console.error('Error checking session:', error);
+    //             }
+    //         }
+    //     };
+    //
+    //     checkSession();
+    // }, [navigate]);
 
     useEffect(() => {
         async function fetchTripDetails() {
@@ -71,9 +71,9 @@ function TripCard() {
 
         async function fetchCreatorGrade(creatorId) {
             try {
-                const response = await axios.get(`https://kuda-trip.ru/api/v1/auth/getusers/score/${creatorId}`);
+                const response = await axios.post(`https://kuda-trip.ru/api/v1/auth/getusers/score/${creatorId}`);
                 if (response.data.status === 'ok') {
-                    setCreatorGrade(response.data.detail);
+                    setCreatorGrade(response.data.detail.message);
                 }
             } catch (error) {
                 console.error('Error fetching creator grade:', error);
@@ -258,8 +258,8 @@ function TripCard() {
                 <div className="car_card">
                     <Car car_name={tripDetails.car_type}
                          car_color="Black"
-                         number={tripDetails.car_number}
-                         region="116"
+                         number={tripDetails.car_number.slice(0, 6)}
+                         region={tripDetails.car_number.slice(6)}
                     />
                 </div>
 
@@ -271,7 +271,7 @@ function TripCard() {
                             profile_photo={profile_example}
                             driver_name={passenger.username}
                             trips={passenger.trip_count}
-                            grade={passenger.grade}
+                            grade={passenger.score}
                         />
                     ))}
                 </div>
