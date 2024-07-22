@@ -96,6 +96,16 @@ class UserNotAllowedError(ValueError):
         super().__init__("This operation is not allowed for user")
 
 
+class ReviewNotAllowedError(ValueError):
+    def __init__(self: str, text: str):
+        super().__init__(f"This operation is not allowed for user, message: {text}")
+
+
+class FindPathError(ValueError):
+    def __init__(self: str):
+        super().__init__("Path not found")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -114,5 +124,7 @@ exceptions_list = (TripNotFoundError,
                    UserNotBookedError,
                    BookNotFoundError,
                    TripEndedError,
-                   UserNotAllowedError
+                   UserNotAllowedError,
+                   ReviewNotAllowedError,
+                   FindPathError
                    )

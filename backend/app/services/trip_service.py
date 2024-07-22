@@ -1,19 +1,23 @@
 import datetime
 from typing import List
 
+import requests
 from fastapi import Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
+from config import settings
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud
-from exceptions import UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError, UserNotAllowedError
+from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
+                        UserNotAllowedError, \
+                        FindPathError)
 from models.point_model import Point
 from models.tag_model import Tag
 from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
-from schemas.point_scheme import CreatePointScheme
+from schemas.point_scheme import CreatePointScheme, PathRequestScheme
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
 from schemas.user_scheme import UserScheme
@@ -21,6 +25,8 @@ from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
 from services.translate_service import translate
+
+from datetime import datetime
 
 
 async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -268,6 +274,37 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     return response
 
 
+
+async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
+    pick_up_latitude = path.pick_up.latitude
+    pick_up_longitude = path.pick_up.longitude
+    drop_off_latitude = path.drop_off.latitude
+    drop_off_longitude = path.drop_off.longitude
+    time_trip_api = settings.geocoder.path_api_key
+
+    response = requests.get(f"https://router.hereapi.com/v8/routes?transportMode=car&origin={pick_up_latitude},"
+                            f"{pick_up_longitude}&destination={drop_off_latitude},"
+                            f"{drop_off_longitude}&return=summary&apikey={time_trip_api}")
+    route_data = response.json()
+    durations = []
+    for route in route_data['routes']:
+        total_duration = 0
+
+        for section in route['sections']:
+            departure_time = section['departure']['time']
+            arrival_time = section['arrival']['time']
+            duration = (datetime.fromisoformat(arrival_time) - datetime.fromisoformat(
+                departure_time)).total_seconds() / 60
+            total_duration += duration
+
+        durations.append(total_duration)
+
+    if len(durations) <= 0:
+        raise FindPathError
+    smallest_duration = min(durations)
+
+    return smallest_duration
+
 async def check_user(trip_id: int, request: Request, db: AsyncSession):
     user: UserScheme = await get_user_from_session_id(request, db)
 
@@ -278,3 +315,4 @@ async def check_user(trip_id: int, request: Request, db: AsyncSession):
     is_creator = user.user_id == creator_id
 
     return {"is_in_trip": is_in_trip, "is_creator": is_creator}
+

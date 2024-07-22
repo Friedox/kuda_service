@@ -13,3 +13,7 @@ class CreatePointScheme(RequestPointScheme):
 class PointScheme(CreatePointScheme):
     point_id: int
 
+
+class PathRequestScheme(BaseModel):
+    pick_up: RequestPointScheme
+    drop_off: RequestPointScheme

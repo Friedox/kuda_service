@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
 from schemas.filter_scheme import FilterScheme
+from schemas.point_scheme import PathRequestScheme
 from schemas.review_scheme import ReviewRequestScheme
 from schemas.trip_scheme import RequestTripScheme
 from services import trip_service, tag_service
@@ -94,6 +95,13 @@ async def set_review(
         trip_service.set_review(review, request, db)
     )
 
+
+
+@router.post("/get_trip_time/")
+async def get_trip_time(path: PathRequestScheme, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.get_trip_time(path, db)
+    )
 
 @router.get("/check_user/{trip_id}")
 async def check_user(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
