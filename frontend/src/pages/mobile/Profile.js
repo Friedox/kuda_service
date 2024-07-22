@@ -5,8 +5,31 @@ import profile_example from '../../assets/profile_example.png'
 import star from '../../assets/icon/star.svg'
 import ellipse from '../../assets/icon/ellipse.svg'
 import arrow_right from '../../assets/icon/arrow_right.svg'
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 function Profile() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
     return (
         <>
             <section className="mobile_section">

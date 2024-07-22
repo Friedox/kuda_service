@@ -12,16 +12,38 @@ import driver_photo1 from "../../assets/driver_photo1.svg";
 import Car from "../../components/mobile/Car";
 import profile_example from '../../assets/profile_example.png';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function TripCard() {
     const { tripId } = useParams();
     const [tripDetails, setTripDetails] = useState(null);
     const [creatorProfile, setCreatorProfile] = useState(null);
+    const [creatorGrade, setCreatorGrade] = useState(null);
     const [passengers, setPassengers] = useState([]);
     const [isBooking, setIsBooking] = useState(false);
     const [bookingStatus, setBookingStatus] = useState(null);
+    const [isCreator, setIsCreator] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     useEffect(() => {
         async function fetchTripDetails() {
@@ -36,9 +58,25 @@ function TripCard() {
 
                     // Fetch passenger details
                     await fetchAllPassengerDetails(tripData.trip_users);
+
+                    await fetchCreatorGrade(tripData.creator_id);
+
+                    // Check if the user is the creator or has booked the trip
+                    await checkUserStatus(tripId);
                 }
             } catch (error) {
                 console.error('Error fetching trip details:', error);
+            }
+        }
+
+        async function fetchCreatorGrade(creatorId) {
+            try {
+                const response = await axios.get(`https://kuda-trip.ru/api/v1/auth/getusers/score/${creatorId}`);
+                if (response.data.status === 'ok') {
+                    setCreatorGrade(response.data.detail);
+                }
+            } catch (error) {
+                console.error('Error fetching creator grade:', error);
             }
         }
 
@@ -67,9 +105,23 @@ function TripCard() {
             try {
                 const passengerDetails = await Promise.all(passengerIds.map(userId => fetchPassengerDetails(userId)));
                 setPassengers(passengerDetails.filter(p => p !== null));
-                console.log(passengers);
             } catch (error) {
                 console.error('Error fetching all passenger details:', error);
+            }
+        }
+
+        async function checkUserStatus(tripId) {
+            try {
+                const response = await axios.get(`https://kuda-trip.ru/api/v1/trips/check_user/${tripId}`, {
+                    withCredentials: true,
+                });
+                if (response.data.status === 'ok') {
+                    const { is_in_trip, is_creator } = response.data.detail;
+                    setBookingStatus(is_in_trip ? 'is_in_trip' : null);
+                    setIsCreator(is_creator);
+                }
+            } catch (error) {
+                console.error('Error checking user status:', error);
             }
         }
 
@@ -115,13 +167,30 @@ function TripCard() {
                 trip_id: tripId
             });
             if (response.data.status === 'ok') {
-                setBookingStatus('Booking cancel successful!');
+                setBookingStatus(null);
             } else {
-                setBookingStatus('Booking cancel failed.');
+                setBookingStatus('Cancel booking failed.');
             }
         } catch (error) {
-            console.error('Error booking trip:', error);
-            setBookingStatus('Booking cancel failed.');
+            console.error('Error canceling booking:', error);
+            setBookingStatus('Cancel booking failed.');
+        } finally {
+            setIsBooking(true);
+        }
+    };
+
+    const handleDelete = async () => {
+        setIsBooking(false);
+        try {
+            const response = await axios.delete(`https://kuda-trip.ru/api/v1/trips/${tripId}`);
+            if (response.data.status === 'ok') {
+                navigate('/trips'); // Redirect to trips list or any other appropriate page
+            } else {
+                setBookingStatus('Delete trip failed.');
+            }
+        } catch (error) {
+            console.error('Error deleting trip:', error);
+            setBookingStatus('Delete trip failed.');
         } finally {
             setIsBooking(true);
         }
@@ -131,7 +200,7 @@ function TripCard() {
         <>
             <div className="gray_bg" />
             <section className="mobile_section">
-                <Header header_text="Details of the trip" href={"https://kuda-trip.ru/trip_card/" + tripId}/>
+                <Header header_text="Details of the trip" href={"https://kuda-trip.ru/trip_card/" + tripId} />
                 <a href="#" className="trip_card_full">
                     <div className="trip_card_section">
                         <div className="trip_time_section">
@@ -182,8 +251,8 @@ function TripCard() {
                     <Driver
                         profile_photo={driver_photo1}
                         driver_name={creatorProfile.username}
-                        grade="4.9"
-                        trips="120"
+                        grade={creatorGrade}
+                        trips={creatorProfile.trip_count}
                     />
                 </div>
                 <div className="car_card">
@@ -201,15 +270,19 @@ function TripCard() {
                             key={passenger.id}
                             profile_photo={profile_example}
                             driver_name={passenger.username}
-                            trips={passenger.trips}
+                            trips={passenger.trip_count}
                             grade={passenger.grade}
                         />
                     ))}
                 </div>
 
-                {bookingStatus ? (
+                {isCreator ? (
+                    <button className="cancel_btn" onClick={handleDelete} disabled={isBooking}>
+                        <h2>Delete Trip</h2>
+                    </button>
+                ) : bookingStatus === 'Booked' ? (
                     <button className="cancel_btn" onClick={handleCancel} disabled={isBooking}>
-                        <h2>Cancel</h2>
+                        <h2>Cancel Booking</h2>
                     </button>
                 ) : (
                     <button className="order_btn" onClick={handleBooking} disabled={isBooking}>

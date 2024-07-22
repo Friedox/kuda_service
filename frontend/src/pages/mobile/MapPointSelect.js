@@ -8,6 +8,7 @@ import {setStartAddress, setEndAddress, setStartCoordinate, setEndCoordinate} fr
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadYandexMapScript from '../../utils/loadYandexMapScript';
 import Cookies from 'js-cookie';
+import axios from "axios";
 
 function MapPointSelect() {
 
@@ -19,6 +20,26 @@ function MapPointSelect() {
     const navigate = useNavigate();
     const location = useLocation();
     const target = new URLSearchParams(location.search).get('target');
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     useEffect(() => {
         const initializeMap = (ymaps) => {

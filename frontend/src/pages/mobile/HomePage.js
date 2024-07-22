@@ -9,9 +9,33 @@ import TripCardMedium from '../../components/mobile/TripCardMedium';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import '../../styles/mobile/style.css';
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 function HomePage() {
     const [trips, setTrips] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     useEffect(() => {
         const sessionId = Cookies.get('session_id');

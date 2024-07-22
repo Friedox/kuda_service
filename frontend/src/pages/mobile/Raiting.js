@@ -11,6 +11,7 @@ import driver_photo1 from "../../assets/driver_photo1.svg";
 import Driver from "../../components/mobile/Driver";
 import Car from "../../components/mobile/Car";
 import StarRating from "../../components/mobile/StarRating";
+import axios from "axios";
 
 function Rating() {
     const [mapInitialized, setMapInitialized] = useState(false);
@@ -32,6 +33,25 @@ function Rating() {
     const [isFilterVisible, setIsFilterVisible] = useState(false); // Состояние для видимости фильтра
     const [isSeatsBlockVisible, setIsSeatsBlockVisible] = useState(false); // Состояние для видимости блока seats_number_block
 
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    // Остаемся на текущей странице
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                    // Возможно, стоит добавить обработку других ошибок
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     const [selectedType, setSelectedType] = useState(null);
 
