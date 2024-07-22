@@ -435,7 +435,7 @@ function FellowTravelCards() {
                 <div className="trip_cards_list">
 
                     {trips.length > 0 && trips.map((trip, index) => (
-                        <a href="#" className="trip_card_full" key={index}>
+                        <a href={"trip_card/" + trip.trip_id} className="trip_card_full" key={index}>
                             <div className="trip_card_section">
                                 <div className="trip_time_section">
                                     <span className="trip_time">{formatTimestamp(trip.start_timestamp)}</span>
