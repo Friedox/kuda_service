@@ -233,8 +233,7 @@ function TripCard() {
                             {tripDetails.tags.includes('child') && <img src={child} alt="Child" />}
                             {tripDetails.tags.includes('people2') && <img src={people2} alt="People2" />}
                             {tripDetails.tags.includes('smoke') && <img src={smoke} alt="Smoke" />}
-                            {tripDetails.tags.includes('pet```javascript
-                            ) && <img src={pet} alt="Pet" />}
+                            {tripDetails.tags.includes('pet') && <img src={pet} alt="Pet" />}
                         </div>
                     </div>
                 </a>
