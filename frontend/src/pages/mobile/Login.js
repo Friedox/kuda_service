@@ -18,7 +18,7 @@ function Login() {
 
                 if (response.data.status === 'ok') {
                     // Сессия действительна, перенаправляем пользователя
-                    navigate('/homes'); // Замените на нужный маршрут
+                    navigate('/home'); // Замените на нужный маршрут
                 }
             } catch (error) {
                 if (error.response && error.response.data.detail.message === 'Invalid session ID') {
