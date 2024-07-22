@@ -77,7 +77,11 @@ function TripCard() {
     }, [tripId]);
 
     if (!tripDetails || !creatorProfile) {
-        return <div>Loading...</div>;
+        return (
+            <div className="loader_container">
+                <span className="loader">Load&nbsp;ng</span>
+            </div>
+        );
     }
 
     const formatTimestamp = (timestamp) => {
