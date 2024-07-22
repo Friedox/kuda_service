@@ -266,3 +266,15 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     response = await review_crud.create(review, user.user_id, db)
 
     return response
+
+
+async def check_user(trip_id: int, request: Request, db: AsyncSession):
+    user: UserScheme = await get_user_from_session_id(request, db)
+
+    users = await trip_user_crud.get_trip_users(trip_id, db)
+    creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
+
+    is_in_trip = user.user_id in users
+    is_creator = user.user_id == creator_id
+
+    return {"is_in_trip": is_in_trip, "is_creator": is_creator}
