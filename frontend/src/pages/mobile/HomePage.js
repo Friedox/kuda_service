@@ -67,7 +67,7 @@ function HomePage() {
                 </div>
                 <div className="mobile_btn_section">
                     <div className="left_btns">
-                        <a href="filters" className="mobile_btn light_blue_bg">
+                        <a href="fellow_travel_cards" className="mobile_btn light_blue_bg">
                             <h2>
                                 Fellow travelers
                             </h2>
