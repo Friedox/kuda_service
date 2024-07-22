@@ -28,3 +28,4 @@ class UserGetScheme(BaseModel):
     email: EmailStr
     username: str
     trip_count: int
+    score: float

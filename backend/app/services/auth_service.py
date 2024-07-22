@@ -169,12 +169,13 @@ async def set_pass(new_pass, request, db) -> dict:
 async def get_user(user_id, db) -> UserGetScheme:
     user = await user_crud.get(user_id, db)
     trip_count = await trip_user_crud.get_trip_number(user_id, db)
-
+    score = await review_crud.get_user_score(user_id, db)
     user_response = UserGetScheme(
         user_id=user.user_id,
         email=user.email,
         username=user.username,
-        trip_count=trip_count
+        trip_count=trip_count,
+        score=score
     )
 
     return user_response
