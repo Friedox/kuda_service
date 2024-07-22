@@ -27,23 +27,23 @@ function TripCard() {
 
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const checkSession = async () => {
-    //         try {
-    //             await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
-    //                 withCredentials: true, // Включение cookies в запрос
-    //             });
-    //         } catch (error) {
-    //             if (error.response && error.response.data.detail.message === 'Invalid session ID') {
-    //                 navigate('/'); // Замените на нужный маршрут
-    //             } else {
-    //                 console.error('Error checking session:', error);
-    //             }
-    //         }
-    //     };
-    //
-    //     checkSession();
-    // }, [navigate]);
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                await axios.get('https://kuda-trip.ru/api/v1/auth/getusers/me/', {
+                    withCredentials: true, // Включение cookies в запрос
+                });
+            } catch (error) {
+                if (error.response && error.response.data.detail.message === 'Invalid session ID') {
+                    navigate('/'); // Замените на нужный маршрут
+                } else {
+                    console.error('Error checking session:', error);
+                }
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
 
     useEffect(() => {
         async function fetchTripDetails() {

@@ -772,6 +772,10 @@ h5 {
     width: calc(50% - 7.5px);
 }
 
+.shadow_div .react-datepicker-wrapper {
+    width: 100%;
+}
+
 .w50 {
     width: calc(50% - 7.5px);
 }
