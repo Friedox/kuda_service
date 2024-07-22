@@ -26,9 +26,9 @@ function Header({header_text, href}) {
                     <img src={back}/>
                 </button>
                 <h1>{header_text}</h1>
-                <a href={href} className="forward_btn">
+                <button onClick={handleShare} className="forward_btn">
                     <img src={forward}/>
-                </a>
+                </button>
             </div>
         </>
     );
