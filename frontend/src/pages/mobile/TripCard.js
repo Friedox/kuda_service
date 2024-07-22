@@ -104,11 +104,30 @@ function TripCard() {
         }
     };
 
+    const handleCancel = async () => {
+        setIsBooking(false);
+        try {
+            const response = await axios.post(`https://kuda-trip.ru/api/v1/trips/delete_book/${tripId}`, {
+                trip_id: tripId
+            });
+            if (response.data.status === 'ok') {
+                setBookingStatus('Booking cancel successful!');
+            } else {
+                setBookingStatus('Booking cancel failed.');
+            }
+        } catch (error) {
+            console.error('Error booking trip:', error);
+            setBookingStatus('Booking cancel failed.');
+        } finally {
+            setIsBooking(true);
+        }
+    };
+
     return (
         <>
             <div className="gray_bg" />
             <section className="mobile_section">
-                <Header header_text="Details of the trip" />
+                <Header header_text="Details of the trip" href={"https://kuda-trip.ru/trip_card/" + tripId}/>
                 <a href="#" className="trip_card_full">
                     <div className="trip_card_section">
                         <div className="trip_time_section">
@@ -145,15 +164,15 @@ function TripCard() {
                         </div>
                     </div>
                 </a>
-                <div className="map_section">
-                    <div className="map_header">
-                        <h2>View on the map</h2>
-                        <button className="map_arrow">
-                            <img src={arrow} />
-                        </button>
-                    </div>
-                    <div className="map"> ТУТ КАРТА БУДЕТ </div>
-                </div>
+                {/*<div className="map_section">*/}
+                {/*    <div className="map_header">*/}
+                {/*        <h2>View on the map</h2>*/}
+                {/*        <button className="map_arrow">*/}
+                {/*            <img src={arrow} />*/}
+                {/*        </button>*/}
+                {/*    </div>*/}
+                {/*    <div className="map"> ТУТ КАРТА БУДЕТ </div>*/}
+                {/*</div>*/}
                 <div className="driver_card">
                     <h2>Driver</h2>
                     <Driver

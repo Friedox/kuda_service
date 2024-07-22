@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import axios, {options} from 'axios';
 import map_point from "../../assets/icon/map_point.svg";
 import local_icon from "../../assets/icon/LocateIcon.svg";
 import user_location from "../../assets/icon/user_locatin.svg";
@@ -19,6 +19,7 @@ import minus from "../../assets/icon/minus.svg";
 import plus from "../../assets/icon/plus_no_circle.svg";
 import arrow from "../../assets/icon/arrow_right.svg";
 import Cookies from 'js-cookie';
+
 
 function MapPointSelect() {
     const [mapInitialized, setMapInitialized] = useState(false);
@@ -41,10 +42,23 @@ function MapPointSelect() {
     const [valueSeats, setValueSeats] = useState(1); // Начальное значение
     const [isFilterVisible, setIsFilterVisible] = useState(false); // Состояние для видимости фильтра
     const [isSeatsBlockVisible, setIsSeatsBlockVisible] = useState(false); // Состояние для видимости блока seats_number_block
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     const handleDecrement = () => {
         setValueSeats((prevValue) => Math.max(prevValue - 1, 1)); // Уменьшаем значение, но не меньше 1
     };
+
+    const handleOptionClick = (option) => {
+        setSelectedOptions(prevState => {
+            if (prevState.includes(option)) {
+                return prevState.filter(item => item !== option);
+            } else {
+                return [...prevState, option];
+            }
+        });
+    };
+
+    const isSelected = (option) => selectedOptions.includes(option);
 
     const handleIncrement = () => {
         setValueSeats((prevValue) => Math.min(prevValue + 1, 4)); // Увеличиваем значение, но не больше 4
@@ -211,6 +225,7 @@ function MapPointSelect() {
         setCarNumber(event.target.value);
     };
 
+
     const handleCreateClick = async () => {
         const data = {
             pickup: {
@@ -224,7 +239,7 @@ function MapPointSelect() {
             start_timestamp: selectedDate ? Math.floor(selectedDate.getTime() / 1000) : 0,
             end_timestamp: 0, // Здесь вы можете добавить логику для определения end_timestamp
             fare: 0,
-            tags: [], // Здесь вы можете добавить любые теги, которые вам нужны
+            tags: selectedOptions, // Здесь вы можете добавить любые теги, которые вам нужны
             available_sits: valueSeats, // Количество доступных мест
             driver_phone: '', // Номер телефона водителя
             driver_tg: value, // Логин в Telegram
@@ -232,7 +247,7 @@ function MapPointSelect() {
             car_type: car, // Тип машины
         };
 
-        console.log(data)
+        console.log(data);
 
         try {
             const response = await axios.post('https://kuda-trip.ru/api/v1/trips/', data, {
@@ -242,14 +257,14 @@ function MapPointSelect() {
                 withCredentials: true, // Включение cookies в запрос
             });
 
-            console.log('Trip created successfully:', response.data);
-            // Добавьте здесь обработку успешного создания поезда или обработку ошибок при создании поездки.
-
+            console.log('Trip created successfully:', response.data.detail);
+            const tripId = response.data.detail.trip_id;
+            navigate(`/trip_card/${tripId}`);
         } catch (error) {
             console.error('Error creating trip:', error);
-            // Добавьте здесь обработку ошибок при создании поездки.
         }
     };
+
 
     return (
         <>
@@ -331,6 +346,44 @@ function MapPointSelect() {
                             onChange={handleCarNumberChange}
                             placeholder="Your car number"
                         />
+                    </div>
+                    <div className="filters_create">
+                        <div
+                            className={`filter_btn ${isSelected("only_verified") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("only_verified")}
+                        >
+                            Only verified users
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("smoke") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("smoke")}
+                        >
+                            You can smoke
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("parcels") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("parcels")}
+                        >
+                            I take parcels
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("child") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("child")}
+                        >
+                            Child safety seat
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("with_animals") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("with_animals")}
+                        >
+                            With animals
+                        </div>
+                        <div
+                            className={`filter_btn ${isSelected("max_two") ? 'checkbox_blue' : ''}`}
+                            onClick={() => handleOptionClick("max_two")}
+                        >
+                            Maximum two in the back
+                        </div>
                     </div>
                 </div>
 
