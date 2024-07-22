@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+!backend/app/alembic/versions/**
 # C extensions
 *.so
 .idea/inspectionProfiles/Project_Default.xml

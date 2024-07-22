@@ -11,7 +11,7 @@ from exceptions import InvalidSessionError, InvalidCredentialsError, EmailInUseE
     GoogleException, PassNotSetException
 from schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme, UserGetScheme
 from config import settings
-from crud import user_crud
+from crud import user_crud, review_crud
 
 
 async def register_user(user_create: CreateUserScheme, db: AsyncSession) -> dict:
@@ -176,3 +176,9 @@ async def get_user(user_id, db) -> UserGetScheme:
     )
 
     return user_response
+
+
+async def get_score(user_id: int, db) -> dict:
+    score = await review_crud.get_user_score(user_id, db)
+
+    return {"message": score}

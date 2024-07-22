@@ -21,7 +21,8 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
         driver_tg=trip_create.driver_tg,
         driver_phone=trip_create.driver_phone,
         car_type=trip_create.car_type,
-        car_number=trip_create.car_number
+        car_number=trip_create.car_number,
+        is_active=True
     )
 
     db.add(new_trip)
@@ -38,7 +39,8 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
                       driver_tg=new_trip.driver_tg,
                       driver_phone=new_trip.driver_phone,
                       car_type=trip_create.car_type,
-                      car_number=trip_create.car_number
+                      car_number=trip_create.car_number,
+                      is_active=new_trip.is_active
                       )
 
     return trip
@@ -64,13 +66,14 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
             driver_tg=trip.driver_tg,
             car_number=trip.car_number,
             car_type=trip.car_type,
-            driver_phone=trip.driver_phone
+            driver_phone=trip.driver_phone,
+            is_active=trip.is_active
         )
         return trip_scheme
     raise TripNotFoundError
 
 
-async def delete(trip_delete: TripScheme, db: AsyncSession) -> bool:
+async def delete(trip_delete: TripScheme, db: AsyncSession) -> None:
     query = select(Trip).filter(Trip.trip_id == trip_delete.trip_id)
 
     result = await db.execute(query)
@@ -81,6 +84,17 @@ async def delete(trip_delete: TripScheme, db: AsyncSession) -> bool:
         await db.commit()
         await point_crud.delete(trip.pickup, db)
         await point_crud.delete(trip.dropoff, db)
-        return True
 
     raise TripNotFoundError
+
+
+async def set_ended(trip_id, db) -> None:
+    query = select(Trip).filter(Trip.trip_id == trip_id)
+    result = await db.execute(query)
+    trip = result.scalars().first()
+    if trip is None:
+        raise TripNotFoundError
+
+    trip.is_active = False
+
+    await db.commit()

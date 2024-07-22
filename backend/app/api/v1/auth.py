@@ -4,6 +4,7 @@ from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
+from schemas.review_scheme import ReviewRequestScheme
 from services import auth_service
 from schemas.user_scheme import CreateUserScheme, CredentialsScheme
 from services.response_service import ResponseService
@@ -50,4 +51,11 @@ async def get_user(user_id: int, db: AsyncSession = Depends(database_helper.sess
 async def logout(request: Request):
     return await ResponseService.response(
         auth_service.logout(request)
+    )
+
+
+@router.post("/getusers/score/{user_id}")
+async def get_score(user_id, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.get_score(user_id, db)
     )

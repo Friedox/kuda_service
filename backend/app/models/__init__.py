@@ -7,6 +7,7 @@ __all__ = (
     "Trip",
     "TripTag",
     "TripUser",
+    "Review",
 
 )
 
@@ -18,3 +19,4 @@ from .trip_model import Trip
 from .trip_tag_model import TripTag
 from .trip_user_model import TripUser
 from .user_model import User
+from .review_model import Review

@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
 from schemas.filter_scheme import FilterScheme
+from schemas.review_scheme import ReviewRequestScheme
 from schemas.trip_scheme import RequestTripScheme
 from services import trip_service, tag_service
 from services.response_service import ResponseService
@@ -69,8 +70,26 @@ async def book(trip_id: int, request: Request, db: AsyncSession = Depends(databa
     )
 
 
+@router.patch("/{trip_id}")
+async def end_trip(trip_id: int, request: Request,
+                   db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.end_trip(trip_id, request, db)
+    )
+
+
 @router.delete("/delete_book/{trip_id}")
 async def delete_book(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         trip_service.delete_book(trip_id, request, db)
+    )
+
+
+@router.post("/set_review/")
+async def set_review(
+        review: ReviewRequestScheme,
+        request: Request,
+        db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.set_review(review, request, db)
     )
