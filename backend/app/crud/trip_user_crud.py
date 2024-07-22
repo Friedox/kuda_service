@@ -44,6 +44,9 @@ async def get(trip_id: int, db: AsyncSession) -> TripTagsScheme:
     result = await db.execute(query)
     trip_object = result.scalars().first()
 
+    if trip_object is None:
+        raise TripNotFoundError
+
     tag_names = [tag.tag for tag in trip_object.tags]
     trip_dict = trip_object.__dict__
     trip_dict['pickup'] = await point_crud.get(trip_object.pickup, db)
@@ -162,6 +165,8 @@ async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsSch
 
     trips = []
     for trip in trips_objects:
+        if not trip.is_active:
+            continue
         tag_names = [tag.tag for tag in trip.tags]
         trip_dict = trip.__dict__
         trip_dict['pickup'] = await point_crud.get(trip.pickup, db)

@@ -36,6 +36,7 @@ class TripScheme(BaseModel):
     driver_tg: str
     car_number: str
     car_type: str
+    is_active: bool
 
 
 class TripTagsScheme(TripScheme):

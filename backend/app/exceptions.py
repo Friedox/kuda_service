@@ -86,6 +86,16 @@ class BookNotFoundError(ValueError):
         super().__init__("Book not found")
 
 
+class TripEndedError(ValueError):
+    def __init__(self: str):
+        super().__init__("Trip already ended")
+
+
+class UserNotAllowedError(ValueError):
+    def __init__(self: str):
+        super().__init__("This operation is not allowed for user")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -102,5 +112,7 @@ exceptions_list = (TripNotFoundError,
                    UserAlreadyBookedError,
                    NotEnoughSitsError,
                    UserNotBookedError,
-                   BookNotFoundError
+                   BookNotFoundError,
+                   TripEndedError,
+                   UserNotAllowedError
                    )

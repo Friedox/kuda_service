@@ -6,15 +6,17 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
-from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud
-from exceptions import UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError
+from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud
+from exceptions import UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError, UserNotAllowedError
 from models.point_model import Point
 from models.tag_model import Tag
 from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
 from schemas.point_scheme import CreatePointScheme
+from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
+from schemas.user_scheme import UserScheme
 from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
@@ -214,6 +216,9 @@ async def book(trip_id: int, request: Request, db: AsyncSession):
     trip = await trip_user_crud.get(trip_id, db)
     users = await trip_user_crud.get_trip_users(trip_id, db)
 
+    if not trip.is_active:
+        raise TripEndedError
+
     if user.user_id in users:
         raise UserAlreadyBookedError
 
@@ -236,3 +241,28 @@ async def delete_book(trip_id: int, request: Request, db: AsyncSession):
     await trip_user_crud.delete_book(user, trip_id, db)
 
     return {"message": "Book deleted successfully"}
+
+
+async def end_trip(trip_id: int, request: Request, db: AsyncSession) -> None:
+    user: UserScheme = await get_user_from_session_id(request, db)
+    creator_id: int = await trip_user_crud.get_trip_creator_id(trip_id, db)
+
+    if user.user_id != creator_id:
+        raise UserNotAllowedError
+
+    await trip_crud.set_ended(trip_id, db)
+
+
+async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSession) -> ReviewScheme:
+    user: UserScheme = await get_user_from_session_id(request, db)
+    await trip_user_crud.get(review.trip_id, db)
+
+    creator_id: int = await trip_user_crud.get_trip_creator_id(review.trip_id, db)
+    trip_users: list[int] = await trip_user_crud.get_trip_users(review.trip_id, db)
+
+    if user.user_id not in trip_users or user.user_id == creator_id:
+        raise UserNotAllowedError
+
+    response = await review_crud.create(review, user.user_id, db)
+
+    return response
