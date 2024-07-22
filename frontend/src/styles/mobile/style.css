@@ -918,6 +918,16 @@ input {outline:none;}
     font-size: 16px;
 }
 
+.filters_create {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+
 .login_btn {
     background-color: #3070EE;
     padding-bottom: 10px;
@@ -1078,8 +1088,16 @@ input {outline:none;}
     /*justify-content: space-evenly;*/
     position: fixed;
     bottom: 50px;
+}
 
-
+.cancel_btn {
+    height: 65px;
+    width: inherit;
+    border-radius: 100px;
+    position: fixed;
+    bottom: 50px;
+    border: 1px solid #111111;
+    color: #111111;
 }
 
 .btn_separator {
@@ -1137,7 +1155,7 @@ input {outline:none;}
 
 .create_btn {
     position: relative;
-    bottom: -40vh;
+    bottom: -27vh;
 }
 
 .filter_block {
@@ -1535,7 +1553,7 @@ html {
     }
 
     .create_btn {
-        bottom: -20vh;
+        bottom: -7vh;
     }
 }
 
