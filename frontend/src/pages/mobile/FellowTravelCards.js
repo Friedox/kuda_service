@@ -289,7 +289,7 @@ function FellowTravelCards() {
                             </div>
                         </div>
 
-                        <div className="flex_row">
+                        <div className="flex_row shadow_div">
                             <DatePicker
                                 selected={selectedDate}
                                 onChange={dataChange}

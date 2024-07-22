@@ -39,7 +39,7 @@ function HomePage() {
 
     useEffect(async () => {
         try {
-            const response = await axios.post('https://kuda-trip.ru/api/v1/trips/get_upcoming/');
+            const response = await axios.get('https://kuda-trip.ru/api/v1/trips/get_upcoming/');
             console.log(response)
             setTrips(response.data.detail);
         } catch (error) {
