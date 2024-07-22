@@ -1,4 +1,3 @@
-import datetime
 from typing import List
 
 import requests
@@ -116,8 +115,9 @@ async def get_user_trips(request: Request, db: AsyncSession) -> List[TripRespons
 
 async def get_upcoming(request: Request, db: AsyncSession) -> List[TripResponseScheme]:
     user = await get_user_from_session_id(request, db)
-    now_time = datetime.datetime.now()
-    timestamp = int(datetime.datetime.timestamp(now_time))
+    now_time = datetime.now()
+    print(now_time)
+    timestamp = int(datetime.timestamp(now_time))
     trips = await trip_user_crud.get_upcoming_user_trips(user, timestamp, db)
 
     response_trips = [
