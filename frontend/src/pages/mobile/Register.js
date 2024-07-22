@@ -9,6 +9,28 @@ function SignUpEmail() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [criteria, setCriteria] = useState({
+        length: false,
+        uppercase: false,
+        number: false,
+    });
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setPassword(value);
+        setCriteria({
+            length: value.length >= 8,
+            uppercase: /[A-Z]/.test(value),
+            number: /\d/.test(value),
+        });
+    };
+
+    const getCriterionClass = (criterionMet) => {
+        if (password.length === 0) {
+            return 'criterion';
+        }
+        return criterionMet ? 'criterion valid' : 'criterion invalid';
+    };
 
     const handleSignUp = async () => {
         try {
@@ -55,8 +77,19 @@ function SignUpEmail() {
                         name="password"
                         placeholder="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                     />
+                    <div className="criteria">
+                        <div className={`${getCriterionClass(criteria.length)} validation`}>
+                            <span>8 characters</span>
+                        </div>
+                        <div className={`${getCriterionClass(criteria.number)} validation`}>
+                            <span>numbers</span>
+                        </div>
+                        <div className={`${getCriterionClass(criteria.uppercase)} validation`}>
+                            <span>сapital letter</span>
+                        </div>
+                    </div>
                     <button className="login_btn" onClick={handleSignUp}>Sign Up</button>
                     {error && <p className="error_message">{error}</p>}
                     <div className="or_section">
@@ -67,6 +100,7 @@ function SignUpEmail() {
                     <a href="login_email" className="login_email">
                         <h2>Log In</h2>
                     </a>
+
                 </div>
             </section>
         </>
