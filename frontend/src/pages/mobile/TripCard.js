@@ -204,7 +204,7 @@ function TripCard() {
                 </div>
 
                 {bookingStatus ? (
-                    <button className="order_btn" onClick={handleBooking} disabled={isBooking}>
+                    <button className="cancel_btn" onClick={handleCancel} disabled={isBooking}>
                         <h2>Cancel</h2>
                     </button>
                 ) : (
