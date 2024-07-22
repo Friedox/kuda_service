@@ -19,7 +19,7 @@ function login() {
                         <h5>or</h5>
                         <div/>
                     </div>
-                    <a href="#" className="login_email">
+                    <a href="login_email" className="login_email">
                         <h2>Log in using email</h2>
                     </a>
                 </div>

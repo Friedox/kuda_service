@@ -6,3 +6,6 @@
 /.coverage_file
 /.coverage
 /coverage.xml
+/frontend/node_modules/
+/backup/
+/build/
