@@ -49,6 +49,8 @@ async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSes
         longitude=trip_request.dropoff.longitude,
     )
 
+    travel_time: float = await get_trip_time(pickup_point, dropoff_point)
+
     trip_create = CreateTripScheme(
         pickup=pickup_point,
         dropoff=dropoff_point,
@@ -61,6 +63,7 @@ async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSes
         driver_tg=trip_request.driver_tg,
         car_number=trip_request.car_number,
         car_type=trip_request.car_type,
+        travel_time=travel_time
     )
 
     trip = await trip_user_crud.create(user, trip_create, db)
@@ -274,12 +277,11 @@ async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSes
     return response
 
 
-
-async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
-    pick_up_latitude = path.pick_up.latitude
-    pick_up_longitude = path.pick_up.longitude
-    drop_off_latitude = path.drop_off.latitude
-    drop_off_longitude = path.drop_off.longitude
+async def get_trip_time(pickup_point: CreatePointScheme, dropoff_point: CreatePointScheme):
+    pick_up_latitude = pickup_point.latitude
+    pick_up_longitude = pickup_point.longitude
+    drop_off_latitude = dropoff_point.latitude
+    drop_off_longitude = dropoff_point.longitude
     time_trip_api = settings.geocoder.path_api_key
 
     response = requests.get(f"https://router.hereapi.com/v8/routes?transportMode=car&origin={pick_up_latitude},"
@@ -300,10 +302,12 @@ async def get_trip_time(path: PathRequestScheme, db: AsyncSession):
         durations.append(total_duration)
 
     if len(durations) <= 0:
-        raise FindPathError
+        return -1
+        # raise FindPathError
     smallest_duration = min(durations)
 
     return smallest_duration
+
 
 async def check_user(trip_id: int, request: Request, db: AsyncSession):
     user: UserScheme = await get_user_from_session_id(request, db)
@@ -315,4 +319,3 @@ async def check_user(trip_id: int, request: Request, db: AsyncSession):
     is_creator = user.user_id == creator_id
 
     return {"is_in_trip": is_in_trip, "is_creator": is_creator}
-

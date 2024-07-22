@@ -22,7 +22,8 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
         driver_phone=trip_create.driver_phone,
         car_type=trip_create.car_type,
         car_number=trip_create.car_number,
-        is_active=True
+        is_active=True,
+        travel_time=trip_create.travel_time
     )
 
     db.add(new_trip)
@@ -40,7 +41,8 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
                       driver_phone=new_trip.driver_phone,
                       car_type=trip_create.car_type,
                       car_number=trip_create.car_number,
-                      is_active=new_trip.is_active
+                      is_active=new_trip.is_active,
+                      travel_time=new_trip.travel_time
                       )
 
     return trip
@@ -67,7 +69,8 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
             car_number=trip.car_number,
             car_type=trip.car_type,
             driver_phone=trip.driver_phone,
-            is_active=trip.is_active
+            is_active=trip.is_active,
+            travel_time=trip.travel_time
         )
         return trip_scheme
     raise TripNotFoundError

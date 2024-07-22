@@ -96,13 +96,6 @@ async def set_review(
     )
 
 
-
-@router.post("/get_trip_time/")
-async def get_trip_time(path: PathRequestScheme, db: AsyncSession = Depends(database_helper.session_getter)):
-    return await ResponseService.response(
-        trip_service.get_trip_time(path, db)
-    )
-
 @router.get("/check_user/{trip_id}")
 async def check_user(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(

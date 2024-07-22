@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float
 from sqlalchemy.orm import relationship
 from models.base import Base
 
@@ -17,6 +17,7 @@ class Trip(Base):
     car_number = Column(String, nullable=True)
     car_type = Column(String, nullable=True)
     is_active = Column(Boolean, nullable=True)
+    travel_time = Column(Float, nullable=True)
 
     users = relationship("User", secondary="trip_user", back_populates="trips")
     tags = relationship("Tag", secondary="trip_tag", back_populates="trips")
