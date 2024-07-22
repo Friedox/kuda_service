@@ -93,3 +93,10 @@ async def set_review(
     return await ResponseService.response(
         trip_service.set_review(review, request, db)
     )
+
+
+@router.get("/check_user/{trip_id}")
+async def check_user(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.check_user(trip_id, request, db)
+    )
