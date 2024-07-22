@@ -51,10 +51,10 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
     result = await db.execute(query)
     trip = result.scalars().first()
 
-    pickup_point = await point_crud.get(trip.pickup, db)
-    dropoff_point = await point_crud.get(trip.dropoff, db)
+    if trip is not None:
+        pickup_point = await point_crud.get(trip.pickup, db)
+        dropoff_point = await point_crud.get(trip.dropoff, db)
 
-    if trip:
         trip_scheme = TripScheme(
             pickup=pickup_point,
             dropoff=dropoff_point,
@@ -79,13 +79,13 @@ async def delete(trip_delete: TripScheme, db: AsyncSession) -> None:
     result = await db.execute(query)
     trip = result.scalars().first()
 
-    if trip:
-        await db.delete(trip)
-        await db.commit()
-        await point_crud.delete(trip.pickup, db)
-        await point_crud.delete(trip.dropoff, db)
+    if not trip:
+        raise TripNotFoundError
 
-    raise TripNotFoundError
+    await db.delete(trip)
+    await db.commit()
+    await point_crud.delete(trip.pickup, db)
+    await point_crud.delete(trip.dropoff, db)
 
 
 async def set_ended(trip_id, db) -> None:

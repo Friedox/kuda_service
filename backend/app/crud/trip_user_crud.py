@@ -124,28 +124,25 @@ async def delete_book(user: UserScheme, trip_id: int, db: AsyncSession) -> None:
 
 async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:
     try:
-        db.begin()
+        await db.begin()
 
-        query = select(TripUser).filter(
-            TripUser.user_id == user.user_id,
-            TripUser.trip_id == trip_delete.trip_id
-        )
+        query = (select(TripUser)
+                 .filter(TripUser.user_id == user.user_id)
+                 .filter(TripUser.trip_id == trip_delete.trip_id))
 
         result = await db.execute(query)
-        trip_user = result.scalars().first()
+        trip_user = result.scalars().all()
 
         if not trip_user:
             await db.rollback()
             raise UserTripNotFoundError(user.user_id, trip_delete.trip_id)
 
-        await db.delete(trip_user)
+        for trip in trip_user:
+            await db.delete(trip)
+        await trip_crud.delete(trip_delete, db)
 
-        if await trip_crud.delete(trip_delete, db):
-            await db.commit()
-            return True
-
-        await db.rollback()
-        raise TripNotFoundError
+        await db.commit()
+        return True
 
     except Exception as e:
         await db.rollback()
