@@ -280,7 +280,7 @@ function TripCard() {
                     <button className="cancel_btn" onClick={handleDelete} disabled={isBooking}>
                         <h2>Delete Trip</h2>
                     </button>
-                ) : bookingStatus === 'Booked' ? (
+                ) : bookingStatus === 'is_in_trip' ? (
                     <button className="cancel_btn" onClick={handleCancel} disabled={isBooking}>
                         <h2>Cancel Booking</h2>
                     </button>
