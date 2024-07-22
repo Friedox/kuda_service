@@ -182,3 +182,20 @@ async def get_upcoming_user_trips(user, timestamp, db):
 
     upcoming_trips = [trip for trip in user_trips if trip.start_timestamp > timestamp]
     return upcoming_trips
+
+
+async def get_trip_number(user_id, db):
+    counter = 0
+    query = (
+        select(TripUser.trip_id)
+        .filter(TripUser.user_id == user_id)
+    )
+
+    result = await db.execute(query)
+
+    user_trips = result.scalars().all()
+
+    for trip_id in user_trips:
+        if await get_trip_creator_id(trip_id, db) == user_id:
+            counter += 1
+    return counter
