@@ -165,6 +165,7 @@ function FellowTravelCards() {
                             function (result) {
                                 const userAddress = result.geoObjects.get(0).properties.get('text');
                                 dispatch(setStartAddress(userAddress));
+                                console.log(result)
                                 dispatch(setStartCoordinate(result.geoObjects.get(0).geometry.getCoordinates()));
                             },
                             function (err) {
@@ -185,7 +186,6 @@ function FellowTravelCards() {
                 startLocation={startAddress}
                 endLocation={endAddress}
                 date={selectedDate}
-                // passengers={}
             />
 
             <section className="mobile_section">
@@ -199,7 +199,7 @@ function FellowTravelCards() {
                                     <div className="trip_time_line">
                                         <img src={divided_line} />
                                         <div className="travel_time">
-                                            <span>{parseInt(trip.travel_time)}</span>
+                                            <span>{parseInt(trip.travel_time)} min</span>
                                         </div>
                                     </div>
                                     <span className="trip_time">{formatTimestamp(trip.start_timestamp + (parseInt(trip.travel_time) * 60))}</span>
