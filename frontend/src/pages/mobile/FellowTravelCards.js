@@ -175,7 +175,7 @@ function FellowTravelCards() {
                             function (result) {
                                 const userAddress = result.geoObjects.get(0).properties.get('text');
                                 dispatch(setStartAddress(userAddress));
-                                console.log(result.geoObjects.get(0))
+                                console.log(result.geoObjects.get(0).properties)
                                 dispatch(setStartCoordinate(result.geoObjects.get(0).geometry.getCoordinates()));
                             },
                             function (err) {
