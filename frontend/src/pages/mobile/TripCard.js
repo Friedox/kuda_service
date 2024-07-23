@@ -196,6 +196,23 @@ function TripCard() {
         }
     };
 
+    const handleFinish = async () => {
+        setIsBooking(false);
+        try {
+            const response = await axios.patch(`https://kuda-trip.ru/api/v1/trips/${tripId}`);
+            if (response.data.status === 'ok') {
+                navigate('/home'); // Redirect to trips list or any other appropriate page
+            } else {
+                setBookingStatus('Finish trip failed.');
+            }
+        } catch (error) {
+            console.error('Error Finish trip:', error);
+            setBookingStatus('Finish trip failed.');
+        } finally {
+            setIsBooking(true);
+        }
+    };
+
     return (
         <>
             <div className="gray_bg" />
@@ -263,23 +280,30 @@ function TripCard() {
                     />
                 </div>
 
-                <div className="passengers">
-                    <h2>Passengers</h2>
-                    {passengers.map(passenger => (
-                        <Driver
-                            key={passenger.id}
-                            profile_photo={profile_example}
-                            driver_name={passenger.username}
-                            trips={passenger.trip_count}
-                            grade={passenger.score}
-                        />
-                    ))}
-                </div>
+                {passengers.length > 1 && (
+                    <div className="passengers">
+                        <h2>Passengers</h2>
+                        {passengers.slice(1).map(passenger => (
+                            <Driver
+                                key={passenger.id}
+                                profile_photo={profile_example}
+                                driver_name={passenger.username}
+                                trips={passenger.trip_count}
+                                grade={passenger.score}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {isCreator ? (
-                    <button className="cancel_btn" onClick={handleDelete} disabled={isBooking}>
-                        <h2>Delete Trip</h2>
-                    </button>
+                    <div>
+                        <button className="cancel_btn" onClick={handleDelete} disabled={isBooking}>
+                            <h2>Delete Trip</h2>
+                        </button>
+                        <button className="order_btn" onClick={handleFinish} disabled={isBooking}>>
+                            <h2>Finish Trip</h2>
+                        </button>
+                    </div>
                 ) : bookingStatus === 'is_in_trip' ? (
                     <button className="cancel_btn" onClick={handleCancel} disabled={isBooking}>
                         <h2>Cancel Booking</h2>
