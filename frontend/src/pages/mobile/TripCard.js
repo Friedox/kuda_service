@@ -184,7 +184,7 @@ function TripCard() {
         try {
             const response = await axios.delete(`https://kuda-trip.ru/api/v1/trips/${tripId}`);
             if (response.data.status === 'ok') {
-                navigate('/trips'); // Redirect to trips list or any other appropriate page
+                navigate('/home'); // Redirect to trips list or any other appropriate page
             } else {
                 setBookingStatus('Delete trip failed.');
             }

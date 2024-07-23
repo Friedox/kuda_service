@@ -148,6 +148,16 @@ function FellowTravelCards() {
 
     const isSelected = (option) => selectedOptions.includes(option);
 
+    async function fetchPassengerDetails(userId) {
+        try {
+            const response = await axios.get(`https://kuda-trip.ru/api/v1/auth/getusers/${userId}`);
+            return response.data.detail;
+        } catch (error) {
+            console.error('Error fetching passenger details:', error);
+            return null;
+        }
+    }
+
     // const dispatch = useDispatch();
     const startAddress = useSelector((state) => state.address.startAddress);
     const endAddress = useSelector((state) => state.address.endAddress);
@@ -165,7 +175,7 @@ function FellowTravelCards() {
                             function (result) {
                                 const userAddress = result.geoObjects.get(0).properties.get('text');
                                 dispatch(setStartAddress(userAddress));
-                                console.log(result)
+                                console.log(result.geoObjects)
                                 dispatch(setStartCoordinate(result.geoObjects.get(0).geometry.getCoordinates()));
                             },
                             function (err) {
@@ -234,12 +244,12 @@ function FellowTravelCards() {
                                         <img src={profile_example} />
                                     </div>
                                     <div className="profile_info">
-                                        <span className="name">Имя пользователя</span>
+                                        <span className="name">{fetchPassengerDetails(trip.creator_id).username}</span>
                                         <span className="car">{trip.car_type}</span>
                                     </div>
                                     <div className="grade_div">
                                         <img src={star} />
-                                        <span className="grade">{trip.driver_phone}</span>
+                                        <span className="grade">{fetchPassengerDetails(trip.creator_id).score}</span>
                                     </div>
                                 </div>
                                 <div className="clearfix"></div>
