@@ -102,7 +102,8 @@ function HomePage() {
                             startLocation={trip.pickup.address.name}
                             endLocation={trip.dropoff.address.name}
                             date={formatDate(trip.start_timestamp)}
-                            passengers={`${trip.available_sits} passengers`}
+                            passengers={`${trip.available_sits}`}
+                            tripId={trip.trip_id}
                         />
                     ))}
                 </div>
