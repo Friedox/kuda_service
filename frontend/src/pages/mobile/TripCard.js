@@ -149,7 +149,8 @@ function TripCard() {
             });
             if (response.data.status === 'ok') {
                 setBookingStatus('Booking successful!');
-                navigate('/trip_card/' + tripId)
+                // navigate('/trip_card/' + tripId);
+                window.location.reload();
             } else {
                 setBookingStatus('Booking failed.');
             }
