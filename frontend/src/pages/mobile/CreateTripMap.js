@@ -329,7 +329,7 @@ function MapPointSelect() {
 
             <section className={`mobile_section filters_bottom ${isFilterVisible ? 'show' : ''}`}>
                 <div className="filter_block_create mt90px">
-                    <ProfileBlock profile_id="0" name="Ivan" profile_img={profile_img} grade="4.2" />
+                    <ProfileBlock profile_id="0" name="Dima" profile_img={profile_img} grade="4.2" />
                     <InputMask
                         className="input"
                         mask="+7 (999) 99-99-999"
