@@ -297,10 +297,10 @@ function TripCard() {
 
                 {isCreator ? (
                     <div>
-                        <button className="cancel_btn" onClick={handleDelete} disabled={isBooking}>
+                        <button className="cancel_btn w50px22px" onClick={handleDelete} disabled={isBooking}>
                             <h2>Delete Trip</h2>
                         </button>
-                        <button className="order_btn" onClick={handleFinish} disabled={isBooking}>>
+                        <button className="order_btn w50px22px r15" onClick={handleFinish} disabled={isBooking}>
                             <h2>Finish Trip</h2>
                         </button>
                     </div>
