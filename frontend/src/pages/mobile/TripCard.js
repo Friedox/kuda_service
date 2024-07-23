@@ -208,10 +208,10 @@ function TripCard() {
                             <div className="trip_time_line">
                                 <img src={divided_line} />
                                 <div className="travel_time">
-                                    <span>1 h</span>
+                                    <span>{parseInt(tripDetails.travel_time)}</span>
                                 </div>
                             </div>
-                            <span className="trip_time">{tripDetails.end_timestamp ? formatTimestamp(tripDetails.end_timestamp) : 'N/A'}</span>
+                            <span className="trip_time">{formatTimestamp(tripDetails.start_timestamp + (parseInt(tripDetails.travel_time) * 60))}</span>
                         </div>
                     </div>
                     <div className="trip_card_section">

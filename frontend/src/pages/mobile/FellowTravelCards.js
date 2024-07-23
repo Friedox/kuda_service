@@ -199,10 +199,10 @@ function FellowTravelCards() {
                                     <div className="trip_time_line">
                                         <img src={divided_line} />
                                         <div className="travel_time">
-                                            <span>1 h</span>
+                                            <span>{parseInt(trip.travel_time)}</span>
                                         </div>
                                     </div>
-                                    <span className="trip_time">{formatTimestamp(trip.end_timestamp)}</span>
+                                    <span className="trip_time">{formatTimestamp(trip.start_timestamp + (parseInt(trip.travel_time) * 60))}</span>
                                 </div>
                             </div>
                             <div className="trip_card_section">
