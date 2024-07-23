@@ -317,7 +317,7 @@ function MapPointSelect() {
                     <a className="location_select_input" onClick={() => handleClick(true)}>
                         <img src={location_end_icon} />
                         <div className="location_title_section">
-                            <h2>SC “Koltso”</h2>
+                            <h2>Куда</h2>
                             <span>{endTripAddress || 'Kazan, Pushkin, 3'}</span>
                         </div>
                     </a>
@@ -329,7 +329,7 @@ function MapPointSelect() {
 
             <section className={`mobile_section filters_bottom ${isFilterVisible ? 'show' : ''}`}>
                 <div className="filter_block_create mt90px">
-                    <ProfileBlock profile_id="0" name="friji1" profile_img={profile_img} grade="4.2" />
+                    <ProfileBlock profile_id="0" name="Ivan" profile_img={profile_img} grade="4.2" />
                     <InputMask
                         className="input"
                         mask="+7 (999) 99-99-999"
