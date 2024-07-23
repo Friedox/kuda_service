@@ -505,6 +505,14 @@ h5 {
     margin-top: 50px;
 }
 
+.w50px22px {
+    width: calc(50% - 22.5px);
+}
+
+.r15 {
+    right: 15px;
+}
+
 
 .card {
     width: 100%;
