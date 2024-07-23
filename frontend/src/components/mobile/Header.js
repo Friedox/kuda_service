@@ -22,9 +22,9 @@ function Header({header_text, href}) {
     return (
         <>
             <div className="header_panel">
-                <button className="back_btn">
+                <a href='fellow_travel_cards' className="back_btn">
                     <img src={back}/>
-                </button>
+                </a>
                 <h1>{header_text}</h1>
                 <button onClick={handleShare} className="forward_btn">
                     <img src={forward}/>
