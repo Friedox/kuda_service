@@ -506,11 +506,11 @@ h5 {
 }
 
 .w50px22px {
-    width: calc(50% - 22.5px);
+    width: calc(50% - 22.5px) !important;
 }
 
 .r15 {
-    right: 15px;
+    right: 15px !important;
 }
 
 
@@ -960,6 +960,10 @@ input {outline:none;}
     border-radius: 100px;
     border: none;
     background-color: white;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
 }
 
 .forward_btn {
