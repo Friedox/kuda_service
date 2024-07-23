@@ -208,7 +208,7 @@ function TripCard() {
                             <div className="trip_time_line">
                                 <img src={divided_line} />
                                 <div className="travel_time">
-                                    <span>{parseInt(tripDetails.travel_time)}</span>
+                                    <span>{parseInt(tripDetails.travel_time)} min</span>
                                 </div>
                             </div>
                             <span className="trip_time">{formatTimestamp(tripDetails.start_timestamp + (parseInt(tripDetails.travel_time) * 60))}</span>
@@ -257,7 +257,7 @@ function TripCard() {
                 </div>
                 <div className="car_card">
                     <Car car_name={tripDetails.car_type}
-                         car_color="Black"
+                         car_color=""
                          number={tripDetails.car_number.slice(0, 6)}
                          region={tripDetails.car_number.slice(6)}
                     />

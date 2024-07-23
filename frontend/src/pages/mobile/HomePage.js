@@ -99,8 +99,8 @@ function HomePage() {
                     {trips.map((trip) => (
                         <TripCardMedium
                             key={trip.trip_id}
-                            startLocation={trip.pickup.name}
-                            endLocation={trip.dropoff.name}
+                            startLocation={trip.pickup.address.name}
+                            endLocation={trip.dropoff.address.name}
                             date={formatDate(trip.start_timestamp)}
                             passengers={`${trip.available_sits} passengers`}
                         />
