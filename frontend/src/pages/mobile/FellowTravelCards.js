@@ -192,11 +192,11 @@ function FellowTravelCards() {
 
     return (
         <>
-            <HeaderInformationBlock
-                startLocation={startAddress}
-                endLocation={endAddress}
-                date={selectedDate}
-            />
+            {/*<HeaderInformationBlock*/}
+            {/*    startLocation={startAddress}*/}
+            {/*    endLocation={endAddress}*/}
+            {/*    date={selectedDate}*/}
+            {/*/>*/}
 
             <section className="mobile_section">
                 <div className="trip_cards_list">
@@ -244,12 +244,12 @@ function FellowTravelCards() {
                                         <img src={profile_example} />
                                     </div>
                                     <div className="profile_info">
-                                        <span className="name">{fetchPassengerDetails(trip.creator_id).username}</span>
+                                        <span className="name">{trip.creator_username}</span>
                                         <span className="car">{trip.car_type}</span>
                                     </div>
                                     <div className="grade_div">
                                         <img src={star} />
-                                        <span className="grade">{fetchPassengerDetails(trip.creator_id).score}</span>
+                                        <span className="grade">{trip.creator_score}</span>
                                     </div>
                                 </div>
                                 <div className="clearfix"></div>
