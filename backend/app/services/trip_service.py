@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
 from config import settings
-from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud
+from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, user_crud
 from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
                         UserNotAllowedError, \
                         FindPathError)
@@ -18,7 +18,8 @@ from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
 from schemas.point_scheme import CreatePointScheme, PathRequestScheme
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
-from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme
+from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme, \
+    TripScoreResponseScheme
 from schemas.user_scheme import UserScheme
 from services import tag_service
 from services.auth_service import get_user_from_session_id
@@ -113,7 +114,7 @@ async def get_user_trips(request: Request, db: AsyncSession) -> List[TripRespons
     return response_trips
 
 
-async def get_upcoming(request: Request, db: AsyncSession) -> List[TripResponseScheme]:
+async def get_upcoming(request: Request, db: AsyncSession) -> List[TripScoreResponseScheme]:
     user = await get_user_from_session_id(request, db)
     now_time = datetime.now()
     print(now_time)
@@ -194,17 +195,20 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession) -> List[Trip
 
     trip_schemas = []
     for trip in trips:
-        print(trip.__dict__)
-
+        creator_id = await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+        user = await user_crud.get(creator_id, db)
+        score = await review_crud.get_user_score(creator_id, db)
         tag_names = [tag.tag for tag in await trip_tag_crud.get_tags(trip.trip_id, db)]
         trip_dict = trip.__dict__.copy()
         trip_dict['tags'] = tag_names
         trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
         trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
-        trip_dict['creator_id'] = await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+        trip_dict['creator_id'] = creator_id
         trip_dict['trip_users'] = await trip_user_crud.get_trip_users(trip.trip_id, db)
+        trip_dict['creator_username'] = user.username
+        trip_dict['creator_score'] = score
 
-        trip_schemas.append(TripResponseScheme(**trip_dict))
+        trip_schemas.append(TripScoreResponseScheme(**trip_dict))
 
     return trip_schemas
 
