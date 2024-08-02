@@ -1,16 +1,15 @@
-import datetime
 from typing import List
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from crud import trip_crud, point_crud
 from exceptions import TripNotFoundError, UserTripNotFoundError, BookNotFoundError
+from models.trip_model import Trip
+from models.trip_user_model import TripUser
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from schemas.user_scheme import UserScheme
-from models.trip_user_model import TripUser
-from models.trip_model import Trip
-from crud import trip_crud, point_crud
 
 
 async def create(user: UserScheme, trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:

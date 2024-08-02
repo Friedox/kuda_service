@@ -1,7 +1,7 @@
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
+
 from models import Message
 from schemas.message_scheme import MessageScheme, MessageWithIdScheme
 from schemas.trip_scheme import TripScheme

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 import requests
@@ -9,24 +10,21 @@ from sqlalchemy.orm import aliased
 from config import settings
 from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, user_crud, message_crud
 from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
-                        UserNotAllowedError, \
-                        FindPathError)
+                        UserNotAllowedError)
 from models.point_model import Point
 from models.tag_model import Tag
 from models.trip_model import Trip
 from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
-from schemas.point_scheme import CreatePointScheme, PathRequestScheme
+from schemas.point_scheme import CreatePointScheme
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
-from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme, RequestTripScheme, TripResponseScheme, \
+from schemas.trip_scheme import CreateTripScheme, RequestTripScheme, TripResponseScheme, \
     TripScoreResponseScheme
 from schemas.user_scheme import UserScheme
 from services import tag_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
 from services.translate_service import translate
-
-from datetime import datetime
 
 
 async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
@@ -115,7 +113,7 @@ async def get_user_trips(request: Request, db: AsyncSession) -> List[TripRespons
     return response_trips
 
 
-async def get_upcoming(request: Request, db: AsyncSession) -> List[TripScoreResponseScheme]:
+async def get_upcoming(request: Request, db: AsyncSession) -> list[TripResponseScheme]:
     user = await get_user_from_session_id(request, db)
     now_time = datetime.now()
     print(now_time)
