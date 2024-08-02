@@ -40,11 +40,6 @@ main_app = FastAPI(
 )
 
 main_app.include_router(router_api_v1, prefix=settings.api.prefix)
-# app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
-#
-# app.include_router(google_auth_router, prefix="/api/auth/google", tags=["google"])
-#
-# app.include_router(trip_router, prefix="/api/trips", tags=["trip"])
 
 if __name__ == "__main__":
     uvicorn.run(
