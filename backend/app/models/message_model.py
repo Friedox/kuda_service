@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 
 from models.base import Base
 
@@ -10,3 +10,4 @@ class Message(Base):
     chat_id = Column(Integer, nullable=False)
     user_id = Column(Integer, nullable=False)
     message = Column(String, nullable=False)
+    timestamp = Column(TIMESTAMP, nullable=False)
