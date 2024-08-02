@@ -1,17 +1,17 @@
-import random
 import hashlib
-import requests
+import random
 
 import bcrypt
 import redis.asyncio as redis
-from fastapi import Request, HTTPException
+import requests
+from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import settings
+from crud import user_crud, review_crud, trip_user_crud
 from exceptions import InvalidSessionError, InvalidCredentialsError, EmailInUseError, UsernameInUseError, \
     GoogleException, PassNotSetException
 from schemas.user_scheme import CredentialsScheme, CreateUserScheme, UserScheme, UserGetScheme
-from config import settings
-from crud import user_crud, review_crud, trip_user_crud
 
 
 async def register_user(user_create: CreateUserScheme, db: AsyncSession) -> dict:
@@ -79,13 +79,7 @@ async def get_info(request: Request, db: AsyncSession):
 
 
 async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserScheme:
-    print(request.cookies)
-    try:
-        print(request.headers)
-    except Exception as e:
-        pass
     session_id = request.cookies.get("session_id")
-    print(session_id)
     if not session_id:
         raise InvalidSessionError
 
