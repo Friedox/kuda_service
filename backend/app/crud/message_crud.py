@@ -1,8 +1,10 @@
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from models import Message
 from schemas.message_scheme import MessageScheme, MessageWithIdScheme
+from schemas.trip_scheme import TripScheme
 
 
 async def save_message(message: MessageScheme, db: AsyncSession) -> MessageWithIdScheme:
@@ -39,3 +41,15 @@ async def get_chat_messages(
     message_schemas = [MessageWithIdScheme(**message.__dict__) for message in messages]
 
     return message_schemas
+
+
+async def delete_messages(trip_delete: TripScheme, db: AsyncSession) -> None:
+    trip_id = trip_delete.trip_id
+
+    stmt = delete(Message).where(Message.chat_id == trip_id)
+
+    await db.execute(stmt)
+
+    await db.commit()
+
+    return None

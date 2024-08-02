@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
 from config import settings
-from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, user_crud
+from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, user_crud, message_crud
 from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
                         UserNotAllowedError, \
                         FindPathError)
@@ -81,10 +81,11 @@ async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
     trip_delete = await trip_crud.get(trip_id, db)
 
     await trip_tag_crud.delete_tags(trip_delete, db)
+    await message_crud.delete_messages(trip_delete, db)
     if await trip_user_crud.delete(user, trip_delete, db):
         return {"message": "Trip deleted successfully"}
 
-    raise UnexpectedError("Trip not deleted")
+    raise UnexpectedError("Trip did not deleted successfully")
 
 
 async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
