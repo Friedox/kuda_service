@@ -1,20 +1,18 @@
-from typing import List, Dict, Annotated
+from datetime import datetime, UTC
+from typing import List, Dict
 
 from fastapi import (
     APIRouter,
     WebSocketDisconnect,
     HTTPException,
-    Cookie,
     Depends,
-    Query,
-    WebSocket,
-    WebSocketException,
-    status,
+    WebSocket, Query,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from crud import trip_user_crud
+from crud import trip_user_crud, message_crud
 from models import database_helper
+from schemas.message_scheme import SendMessageScheme, MessageScheme
 from schemas.user_scheme import UserScheme
 from services import auth_service
 
@@ -57,16 +55,37 @@ async def websocket_endpoint(
         *,
         websocket: WebSocket,
         chat_id: str,
-        db: AsyncSession = Depends(database_helper.session_getter)
+        db: AsyncSession = Depends(database_helper.session_getter),
+        limit: int = Query(100, alias="limit"),
+        offset: int = Query(0, alias="offset")
 ):
     try:
         user = await auth_service.get_user_from_session_id(websocket, db)
         await verify_access(chat_id, user, db)
         await manager.connect(chat_id, websocket)
+
+        old_messages = await message_crud.get_chat_messages(db, int(chat_id), limit=limit, offset=offset)
+        for message in reversed(old_messages):
+            await websocket.send_text(f"{message.user_id}: {message.json()}")
+
         try:
             while True:
-                data = await websocket.receive_text()
-                await manager.broadcast(chat_id, f"Message text was: {data}")
+                text = await websocket.receive_text()
+                message_scheme = MessageScheme(
+                    user_id=user.user_id,
+                    chat_id=int(chat_id),
+                    message=text,
+                    timestamp=datetime.now().replace(tzinfo=None)
+                )
+
+                message = await message_crud.save_message(message_scheme, db)
+
+                message_send = SendMessageScheme(
+                    **message.dict(),
+                    username=user.username
+                )
+
+                await manager.broadcast(chat_id, f"{user.user_id}: {message_send.json()}")
         except WebSocketDisconnect:
             manager.disconnect(chat_id, websocket)
     except HTTPException as e:
@@ -75,4 +94,3 @@ async def websocket_endpoint(
     except Exception as e:
         print(str(e))
         await websocket.close(code=400, reason=str(e))
-
