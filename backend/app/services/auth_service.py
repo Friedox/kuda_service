@@ -72,44 +72,31 @@ async def create_session(user_id: int, username: str) -> str:
     return session_id
 
 
-async def get_info(request: Request, db: AsyncSession):
-    user = await get_user_from_session_id(request, db)
+async def get_info(session_id: str | None, db: AsyncSession):
+    print(session_id)
+    user = await get_user_from_session_id(session_id=session_id, db=db)
     user.__dict__.pop('password_hash')
     return user
 
 
-async def get_user_from_session_id(request: Request, db: AsyncSession) -> UserScheme:
-    session_id = request.cookies.get("session_id")
+async def get_user_from_session_id(session_id: str | None, db: AsyncSession) -> UserScheme:
     if not session_id:
         raise InvalidSessionError
 
-    redis_client = redis.from_url(f'redis://{settings.redis.host}')
-    username = await redis_client.hget(f"session:{session_id}", "username")
-    await redis_client.aclose()
+    async with redis.from_url(f'redis://{settings.redis.host}') as redis_client:
+        username = await redis_client.hget(f"session:{session_id}", "username")
 
     if not username:
         raise InvalidSessionError
+
     user_data = await user_crud.get(username.decode('utf-8'), db)
 
     return user_data
 
 
-async def get_session_id(request: Request):
-    session_id = request.cookies.get("session_id")
-
-    redis_client = redis.from_url(f'redis://{settings.redis.host}')
-
-    if not session_id or not await redis_client.exists(f"session:{session_id}"):
-        raise InvalidSessionError
-    await redis_client.aclose()
-    return session_id
-
-
-async def logout(request: Request):
-    session_id = await get_session_id(request)
-    redis_client = redis.from_url(f'redis://{settings.redis.host}')
-    await redis_client.delete(f"session:{session_id}")
-    await redis_client.aclose()
+async def logout(session_id: str | None):
+    async with redis.from_url(f'redis://{settings.redis.host}') as redis_client:
+        await redis_client.delete(f"session:{session_id}")
 
     return {"message": "Logged out successfully"}
 
@@ -151,8 +138,8 @@ async def proceed_google(code: str, db: AsyncSession) -> dict:
     return {"message": "Logged in successfully", "session_id": session_id}
 
 
-async def set_pass(new_pass, request, db) -> dict:
-    user = await get_user_from_session_id(request, db)
+async def set_pass(new_pass: str, session_id: str | None, db: AsyncSession) -> dict:
+    user = await get_user_from_session_id(session_id, db)
     user_id = user.user_id
     hashed_password = bcrypt.hashpw(new_pass.encode('utf-8'), bcrypt.gensalt())
 

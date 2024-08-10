@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Cookie
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,10 +14,10 @@ router = APIRouter(tags=["Trips"])
 
 
 @router.post("/")
-async def create(trip: RequestTripScheme, request: Request,
+async def create(trip: RequestTripScheme, session_id: str | None = Cookie(default=None),
                  db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.create(trip, request, db)
+        trip_service.create(trip, session_id, db)
     )
 
 
@@ -29,17 +29,18 @@ async def get(trip_id: int, db: AsyncSession = Depends(database_helper.session_g
 
 
 @router.delete("/{trip_id}")
-async def delete(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def delete(trip_id: int, session_id: str | None = Cookie(default=None),
+                 db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.delete(trip_id, request, db)
+        trip_service.delete(trip_id, session_id, db)
     )
 
 
 @router.get("/get_user_trips/")
-async def get_user_trips(request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
-    print(1)
+async def get_user_trips(session_id: str | None = Cookie(default=None),
+                         db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.get_user_trips(request, db)
+        trip_service.get_user_trips(session_id, db)
     )
 
 
@@ -58,46 +59,50 @@ async def get_filtered(trip_filter: FilterScheme, db: AsyncSession = Depends(dat
 
 
 @router.get("/get_upcoming/")
-async def get_upcoming(request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def get_upcoming(session_id: str | None = Cookie(default=None),
+                       db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.get_upcoming(request, db)
+        trip_service.get_upcoming(session_id, db)
     )
 
 
 @router.post("/book/{trip_id}")
-async def book(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def book(trip_id: int, session_id: str | None = Cookie(default=None),
+               db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.book(trip_id, request, db)
+        trip_service.book(trip_id, session_id, db)
     )
 
 
 @router.patch("/{trip_id}")
-async def end_trip(trip_id: int, request: Request,
+async def end_trip(trip_id: int, session_id: str | None = Cookie(default=None),
                    db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.end_trip(trip_id, request, db)
+        trip_service.end_trip(trip_id, session_id, db)
     )
 
 
 @router.delete("/delete_book/{trip_id}")
-async def delete_book(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def delete_book(trip_id: int, session_id: str | None = Cookie(default=None),
+                      db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.delete_book(trip_id, request, db)
+        trip_service.delete_book(trip_id, session_id, db)
     )
 
 
 @router.post("/set_review/")
 async def set_review(
         review: ReviewRequestScheme,
-        request: Request,
+        session_id: str | None = Cookie(default=None),
         db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.set_review(review, request, db)
+        trip_service.set_review(review, session_id, db)
     )
 
 
 @router.get("/check_user/{trip_id}")
-async def check_user(trip_id: int, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def check_user(trip_id: int, session_id: str | None = Cookie(default=None),
+                     db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        trip_service.check_user(trip_id, request, db)
+        trip_service.check_user(trip_id, session_id, db)
     )

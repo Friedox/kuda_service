@@ -27,8 +27,8 @@ from services.geocoder_service import geocode
 from services.translate_service import translate
 
 
-async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSession) -> dict:
-    user = await get_user_from_session_id(request, db)
+async def create(trip_request: RequestTripScheme, session_id: str | None, db: AsyncSession) -> dict:
+    user = await get_user_from_session_id(session_id=session_id, db=db)
 
     await tag_service.check_tags(trip_request.tags, db)
 
@@ -74,8 +74,8 @@ async def create(trip_request: RequestTripScheme, request: Request, db: AsyncSes
     }
 
 
-async def delete(trip_id: int, request: Request, db: AsyncSession) -> dict:
-    user = await get_user_from_session_id(request, db)
+async def delete(trip_id: int, session_id: str | None, db: AsyncSession) -> dict:
+    user = await get_user_from_session_id(session_id=session_id, db=db)
     trip_delete = await trip_crud.get(trip_id, db)
 
     await trip_tag_crud.delete_tags(trip_delete, db)
@@ -97,8 +97,8 @@ async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
     return response_trip
 
 
-async def get_user_trips(request: Request, db: AsyncSession) -> List[TripResponseScheme]:
-    user = await get_user_from_session_id(request, db)
+async def get_user_trips(session_id: str | None, db: AsyncSession) -> List[TripResponseScheme]:
+    user = await get_user_from_session_id(session_id=session_id, db=db)
 
     trips = await trip_user_crud.get_user_trips(user, db)
 
@@ -113,8 +113,8 @@ async def get_user_trips(request: Request, db: AsyncSession) -> List[TripRespons
     return response_trips
 
 
-async def get_upcoming(request: Request, db: AsyncSession) -> list[TripResponseScheme]:
-    user = await get_user_from_session_id(request, db)
+async def get_upcoming(session_id: str | None, db: AsyncSession) -> list[TripResponseScheme]:
+    user = await get_user_from_session_id(session_id, db)
     now_time = datetime.now()
     print(now_time)
     timestamp = int(datetime.timestamp(now_time))
@@ -223,8 +223,8 @@ async def convert_coords(latitude: float, longitude: float):
     return translated_details
 
 
-async def book(trip_id: int, request: Request, db: AsyncSession):
-    user = await get_user_from_session_id(request, db)
+async def book(trip_id: int, session_id: str | None, db: AsyncSession):
+    user = await get_user_from_session_id(session_id=session_id, db=db)
     trip = await trip_user_crud.get(trip_id, db)
     users = await trip_user_crud.get_trip_users(trip_id, db)
 
@@ -242,8 +242,8 @@ async def book(trip_id: int, request: Request, db: AsyncSession):
     return {"message": "Booked successfully"}
 
 
-async def delete_book(trip_id: int, request: Request, db: AsyncSession):
-    user = await get_user_from_session_id(request, db)
+async def delete_book(trip_id: int, session_id: str | None, db: AsyncSession):
+    user = await get_user_from_session_id(session_id=session_id, db=db)
     trip = await trip_user_crud.get(trip_id, db)
     users = await trip_user_crud.get_trip_users(trip_id, db)
 
@@ -255,8 +255,8 @@ async def delete_book(trip_id: int, request: Request, db: AsyncSession):
     return {"message": "Book deleted successfully"}
 
 
-async def end_trip(trip_id: int, request: Request, db: AsyncSession) -> None:
-    user: UserScheme = await get_user_from_session_id(request, db)
+async def end_trip(trip_id: int, session_id: str | None, db: AsyncSession) -> None:
+    user: UserScheme = await get_user_from_session_id(session_id=session_id, db=db)
     creator_id: int = await trip_user_crud.get_trip_creator_id(trip_id, db)
 
     if user.user_id != creator_id:
@@ -265,8 +265,8 @@ async def end_trip(trip_id: int, request: Request, db: AsyncSession) -> None:
     await trip_crud.set_ended(trip_id, db)
 
 
-async def set_review(review: ReviewRequestScheme, request: Request, db: AsyncSession) -> ReviewScheme:
-    user: UserScheme = await get_user_from_session_id(request, db)
+async def set_review(review: ReviewRequestScheme, session_id: str | None, db: AsyncSession) -> ReviewScheme:
+    user: UserScheme = await get_user_from_session_id(session_id=session_id, db=db)
     await trip_user_crud.get(review.trip_id, db)
 
     creator_id: int = await trip_user_crud.get_trip_creator_id(review.trip_id, db)
@@ -312,8 +312,8 @@ async def get_trip_time(pickup_point: CreatePointScheme, dropoff_point: CreatePo
     return smallest_duration
 
 
-async def check_user(trip_id: int, request: Request, db: AsyncSession):
-    user: UserScheme = await get_user_from_session_id(request, db)
+async def check_user(trip_id: int, session_id: str | None, db: AsyncSession):
+    user: UserScheme = await get_user_from_session_id(session_id=session_id, db=db)
 
     users = await trip_user_crud.get_trip_users(trip_id, db)
     creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)

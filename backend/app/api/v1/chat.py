@@ -6,7 +6,7 @@ from fastapi import (
     WebSocketDisconnect,
     HTTPException,
     Depends,
-    WebSocket, Query,
+    WebSocket, Query, Cookie,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -64,13 +64,14 @@ async def verify_access(chat_id: str, user: UserScheme, db):
 async def websocket_endpoint(
         *,
         websocket: WebSocket,
+        session_id: str | None = Cookie(default=None),
         chat_id: str,
         db: AsyncSession = Depends(database_helper.session_getter),
         limit: int = Query(100, alias="limit"),
         offset: int = Query(0, alias="offset")
 ):
     try:
-        user = await auth_service.get_user_from_session_id(websocket, db)
+        user = await auth_service.get_user_from_session_id(session_id, db)
         await verify_access(chat_id, user, db)
         await manager.connect(chat_id, websocket)
 
@@ -82,12 +83,10 @@ async def websocket_endpoint(
             while True:
                 data = await websocket.receive_text()
                 if data.startswith("/typing"):
-                    # Handle typing status
                     _, status = data.split(maxsplit=1)
                     is_typing = status.lower() == "true"
                     await manager.update_typing_status(chat_id, user.user_id, is_typing)
                 else:
-                    # Handle regular messages
                     text = data
                     message_scheme = MessageScheme(
                         user_id=user.user_id,
@@ -106,7 +105,6 @@ async def websocket_endpoint(
                     await manager.broadcast(chat_id, f"{user.user_id}: {message_send.json()}")
         except WebSocketDisconnect:
             manager.disconnect(chat_id, websocket)
-            # Notify that the user has stopped typing
             await manager.update_typing_status(chat_id, user.user_id, False)
     except HTTPException as e:
         print(str(e))
