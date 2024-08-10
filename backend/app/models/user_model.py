@@ -9,6 +9,8 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
+    telegram = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
     password_hash = Column(LargeBinary)
     is_google_account = Column(Boolean, default=False)
 
