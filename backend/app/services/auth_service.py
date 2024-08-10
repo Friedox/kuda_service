@@ -4,7 +4,6 @@ import random
 import bcrypt
 import redis.asyncio as redis
 import requests
-from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings

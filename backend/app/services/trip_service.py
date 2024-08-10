@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import List
 
 import requests
-from fastapi import Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased

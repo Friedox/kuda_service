@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends
-
-from fastapi import Request, Cookie
+from fastapi import Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
-from schemas.review_scheme import ReviewRequestScheme
-from services import auth_service
 from schemas.user_scheme import CreateUserScheme, CredentialsScheme
+from services import auth_service
 from services.response_service import ResponseService
 
 router = APIRouter(tags=["Auth"])

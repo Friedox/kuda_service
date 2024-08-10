@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Depends, Cookie
-from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
 from schemas.filter_scheme import FilterScheme
-from schemas.point_scheme import PathRequestScheme
 from schemas.review_scheme import ReviewRequestScheme
 from schemas.trip_scheme import RequestTripScheme
 from services import trip_service, tag_service
