@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends
-
-from fastapi import Request
+from fastapi import Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import database_helper
-from schemas.review_scheme import ReviewRequestScheme
-from services import auth_service
 from schemas.user_scheme import CreateUserScheme, CredentialsScheme
+from services import auth_service
 from services.response_service import ResponseService
 
 router = APIRouter(tags=["Auth"])
@@ -27,16 +25,18 @@ async def login(user: CredentialsScheme, db: AsyncSession = Depends(database_hel
 
 
 @router.post("/set_pass")
-async def set_pass(new_pass: str, request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def set_pass(new_pass: str, session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        auth_service.set_pass(new_pass, request, db)
+        auth_service.set_pass(new_pass, session_id, db)
     )
 
 
 @router.get("/getusers/me/")
-async def get_info(request: Request, db: AsyncSession = Depends(database_helper.session_getter)):
+async def get_info(session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
-        auth_service.get_info(request, db)
+        auth_service.get_info(session_id, db)
     )
 
 
@@ -48,14 +48,30 @@ async def get_user(user_id: int, db: AsyncSession = Depends(database_helper.sess
 
 
 @router.post("/logout")
-async def logout(request: Request):
+async def logout(session_id: str | None = Cookie(default=None)):
     return await ResponseService.response(
-        auth_service.logout(request)
+        auth_service.logout(session_id)
     )
 
 
-@router.post("/getusers/score/{user_id}")
+@router.get("/getusers/score/{user_id}")
 async def get_score(user_id, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         auth_service.get_score(user_id, db)
+    )
+
+
+@router.post("/set_tg")
+async def set_pass(telegram_tag: str, session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.set_tg(telegram_tag, session_id, db)
+    )
+
+
+@router.post("/set_phone")
+async def set_pass(phone: str, session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.set_phone(phone, session_id, db)
     )

@@ -1,6 +1,5 @@
 from typing import Optional
-
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr
 
 
 class CredentialsScheme(BaseModel):
@@ -12,6 +11,8 @@ class CreateUserScheme(BaseModel):
     email: EmailStr
     username: str
     password: str = None
+    phone: str = None
+    telegram: str = None
     is_google_account: bool = False
 
 
@@ -20,6 +21,8 @@ class UserScheme(BaseModel):
     email: EmailStr
     username: str
     password_hash: Optional[bytes] = None
+    phone: str = None
+    telegram: str = None
     is_google_account: bool
 
 
@@ -28,4 +31,7 @@ class UserGetScheme(BaseModel):
     email: EmailStr
     username: str
     trip_count: int
+    phone: str
+    telegram: str
     score: float
+

@@ -31,6 +31,11 @@ class TripNotFoundError(ValueError):
         super().__init__("Trip not found")
 
 
+class TripAlreadyEndedError(ValueError):
+    def __init__(self):
+        super().__init__("Trip already ended")
+
+
 class UserTripNotFoundError(ValueError):
     def __init__(self, user_id, trip_id):
         super().__init__(f"User {user_id} do not have trip {trip_id}")
@@ -106,6 +111,13 @@ class FindPathError(ValueError):
         super().__init__("Path not found")
 
 
+class CarNotFoundError(ValueError):
+    def __init__(self: str, car_id):
+        if car_id:
+            super().__init__(f"Car with id '{car_id}' not found")
+        super().__init__(f"Car not found")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -126,5 +138,7 @@ exceptions_list = (TripNotFoundError,
                    TripEndedError,
                    UserNotAllowedError,
                    ReviewNotAllowedError,
-                   FindPathError
+                   FindPathError,
+                   CarNotFoundError,
+                   TripAlreadyEndedError
                    )

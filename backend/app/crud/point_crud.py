@@ -1,5 +1,6 @@
 from typing import List
 
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -37,11 +38,14 @@ async def get(point_id: int, db: AsyncSession) -> PointScheme:
 
 
 async def delete(point_id: int, db: AsyncSession) -> bool:
-    query = select(Point).where(Point.point_id == point_id)
+    try:
+        query = select(Point).where(Point.point_id == point_id)
 
-    result = await db.execute(query)
-    point = result.scalar_one()
-    if point:
-        await db.delete(point)
-        return True
-    raise PointNotFoundError(point_id=point_id)
+        result = await db.execute(query)
+        point = result.scalar_one()
+        if point:
+            await db.delete(point)
+            await db.commit()
+            return True
+    except NoResultFound:
+        raise PointNotFoundError(point_id=point_id)

@@ -37,6 +37,8 @@ async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
         email=user_create.email,
         username=user_create.username,
         password_hash=hashed_password,
+        telegram=user_create.telegram if user_create.telegram is not None else "set",
+        phone=user_create.phone if user_create.phone is not None else "set",
         is_google_account=user_create.is_google_account
     )
 
@@ -93,4 +95,22 @@ async def set_password(user_id, hashed_password, db):
     user = result.scalars().first()
 
     user.password_hash = hashed_password
+    await db.commit()
+
+
+async def set_tg(user_id, telegram_tag, db):
+    query = select(User).filter(User.user_id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    user.telegram = telegram_tag
+    await db.commit()
+
+
+async def set_phone(user_id, phone, db):
+    query = select(User).filter(User.user_id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    user.phone = "+" + phone
     await db.commit()
