@@ -18,6 +18,7 @@ class ApiV1Prefix(BaseModel):
     trips: str = "/trips"
     google: str = "/auth/google"
     chat: str = "/chat"
+    cars: str = "/cars"
 
 
 class ApiPrefix(BaseModel):

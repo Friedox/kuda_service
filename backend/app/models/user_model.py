@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, LargeBinary, Boolean
 from sqlalchemy.orm import relationship
 
 from models.base import Base
+from models.car_model import user_car_association
 
 
 class User(Base):
@@ -15,3 +16,4 @@ class User(Base):
     is_google_account = Column(Boolean, default=False)
 
     trips = relationship("Trip", secondary="trip_user", back_populates="users")
+    cars = relationship("Car", secondary=user_car_association, back_populates="users")
