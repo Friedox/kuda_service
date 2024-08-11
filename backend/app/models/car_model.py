@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
 
 from models.base import Base
+from models.trip_model import car_trip_association
 
 user_car_association = Table(
     'user_car', Base.metadata,
@@ -19,3 +20,4 @@ class Car(Base):
     region_number = Column(Integer, nullable=False)
 
     users = relationship("User", secondary=user_car_association, back_populates="cars")
+    trips = relationship("Trip", secondary=car_trip_association, back_populates="cars")
