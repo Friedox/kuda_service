@@ -5,6 +5,7 @@ from .trips import router as trips_router
 from .auth import router as auth_router
 from .google_auth import router as auth_google_router
 from .chat import router as chat_router
+from .cars import router as cars_router
 
 router = APIRouter(
     prefix=settings.api.v1.prefix
@@ -27,4 +28,9 @@ router.include_router(
 router.include_router(
     chat_router,
     prefix=settings.api.v1.chat
+)
+
+router.include_router(
+    cars_router,
+    prefix=settings.api.v1.cars
 )
