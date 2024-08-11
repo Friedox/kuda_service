@@ -95,7 +95,7 @@ async def get_user_from_session_id(session_id: str | None, db: AsyncSession) -> 
 
 async def logout(session_id: str | None):
     async with redis.from_url(f'redis://{settings.redis.host}') as redis_client:
-        await redis_client.delete_trip(f"session:{session_id}")
+        await redis_client.delete(f"session:{session_id}")
 
     return {"message": "Logged out successfully"}
 
@@ -167,3 +167,19 @@ async def get_score(user_id: int, db) -> dict:
     score = await review_crud.get_user_score(user_id, db)
 
     return {"message": score}
+
+
+async def set_tg(telegram_tag: str, session_id: str | None, db: AsyncSession) -> dict:
+    user = await get_user_from_session_id(session_id, db)
+    user_id = user.user_id
+
+    await user_crud.set_tg(user_id, telegram_tag, db)
+    return {"message": "Telegram successfully set"}
+
+
+async def set_phone(phone: str, session_id: str | None, db: AsyncSession) -> dict:
+    user = await get_user_from_session_id(session_id, db)
+    user_id = user.user_id
+
+    await user_crud.set_phone(user_id, phone, db)
+    return {"message": "Phone successfully set"}

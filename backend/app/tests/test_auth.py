@@ -23,6 +23,8 @@ async def test_register_user():
         email="test@mail.com",
         username="test",
         password="test_pass",
+        telegram="test_tg",
+        phone="+77777777777",
         is_google_account=False
     )
 
@@ -78,6 +80,8 @@ async def test_get_info():
                 email="test@mail.com",
                 username="test",
                 password="test_pass",
+                telegram="test_tg",
+                phone="+77777777777",
                 is_google_account=False
             )
 

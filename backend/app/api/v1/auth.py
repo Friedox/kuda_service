@@ -59,3 +59,19 @@ async def get_score(user_id, db: AsyncSession = Depends(database_helper.session_
     return await ResponseService.response(
         auth_service.get_score(user_id, db)
     )
+
+
+@router.post("/set_tg")
+async def set_pass(telegram_tag: str, session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.set_tg(telegram_tag, session_id, db)
+    )
+
+
+@router.post("/set_phone")
+async def set_pass(phone: str, session_id: str | None = Cookie(default=None),
+                   db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        auth_service.set_phone(phone, session_id, db)
+    )
