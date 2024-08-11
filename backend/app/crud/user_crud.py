@@ -37,6 +37,8 @@ async def create(user_create: CreateUserScheme, db: AsyncSession) -> UserScheme:
         email=user_create.email,
         username=user_create.username,
         password_hash=hashed_password,
+        telegram=user_create.telegram,
+        phone=user_create.phone,
         is_google_account=user_create.is_google_account
     )
 

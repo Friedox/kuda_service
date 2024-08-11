@@ -155,7 +155,9 @@ async def get_user(user_id, db) -> UserGetScheme:
         email=user.email,
         username=user.username,
         trip_count=trip_count,
-        score=score
+        score=score,
+        phone=user.phone,
+        telegram=user.telegram
     )
 
     return user_response

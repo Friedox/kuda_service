@@ -54,7 +54,7 @@ async def logout(session_id: str | None = Cookie(default=None)):
     )
 
 
-@router.post("/getusers/score/{user_id}")
+@router.get("/getusers/score/{user_id}")
 async def get_score(user_id, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         auth_service.get_score(user_id, db)
