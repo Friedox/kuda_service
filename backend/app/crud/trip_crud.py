@@ -18,10 +18,6 @@ async def create(trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
         end_timestamp=trip_create.end_timestamp,
         fare=trip_create.fare,
         available_sits=trip_create.available_sits,
-        driver_tg=trip_create.driver_tg,
-        driver_phone=trip_create.driver_phone,
-        car_type=trip_create.car_type,
-        car_number=trip_create.car_number,
         is_active=True,
         travel_time=trip_create.travel_time
     )

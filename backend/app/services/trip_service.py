@@ -56,11 +56,8 @@ async def create(trip_request: RequestTripScheme, session_id: str | None, db: As
         fare=trip_request.fare,
         tags=trip_request.tags,
         available_sits=trip_request.available_sits,
-        driver_phone=trip_request.driver_phone,
-        driver_tg=trip_request.driver_tg,
-        car_number=trip_request.car_number,
-        car_type=trip_request.car_type,
-        travel_time=travel_time
+        travel_time=travel_time,
+        car_id=trip_request.car_id
     )
 
     trip = await trip_user_crud.create(user, trip_create, db)
