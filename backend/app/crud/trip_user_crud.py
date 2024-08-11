@@ -1,12 +1,13 @@
 from typing import List
 
-from sqlalchemy import select
+from sqlalchemy import select, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from crud import trip_crud, point_crud
 from exceptions import TripNotFoundError, UserTripNotFoundError, BookNotFoundError
-from models.trip_model import Trip
+from models.car_model import user_car_association
+from models.trip_model import Trip, car_trip_association
 from models.trip_user_model import TripUser
 from schemas.trip_scheme import CreateTripScheme, TripScheme, TripTagsScheme
 from schemas.user_scheme import UserScheme
@@ -14,9 +15,11 @@ from schemas.user_scheme import UserScheme
 
 async def create(user: UserScheme, trip_create: CreateTripScheme, db: AsyncSession) -> TripScheme:
     try:
-        db.begin()
-
         trip = await trip_crud.create(trip_create, db)
+
+        stmt = insert(car_trip_association).values(trip_id=trip.trip_id, car_id=trip_create.car_id)
+        await db.execute(stmt)
+        await db.commit()
 
         link = TripUser(
             user_id=user.user_id,
@@ -64,7 +67,11 @@ async def get_trip_creator_id(trip_id: int, db: AsyncSession) -> int:
     )
 
     result = await db.execute(query)
+
     trip_object = result.scalars().first()
+
+    if trip_object is None:
+        raise TripNotFoundError
 
     return trip_object.user_id
 
@@ -83,8 +90,6 @@ async def get_trip_users(trip_id: int, db: AsyncSession) -> list[int]:
 
 async def book(user: UserScheme, trip_id: int, db: AsyncSession) -> TripScheme:
     try:
-        db.begin()
-
         trip = await trip_crud.get(trip_id, db)
 
         link = TripUser(
@@ -103,8 +108,6 @@ async def book(user: UserScheme, trip_id: int, db: AsyncSession) -> TripScheme:
 
 async def delete_book(user: UserScheme, trip_id: int, db: AsyncSession) -> None:
     try:
-        db.begin()
-
         query = select(TripUser).filter(TripUser.user_id == user.user_id).filter(TripUser.trip_id == trip_id)
 
         result = await db.execute(query)
@@ -121,7 +124,7 @@ async def delete_book(user: UserScheme, trip_id: int, db: AsyncSession) -> None:
         raise e
 
 
-async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:
+async def delete_trip(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) -> bool:
     try:
         await db.begin()
 
@@ -140,6 +143,12 @@ async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) ->
             await db.delete(trip)
         await trip_crud.delete(trip_delete, db)
 
+        await db.execute(
+            delete(car_trip_association).where(
+                car_trip_association.c.trip_id == trip_delete.trip_id
+            )
+        )
+
         await db.commit()
         return True
 
@@ -148,29 +157,19 @@ async def delete(user: UserScheme, trip_delete: TripScheme, db: AsyncSession) ->
         raise e
 
 
-async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripTagsScheme]:
+async def get_user_trips(user: UserScheme, db: AsyncSession) -> List[TripScheme]:
     query = (
         select(Trip)
         .join(TripUser)
         .filter(TripUser.user_id == user.user_id)
-        .options(selectinload(Trip.tags))
     )
 
     result = await db.execute(query)
     trips_objects = result.scalars().all()
 
-    trips = []
-    for trip in trips_objects:
-        if not trip.is_active:
-            continue
-        tag_names = [tag.tag for tag in trip.tags]
-        trip_dict = trip.__dict__
-        trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
-        trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
-        trip_dict['tags'] = tag_names
-        trips.append(TripTagsScheme(**trip_dict))
+    ids = [trip.trip_id for trip in trips_objects]
 
-    return trips
+    return [await trip_crud.get(trip_id, db) for trip_id in ids]
 
 
 async def get_upcoming_user_trips(user, timestamp, db):

@@ -32,3 +32,8 @@ async def get(tag: str or int, db: AsyncSession) -> TagScheme:
     result = await db.execute(query)
     tag = result.scalars().first()
     return TagScheme(**tag.__dict__)
+
+
+async def get_trip_tags(tag_ids: list[int], db: AsyncSession) -> list[str]:
+    tags = (await db.execute(select(Tag).filter(Tag.tag_id.in_(tag_ids)))).scalars().all()
+    return [tag.tag for tag in tags]

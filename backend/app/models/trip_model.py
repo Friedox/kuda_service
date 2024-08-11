@@ -24,4 +24,3 @@ class Trip(Base):
     users = relationship("User", secondary="trip_user", back_populates="trips")
     tags = relationship("Tag", secondary="trip_tag", back_populates="trips")
     cars = relationship("Car", secondary=car_trip_association, back_populates="trips")
-

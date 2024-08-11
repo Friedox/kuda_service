@@ -2,7 +2,9 @@ from typing import List
 
 from pydantic import BaseModel
 
+from .car_scheme import CarScheme
 from .point_scheme import PointScheme, CreatePointScheme, RequestPointScheme
+from .user_scheme import UserGetScheme
 
 
 class RequestTripScheme(BaseModel):
@@ -39,7 +41,8 @@ class TripTagsScheme(TripScheme):
 
 
 class TripResponseScheme(TripTagsScheme):
-    creator_id: int
+    car: CarScheme
+    creator: UserGetScheme
     trip_users: list[int]
 
 

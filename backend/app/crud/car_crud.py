@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from exceptions import CarNotFoundError, UserNotAllowedError
 from models import Car
 from models.car_model import user_car_association
+from models.trip_model import car_trip_association
 from schemas.car_scheme import RequestCarScheme, CarScheme
 
 
@@ -97,3 +98,20 @@ async def get_user_cars(user_id: int, db: AsyncSession) -> list[CarScheme]:
     except SQLAlchemyError as e:
         await db.rollback()
         raise e
+
+
+async def get_trip_car(trip_id: int, db: AsyncSession) -> CarScheme:
+    result = await db.execute(
+        select(Car)
+        .join(car_trip_association)
+        .where(car_trip_association.c.trip_id == trip_id)
+    )
+
+    car = result.scalars().first()
+
+    if car is None:
+        raise CarNotFoundError
+
+    car_scheme = CarScheme.from_orm(car)
+
+    return car_scheme

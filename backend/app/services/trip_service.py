@@ -2,25 +2,18 @@ from datetime import datetime
 from typing import List
 
 import requests
-from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import aliased
 
 from config import settings
-from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, user_crud, message_crud
-from exceptions import (UnexpectedError, UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
+from crud import trip_crud, trip_user_crud, trip_tag_crud, point_crud, review_crud, message_crud, car_crud
+from exceptions import (UserAlreadyBookedError, NotEnoughSitsError, TripEndedError,
                         UserNotAllowedError)
-from models.point_model import Point
-from models.tag_model import Tag
-from models.trip_model import Trip
-from models.trip_tag_model import TripTag
 from schemas.filter_scheme import FilterScheme
 from schemas.point_scheme import CreatePointScheme
 from schemas.review_scheme import ReviewRequestScheme, ReviewScheme
-from schemas.trip_scheme import CreateTripScheme, RequestTripScheme, TripResponseScheme, \
-    TripScoreResponseScheme
+from schemas.trip_scheme import CreateTripScheme, RequestTripScheme, TripResponseScheme
 from schemas.user_scheme import UserScheme
-from services import tag_service
+from services import tag_service, auth_service
 from services.auth_service import get_user_from_session_id
 from services.geocoder_service import geocode
 from services.translate_service import translate
@@ -30,6 +23,7 @@ async def create(trip_request: RequestTripScheme, session_id: str | None, db: As
     user = await get_user_from_session_id(session_id=session_id, db=db)
 
     await tag_service.check_tags(trip_request.tags, db)
+    await car_crud.get(trip_request.car_id, db)
 
     pickup_address_dict = await convert_coords(trip_request.pickup.latitude, trip_request.pickup.longitude)
     dropoff_address_dict = await convert_coords(trip_request.dropoff.latitude, trip_request.dropoff.longitude)
@@ -76,18 +70,25 @@ async def delete(trip_id: int, session_id: str | None, db: AsyncSession) -> dict
 
     await trip_tag_crud.delete_tags(trip_delete, db)
     await message_crud.delete_messages(trip_delete, db)
-    if await trip_user_crud.delete(user, trip_delete, db):
-        return {"message": "Trip deleted successfully"}
+    await trip_user_crud.delete_trip(user, trip_delete, db)
 
-    raise UnexpectedError("Trip did not deleted successfully")
+    await point_crud.delete(trip_delete.pickup.point_id, db)
+    await point_crud.delete(trip_delete.dropoff.point_id, db)
+    return {"message": "Trip deleted successfully"}
 
 
 async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
-    trip = await trip_user_crud.get(trip_id, db)
+    trip = await trip_crud.get(trip_id, db)
+    tags = [tag.tag for tag in await trip_tag_crud.get_tags(trip_id=trip_id, db=db)]
+    car = await car_crud.get_trip_car(trip_id, db)
+
     creator_id = await trip_user_crud.get_trip_creator_id(trip_id, db)
+    creator = await auth_service.get_user(creator_id, db)
 
     response_trip = TripResponseScheme(**trip.__dict__,
-                                       creator_id=creator_id,
+                                       tags=tags,
+                                       car=car,
+                                       creator=creator,
                                        trip_users=await trip_user_crud.get_trip_users(trip_id, db))
 
     return response_trip
@@ -101,8 +102,13 @@ async def get_user_trips(session_id: str | None, db: AsyncSession) -> List[TripR
     response_trips = [
         TripResponseScheme(
             **trip.__dict__,
-            creator_id=await trip_user_crud.get_trip_creator_id(trip.trip_id, db),
-            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db)
+            tags=[tag.tag for tag in await trip_tag_crud.get_tags(trip_id=trip.trip_id, db=db)],
+            car=await car_crud.get_trip_car(trip.trip_id, db),
+            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db),
+            creator=await auth_service.get_user(
+                await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+                , db
+            )
         ) for
         trip in trips]
 
@@ -112,15 +118,19 @@ async def get_user_trips(session_id: str | None, db: AsyncSession) -> List[TripR
 async def get_upcoming(session_id: str | None, db: AsyncSession) -> list[TripResponseScheme]:
     user = await get_user_from_session_id(session_id, db)
     now_time = datetime.now()
-    print(now_time)
     timestamp = int(datetime.timestamp(now_time))
     trips = await trip_user_crud.get_upcoming_user_trips(user, timestamp, db)
 
     response_trips = [
         TripResponseScheme(
             **trip.__dict__,
-            creator_id=await trip_user_crud.get_trip_creator_id(trip.trip_id, db),
-            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db)
+            tags=[tag.tag for tag in await trip_tag_crud.get_tags(trip_id=trip.trip_id, db=db)],
+            car=await car_crud.get_trip_car(trip.trip_id, db),
+            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db),
+            creator=await auth_service.get_user(
+                await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+                , db
+            )
         ) for
         trip in trips]
 
@@ -128,84 +138,24 @@ async def get_upcoming(session_id: str | None, db: AsyncSession) -> list[TripRes
 
 
 async def get_filtered(trip_filter: FilterScheme, db: AsyncSession) -> List[TripResponseScheme]:
-    query = select(Trip)
+    filtered_trip_ids = await trip_crud.get_filtered(trip_filter, db)
 
-    if trip_filter.pickup:
-        pickup_point = aliased(Point)
-        query = query.join(pickup_point, Trip.pickup == pickup_point.point_id)
-        if trip_filter.pickup_range:
-            pickup_range_degrees = trip_filter.pickup_range / 111320.0  # 1 degree ≈ 111.32 km
-            query = query.filter(
-                func.sqrt(
-                    func.pow(pickup_point.latitude - trip_filter.pickup.latitude, 2) +
-                    func.pow(pickup_point.longitude - trip_filter.pickup.longitude, 2)
-                ) <= pickup_range_degrees
+    filtered_trips = [await trip_crud.get(trip_id, db) for trip_id in filtered_trip_ids]
+
+    response_trips = [
+        TripResponseScheme(
+            **trip.__dict__,
+            tags=[tag.tag for tag in await trip_tag_crud.get_tags(trip_id=trip.trip_id, db=db)],
+            car=await car_crud.get_trip_car(trip.trip_id, db),
+            trip_users=await trip_user_crud.get_trip_users(trip.trip_id, db),
+            creator=await auth_service.get_user(
+                await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
+                , db
             )
-        else:
-            query = query.filter(
-                pickup_point.latitude == trip_filter.pickup.latitude,
-                pickup_point.longitude == trip_filter.pickup.longitude
-            )
+        ) for
+        trip in filtered_trips]
 
-    if trip_filter.dropoff:
-        dropoff_point = aliased(Point)
-        query = query.join(dropoff_point, Trip.dropoff == dropoff_point.point_id)
-        if trip_filter.dropoff_range:
-            dropoff_range_degrees = trip_filter.dropoff_range / 111320.0  # 1 degree ≈ 111.32 km
-            query = query.filter(
-                func.sqrt(
-                    func.pow(dropoff_point.latitude - trip_filter.dropoff.latitude, 2) +
-                    func.pow(dropoff_point.longitude - trip_filter.dropoff.longitude, 2)
-                ) <= dropoff_range_degrees
-            )
-        else:
-            query = query.filter(
-                dropoff_point.latitude == trip_filter.dropoff.latitude,
-                dropoff_point.longitude == trip_filter.dropoff.longitude
-            )
-
-    if trip_filter.start_timestamp:
-        query = query.filter(Trip.start_timestamp >= trip_filter.start_timestamp)
-
-    if trip_filter.end_timestamp:
-        query = query.filter(Trip.end_timestamp <= trip_filter.end_timestamp)
-
-    if trip_filter.tags:
-        tag_alias = aliased(Tag)
-        trip_tag_alias = aliased(TripTag)
-
-        subquery = (
-            select(Trip.trip_id)
-            .join(trip_tag_alias, Trip.trip_id == trip_tag_alias.trip_id)
-            .join(tag_alias, trip_tag_alias.tag_id == tag_alias.tag_id)
-            .filter(tag_alias.tag.in_(trip_filter.tags))
-            .group_by(Trip.trip_id)
-            .having(func.count(tag_alias.tag) == len(trip_filter.tags))
-        )
-
-        query = query.filter(Trip.trip_id.in_(subquery))
-
-    result = await db.execute(query)
-    trips = result.scalars().all()
-
-    trip_schemas = []
-    for trip in trips:
-        creator_id = await trip_user_crud.get_trip_creator_id(trip.trip_id, db)
-        user = await user_crud.get(creator_id, db)
-        score = await review_crud.get_user_score(creator_id, db)
-        tag_names = [tag.tag for tag in await trip_tag_crud.get_tags(trip.trip_id, db)]
-        trip_dict = trip.__dict__.copy()
-        trip_dict['tags'] = tag_names
-        trip_dict['pickup'] = await point_crud.get(trip.pickup, db)
-        trip_dict['dropoff'] = await point_crud.get(trip.dropoff, db)
-        trip_dict['creator_id'] = creator_id
-        trip_dict['trip_users'] = await trip_user_crud.get_trip_users(trip.trip_id, db)
-        trip_dict['creator_username'] = user.username
-        trip_dict['creator_score'] = score
-
-        trip_schemas.append(TripScoreResponseScheme(**trip_dict))
-
-    return trip_schemas
+    return response_trips
 
 
 async def convert_coords(latitude: float, longitude: float):
@@ -240,7 +190,7 @@ async def book(trip_id: int, session_id: str | None, db: AsyncSession):
 
 async def delete_book(trip_id: int, session_id: str | None, db: AsyncSession):
     user = await get_user_from_session_id(session_id=session_id, db=db)
-    trip = await trip_user_crud.get(trip_id, db)
+    await trip_user_crud.get(trip_id, db)
     users = await trip_user_crud.get_trip_users(trip_id, db)
 
     if user.user_id not in users:

@@ -95,7 +95,7 @@ async def get_user_from_session_id(session_id: str | None, db: AsyncSession) -> 
 
 async def logout(session_id: str | None):
     async with redis.from_url(f'redis://{settings.redis.host}') as redis_client:
-        await redis_client.delete(f"session:{session_id}")
+        await redis_client.delete_trip(f"session:{session_id}")
 
     return {"message": "Logged out successfully"}
 
