@@ -16,6 +16,12 @@ async def create(car_create: RequestCarScheme, session_id: str | None, db: Async
     }
 
 
+async def get_user_cars(session_id: str | None, db: AsyncSession) -> list[CarScheme]:
+    user = await get_user_from_session_id(session_id=session_id, db=db)
+
+    return await car_crud.get_user_cars(user.user_id, db)
+
+
 async def get(car_id: int, db: AsyncSession) -> CarScheme:
     car = await car_crud.get(car_id, db)
 

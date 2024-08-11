@@ -17,6 +17,14 @@ async def create(car: RequestCarScheme, session_id: str | None = Cookie(default=
     )
 
 
+@router.get("/")
+async def create(session_id: str | None = Cookie(default=None),
+                 db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        car_service.get_user_cars(session_id, db)
+    )
+
+
 @router.get("/{car_id}")
 async def create(car_id: int, db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(

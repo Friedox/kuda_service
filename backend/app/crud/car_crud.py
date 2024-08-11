@@ -80,3 +80,20 @@ async def delete_car(user_id: int, car_id: int, db: AsyncSession) -> None:
     except SQLAlchemyError as e:
         await db.rollback()
         raise e
+
+
+async def get_user_cars(user_id: int, db: AsyncSession) -> list[CarScheme]:
+    try:
+        result = await db.execute(
+            select(Car).join(user_car_association).where(user_car_association.c.user_id == user_id)
+        )
+
+        cars = result.scalars().all()
+
+        car_schemes = [CarScheme(**car.__dict__) for car in cars]
+
+        return car_schemes
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise e
