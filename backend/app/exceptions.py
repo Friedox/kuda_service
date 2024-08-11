@@ -106,6 +106,11 @@ class FindPathError(ValueError):
         super().__init__("Path not found")
 
 
+class CarNotFoundError(ValueError):
+    def __init__(self: str, car_id):
+        super().__init__(f"Car with id '{car_id}' not found")
+
+
 exceptions_list = (TripNotFoundError,
                    UserNotFoundError,
                    EmailInUseError,
@@ -126,5 +131,6 @@ exceptions_list = (TripNotFoundError,
                    TripEndedError,
                    UserNotAllowedError,
                    ReviewNotAllowedError,
-                   FindPathError
+                   FindPathError,
+                   CarNotFoundError
                    )
