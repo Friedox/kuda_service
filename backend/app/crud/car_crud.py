@@ -1,15 +1,14 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, delete
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from exceptions import CarNotFoundError
+from exceptions import CarNotFoundError, UserNotAllowedError
 from models import Car
 from models.car_model import user_car_association
 from schemas.car_scheme import RequestCarScheme, CarScheme
-from schemas.user_scheme import UserScheme
 
 
-async def create(user: UserScheme, car_create: RequestCarScheme, db: AsyncSession) -> CarScheme:
+async def create(user_id: int, car_create: RequestCarScheme, db: AsyncSession) -> CarScheme:
     try:
         new_car = Car(
             model=car_create.model,
@@ -18,7 +17,7 @@ async def create(user: UserScheme, car_create: RequestCarScheme, db: AsyncSessio
         )
         db.add(new_car)
         await db.flush()
-        stmt = insert(user_car_association).values(user_id=user.user_id, car_id=new_car.car_id)
+        stmt = insert(user_car_association).values(user_id=user_id, car_id=new_car.car_id)
         await db.execute(stmt)
 
         await db.commit()
@@ -44,3 +43,40 @@ async def get(car_id: int, db: AsyncSession) -> CarScheme:
     car_scheme: CarScheme = CarScheme(**car.__dict__)
 
     return car_scheme
+
+
+async def delete_car(user_id: int, car_id: int, db: AsyncSession) -> None:
+    try:
+        user_car = (
+            await db.execute(
+                select(user_car_association).where(
+                    user_car_association.c.user_id == user_id,
+                    user_car_association.c.car_id == car_id
+                )
+            )
+        ).first()
+
+        if user_car is None:
+            raise UserNotAllowedError
+
+        await db.execute(
+            delete(user_car_association).where(
+                user_car_association.c.user_id == user_id,
+                user_car_association.c.car_id == car_id
+            )
+        )
+
+        car_to_delete = (
+            await db.execute(select(Car).where(Car.car_id == car_id))
+        ).scalars().first()
+
+        if car_to_delete is None:
+            raise CarNotFoundError(car_id=car_id)
+
+        await db.delete(car_to_delete)
+
+        await db.commit()
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise e

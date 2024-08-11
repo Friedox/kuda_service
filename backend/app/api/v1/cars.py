@@ -22,3 +22,11 @@ async def create(car_id: int, db: AsyncSession = Depends(database_helper.session
     return await ResponseService.response(
         car_service.get(car_id, db)
     )
+
+
+@router.delete("/{car_id}")
+async def create(car_id: int, session_id: str | None = Cookie(default=None),
+                 db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        car_service.delete(car_id, session_id, db)
+    )
